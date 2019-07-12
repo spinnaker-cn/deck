@@ -1,0 +1,30 @@
+@import (reference) '~core/presentation/less/imports/commonImports.less';
+
+.user-notifications {
+  position: fixed;
+  bottom: 5px;
+  width: 100%;
+  z-index: 3;
+}
+.user-notification {
+  .fade-in(0.1);
+  text-align: center;
+  font-size: 120%;
+  margin: 10px;
+  padding: 10px;
+  background-color: var(--color-accent-g2);
+  box-shadow: 0 2px 5px var(--color-concrete);
+  & > .message {
+    width: 100%;
+    padding-right: 30px;
+    .action {
+      display: inline-block;
+      padding: 0 10px;
+      font-weight: 600;
+    }
+  }
+  & > button.close-notification {
+    width: 20px;
+    padding: 1px 5px;
+  }
+}

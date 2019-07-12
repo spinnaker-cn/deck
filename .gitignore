@@ -1,0 +1,45 @@
+# OS Generated Files #
+*.swp
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# IDE Files
+*.ipr
+*.iws
+*.iml
+.idea/
+.vscode/
+.classpath
+.project
+.settings/
+
+# Node Files #
+npm-debug.log
+node_modules/
+test/google/node_modules/
+
+# Build Files
+.awcache/
+.gradle/
+.happypack/
+**/.cache-loader
+.yalc
+yalc.lock
+build/
+dist/
+lib/
+transpiled/
+app/scripts/modules/core/src/styleguide/public/
+yarn-error.log
+
+# Test Results
+test-results.xml
+/bin/
+
+# Functional Test Artifacts
+mb.pid
+mb*.log
+selenium-logs
+*.browser.log

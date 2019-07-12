@@ -1,0 +1,34 @@
+@import (reference) "~core/presentation/less/imports/commonImports.less";
+
+.execution-marker.stage {
+  margin-top: 0;
+  display: inline-block;
+  height: 20px;
+  opacity: 0.65;
+  transition: 0.2s all;
+  text-align: center;
+  padding: 0;
+  color: var(--color-black);
+  font-size: 90%;
+  border: 1px solid transparent;
+  border-left-color: var(--color-white);
+  vertical-align: middle;
+  &:hover, &.active {
+    opacity: 1;
+  }
+  &.after-active {
+    border-left-color: transparent;
+  }
+  &.active {
+    border-color: var(--color-mineshaft);
+    &:first-child {
+      border-left-width: 1px;
+    }
+    &:last-child {
+      border-right-width: 1px;
+    }
+  }
+  &.glowing {
+    .glowing(2.5);
+  }
+}

@@ -1,0 +1,124 @@
+@import (reference) "~core/presentation/less/imports/commonImports.less";
+
+.secondary-panel {
+  > div {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .nav {
+    padding: 0 0 0 10px;
+    background-color: var(--color-cirrus);
+    border: 1px solid var(--color-alto);
+    border-radius: 0;
+    border-bottom-width: 0;
+
+    h3 {
+      margin-right: 10px;
+      font-weight: 600;
+    }
+
+    h4 {
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0;
+      font-size: 16px;
+    }
+
+    .list-group-item {
+      &.active {
+        font-weight: 700;
+      }
+    }
+
+    .nav-search {
+      margin-top: 10px;
+    }
+
+  }
+  .nav-content {
+    .header {
+      border-bottom: none;
+      padding: 0;
+      position: relative;
+      z-index: 10;
+      background-color: var(--color-alabaster);
+      h3 {
+        display: inline-block;
+        font-weight: 600;
+      }
+      .actions {
+        display: inline-block;
+      }
+      .filters {
+        display: inline-block;
+        label {
+          font-weight: normal;
+          margin-bottom: 0;
+          margin-left: 10px;
+        }
+      }
+      &.header-clusters {
+        padding-top: 0;
+        h3 {
+          @media (min-width: 708px) and (max-width: 992px) {
+            font-size: 110%;
+          }
+          padding-bottom: 5px;
+        }
+        .filters {
+          height: 40px;
+          line-height: 40px;
+          vertical-align: top;
+          font-size: 90%;
+        }
+      }
+    }
+    .sort-filter {
+      .form-inline, .form-horizontal {
+        border-bottom: 1px solid var(--color-seashell);
+        padding: 0 10px 10px 10px;
+        label {
+          font-weight: normal;
+          margin-bottom: 0;
+        }
+        .checkbox {
+          min-height: 20px;
+          padding-top: 0;
+        }
+      }
+      .form-inline {
+        @media(min-width: 768px) {
+          label {
+            margin-left: 10px;
+          }
+          input, select {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+    .content {
+      padding: 0 0 10px;
+      @media (min-width: 708px) and (max-width: 992px) {
+        padding: 0 5px;
+      }
+    }
+  }
+}
+
+@media (min-width: @screen-lg-min) {
+  .pull-right-lg {
+    float: right;
+  }
+}
+
+.nav.navbar-nav {
+  .remove-border-top:hover, .remove-border-top:active {
+    border-top-color: transparent;
+    transition: none;
+  }
+  .glyphicon {
+    padding-right: 4px;
+  }
+}
