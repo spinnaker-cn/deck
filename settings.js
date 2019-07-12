@@ -63,7 +63,7 @@ window.spinnakerSettings = {
     'oracle',
     'tencent',
   ],
-  defaultTimeZone: process.env.TIMEZONE || 'America/Los_Angeles', // see http://momentjs.com/timezone/docs/#/data-utilities/
+  defaultTimeZone: process.env.TIMEZONE || 'Asia/Shanghai', // see http://momentjs.com/timezone/docs/#/data-utilities/
   feature: {
     artifacts: artifactsEnabled,
     artifactsRewrite: artifactsRewriteEnabled,
@@ -85,7 +85,7 @@ window.spinnakerSettings = {
     pipelineTemplates: false,
     pipelines: true,
     quietPeriod: false,
-    roscoMode: false,
+    roscoMode: true,
     snapshots: false,
     travis: false,
     versionedProviders: true,
