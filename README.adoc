@@ -59,3 +59,16 @@ For now, you can look at the https://github.com/spinnaker/deck/tree/master/app/s
 get an idea how we are customizing Deck internally. Expect a lot of this to change, though, as we figure out better, cleaner
 hooks and integration points. And we're happy to provide new integration points (or accept pull requests) following
 those existing conventions if you need an integration point that doesn't already exist.
+
+== Added by 叶静涛
+
+源码启动时注意：
+
+如需要非本地也能访问，导出环境变量export DECK_HOST=0.0.0.0，导出环境变量export API_HOST=http://机器外网IP:8084
+先执行yarn安装好依赖
+再使用yarn run start命令启动程序
+```
+nohup yarn run start &
+```
+生产规格建议使用pm2监控
+
