@@ -64,9 +64,9 @@ those existing conventions if you need an integration point that doesn't already
 
 源码启动时注意：
 
-如需要非本地也能访问，导出环境变量export DECK_HOST=0.0.0.0，导出环境变量export API_HOST=http://机器外网IP:8084
-先执行yarn安装好依赖
-再使用yarn run start命令启动程序
+* 如需要非本地也能访问，导出环境变量export DECK_HOST=0.0.0.0，导出环境变量export API_HOST=http://机器外网IP:8084
+* 先执行yarn安装好依赖
+* 再使用yarn run start命令启动程序
 ```
 nohup yarn run start &
 ```
