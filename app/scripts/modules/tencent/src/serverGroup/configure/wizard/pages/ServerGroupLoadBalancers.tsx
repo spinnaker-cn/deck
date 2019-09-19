@@ -200,7 +200,7 @@ export class ServerGroupLoadBalancers
   };
 
   private getUrlList = (selectedListener: IALBListener, domain: string): string[] => {
-    return selectedListener && selectedListener.rules && selectedListener.rules.length
+    return selectedListener && selectedListener.rules && selectedListener.rules.length && domain
       ? selectedListener.rules.filter(r => r.domain === domain).map(r => r.url)
       : [];
   };
@@ -221,22 +221,26 @@ export class ServerGroupLoadBalancers
       forwardLoadBalancers.every(flb => !!flb.loadBalancerId)
     ) {
       this.setState({
-        listenerLocationMap: forwardLoadBalancers.reduce((p: ITencentLocationMap, c) => {
-          const listenerList = lbListenerMap[c.loadBalancerId] || [];
-          const selectedListener = listenerList.find(l => l.listenerId === c.listenerId);
-          const rule = selectedListener && selectedListener.rules.find(r => r.locationId === c.locationId);
-          if (selectedListener && rule) {
-            p[c.listenerId] = {
-              domain: rule.domain,
-              url: rule.url,
-              isL7: this.isL7(selectedListener.protocol),
-              domainList: this.getDomainList(selectedListener),
-              urlList: this.getUrlList(selectedListener, rule.domain),
-              selectedListener: selectedListener,
-            };
-          }
-          return p;
-        }, {}),
+        listenerLocationMap: Object.assign(
+          {},
+          this.state.listenerLocationMap,
+          forwardLoadBalancers.reduce((p: ITencentLocationMap, c) => {
+            const listenerList = lbListenerMap[c.loadBalancerId] || [];
+            const selectedListener = listenerList.find(l => l.listenerId === c.listenerId);
+            const rule = selectedListener && selectedListener.rules.find(r => r.locationId === c.locationId);
+            if (selectedListener) {
+              p[c.listenerId] = {
+                domain: (rule && rule.domain) || '',
+                url: (rule && rule.url) || '',
+                isL7: this.isL7(selectedListener.protocol),
+                domainList: this.getDomainList(selectedListener),
+                urlList: this.getUrlList(selectedListener, (rule && rule.domain) || ''),
+                selectedListener: selectedListener,
+              };
+            }
+            return p;
+          }, {}),
+        ),
       });
     }
   }
