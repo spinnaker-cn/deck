@@ -1,0 +1,142 @@
+<div modal-page class="confirmation-modal">
+  <task-monitor monitor="taskMonitor"></task-monitor>
+  <form role="form" name="UpdateLaunchConfig" novalidate ng-if="!ctrl.submitting">
+    <modal-close dismiss="$dismiss()"></modal-close>
+    <div class="modal-header">
+      <h3>UpdateLaunchConfig {{serverGroup.name}}</h3>
+    </div>
+    <div class="modal-body confirmation-modal">
+      <div class="form-group row">
+        <div class="col-md-4 sm-label-right">
+          SystemDisk.Category
+        </div>
+        <div class="col-md-7">
+          <select
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.systemDiskCategory"
+            ng-options="systemDiskCategory for systemDiskCategory in ['cloud','cloud_efficiency','cloud_ssd','ephemeral_ssd','cloud_essd']"
+          ></select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-4 sm-label-right">
+          SystemDisk.Size
+        </div>
+        <div class="col-md-7">
+          <input
+            type="number"
+            min="40"
+            max="500"
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.systemDiskSize"
+            name="systemDiskSize"
+            ng-pattern=""
+            ng-change=""
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-4 sm-label-right">
+          SpotStrategy
+        </div>
+        <div class="col-md-7">
+          <select
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.spotStrategy"
+            ng-options="spotStrategy for spotStrategy in ['NoSpot','SpotWithPriceLimit','SpotAsPriceGo']"
+          ></select>
+        </div>
+      </div>
+      <!-- <div class="form-group row" ng-show="serverGroup.result.scalingConfiguration.spotStrategy == 'SpotWithPriceLimit'">
+        <div class="col-md-4 sm-label-right">
+          SpotPriceLimit
+        </div>
+        <div class="col-md-7">
+          <input
+            type="number"
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.spotPriceLimit[0].priceLimit"
+            name="systemDiskSize"
+            ng-pattern=""
+            ng-change=""
+          />
+        </div>
+      </div> -->
+      <div class="form-group row">
+        <div class="col-md-4 sm-label-right">MaxBandwidthOut
+        </div>
+        <div class="col-md-2">
+          <input
+            type="number"
+            min="0"
+            max="100"
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.internetMaxBandwidthOut"
+            name="InternetMaxBandwidthOut"
+            ng-change=""
+          />
+        </div>
+        <div class="col-md-6 form-inline">
+          <label class="sm-label-right">
+            LoadBalancerWeight
+          </label>
+          <input
+            type="number"
+            min="0"
+            max="100"
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingConfiguration.loadBalancerWeight"
+            name="InternetMaxBandwidthOut"
+            ng-change=""
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-4 sm-label-right">KeyPairName</label>
+        <div class="col-md-7">
+          <ui-select
+            required
+            ng-model="serverGroup.result.scalingConfiguration.keyPairName"
+            class="form-control input-sm"
+            on-select=""
+          >
+            <ui-select-match placeholder="select a {{firewallLabel}}">{{$select.selected}}</ui-select-match>
+            <ui-select-choices
+              repeat="securityGroup in keyPairs"
+            >
+              <span ng-bind-html="securityGroup | highlight: $select.search"></span>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+
+      <alicloud-security-image-id-directive
+        command="serverGroup.result"
+        laybel="4"
+        require="false">
+      </alicloud-security-image-id-directive>
+
+      <alicloud-security-instance-directive
+        command="serverGroup.result"
+        laybel="4"
+        require="false"
+        instanceType="instanceType">
+      </alicloud-security-instance-directive>
+
+      <div class="form-group row">
+        <div class="container-fluid form-horizontal col-md-10 col-md-offset-1">
+          <alicloud-tags-selector command="serverGroup"></alicloud-tags-selector>
+        </div>
+      </div>
+
+    </div>
+    <alicloud-footer
+      action="ctrl.submit()"
+      cancel="ctrl.cancel()"
+      is-valid="isvalid"
+      account="serverGroup.account"
+      verification="verification"
+    ></alicloud-footer>
+  </form>
+</div>

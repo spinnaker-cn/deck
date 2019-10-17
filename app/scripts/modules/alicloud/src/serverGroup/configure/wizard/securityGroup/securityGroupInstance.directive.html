@@ -1,0 +1,36 @@
+<div>
+  <div class="form-group row">
+    <div class="col-md-3 sm-label-right" ng-show="instanceSelectorCtrl.laybel==3">
+      InstanceType
+    </div>
+    <div class="col-md-4 sm-label-right" ng-show="instanceSelectorCtrl.laybel==4">
+      InstanceType
+    </div>
+    <h5 class="text-center col-md-7" ng-show="instanceSelectorCtrl.command.masterZoneId==null && instanceSelectorCtrl.laybel==3 ">(please select a zoneId)</h5>
+    <div class="col-md-7" ng-show="instanceSelectorCtrl.command.masterZoneId!=null || instanceSelectorCtrl.laybel==4">
+      <!--<button type="button" ng-show="instanceSelectorCtrl.laybel==3" style="margin-right:5px;margin-bottom:3px;" ng-click="instanceSelectorCtrl.deleteinstancetype($index)" class="btn btn-info myAlert" ng-repeat = "item in instanceSelectorCtrl.command.scalingConfigurations.instanceTypes">-->
+        <!--{{item}}-->
+        <!--<span>&times;</span>-->
+        <!--<button type="button" ng-show="instanceSelectorCtrl.laybel==4" style="margin-right:5px;margin-bottom:3px;" ng-click="instanceSelectorCtrl.deleteinstancetype($index)" class="btn btn-info myAlert" ng-repeat = "item in instanceSelectorCtrl.command.scalingConfiguration.instanceTypes">-->
+          <!--{{item}}-->
+          <!--<span>&times;</span>-->
+      <!--</button>-->
+      <!--ng-change = "instanceSelectorCtrl.getinsatncetype(instanceSelectorCtrl.command.scalingConfigurations.instanceType)"-->
+      <select
+        ng-required="instanceSelectorCtrl.require"
+        class="form-control input-sm"
+        ng-show="instanceSelectorCtrl.laybel==3"
+        ng-model="instanceSelectorCtrl.command.scalingConfigurations.instanceType"
+        ng-options="instancetype for instancetype in instanceType"
+      ></select>
+      <select
+        ng-required="instanceSelectorCtrl.require"
+        ng-show="instanceSelectorCtrl.laybel==4"
+        class="form-control input-sm"
+        ng-model="instanceSelectorCtrl.command.scalingConfiguration.instanceType"
+        ng-options="instancetype for instancetype in instanceType"
+      ></select>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,152 @@
+<div class="details-panel" ng-class="{ disabled: serverGroup.isDisabled }">
+  <div class="header" ng-if="state.loading">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="horizontal center middle">
+      <loading-spinner size="'small'"></loading-spinner>
+    </div>
+  </div>
+
+  <div class="header" ng-if="!state.loading">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="header-text horizontal middle">
+      <span class="glyphicon glyphicon-th"></span>
+      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
+        {{serverGroup.name}}
+      </h3>
+    </div>
+    <div class="actions" ng-class="{ insights: serverGroup.insightActions.length > 0 }">
+      <div class="dropdown" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" uib-dropdown-toggle>
+          Server Group Actions <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+          <li><a href ng-click="ctrl.rollbackServerGroup()">Rollback</a></li>
+          <li><a href ng-show="!serverGroup.isDisabled" ng-click="ctrl.cloneServerGroup()">Clone</a></li>
+          <li ng-if="!serverGroup.isDisabled"><a href ng-click="ctrl.resizeServerGroup()">Resize</a></li>
+          <li><a href ng-show="!serverGroup.isDisabled" ng-click="ctrl.disableServerGroup()">Disable</a></li>
+          <li><a href ng-show="serverGroup.isDisabled" ng-click="ctrl.enableServerGroup()">Enable</a></li>
+          <li><a href ng-click="ctrl.destroyServerGroup()">Destroy</a></li>
+        </ul>
+      </div>
+      <div class="dropdown" ng-if="serverGroup.insightActions.length > 0" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" uib-dropdown-toggle>
+          Insight <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+          <li ng-repeat="action in serverGroup.insightActions">
+            <a target="_blank" href="{{action.url}}">{{action.label}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="content" ng-if="!state.loading">
+    <h4 class="text-center" ng-if="serverGroup.isDisabled">[SERVER GROUP IS DISABLED]</h4>
+
+    <server-group-running-tasks-details
+      server-group="serverGroup"
+      application="ctrl.application"
+    ></server-group-running-tasks-details>
+
+    <collapsible-section heading="Server Group Information" expanded="true">
+      <dl>
+        <dt>Created</dt>
+        <dd>{{serverGroup.creationTime | date:'yyyy-MM-dd HH:mm:ss'}}</dd>
+        <dt>Region</dt>
+        <dd>
+          <account-tag account="serverGroup.account" provider="serverGroup.type" pad="right"></account-tag>
+          {{serverGroup.region}}
+        </dd>
+        <dt>ScalingGroupName</dt>
+        <dd>{{serverGroup.result.scalingGroup.scalingGroupName}}</dd>
+        <dt>VpcId</dt>
+        <dd>{{serverGroup.result.scalingGroup.vpcId}}</dd>
+        <dt>Subnet</dt>
+        <dd>{{serverGroup.result.scalingGroup.vswitchId}}</dd>
+        <dt>DefaultCooldown</dt>
+        <dd>{{serverGroup.result.scalingGroup.defaultCooldown}}</dd>
+        <button ng-disabled="serverGroup.isDisabled" ng-click="ctrl.reScalingGroupServerGroup()">Edit ScalingGroup</button>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="Sizes" expanded="true">
+      <dl class="dl-horizontal dl-flex">
+        <dt>MaxSize</dt>
+        <dd>{{serverGroup.capacity.max}}</dd>
+        <dt>MinSize</dt>
+        <dd>{{serverGroup.capacity.min}}</dd>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="Insatnce">
+      <dl>
+        <dt>InstanceType</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.instanceType}}</dd>
+        <dt>InstanceGeneration</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.instanceGeneration}}</dd>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="{{firewallsLabel}}">
+      <dl>
+        <dt>RamRoleName</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.ramRoleName}}</dd>
+        <dt>ServerGroupConfigurationName</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.scalingConfigurationName}}</dd>
+        <dt>ServerGroupConfigurationId</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.scalingConfigurationId}}</dd>
+        <dt>SecurityGroupId</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.securityGroupId}}</dd>
+        <button ng-disabled="serverGroup.isDisabled" ng-click="ctrl.updateSecurityGroupServerGroup()">Update SecurityGroup</button>
+        <dt>ImageId</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.imageId}}</dd>
+        <dt>InternetChargeType</dt>
+        <dd>PayByTraffic</dd>
+        <dt>SpotStrategy</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.spotStrategy}}</dd>
+        <dt ng-show="serverGroup.result.scalingConfiguration.spotStrategy=='SpotWithPriceLimit'">SpotPriceLimit</dt>
+        <dd ng-show="serverGroup.result.scalingConfiguration.spotStrategy=='SpotWithPriceLimit'">{{serverGroup.result.scalingConfiguration.spotPriceLimit[0].priceLimit}}</dd>
+        <dt>InternetMaxBandwidthOut</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.internetMaxBandwidthOut}}</dd>
+        <dt>InternetMaxBandwidthIn</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.internetMaxBandwidthIn}}</dd>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="tag">
+      <dl ng-show="serverGroup.result.scalingConfiguration.tags!=[] || serverGroup.result.scalingConfiguration.tags!=null" ng-repeat = "item in serverGroup.result.scalingConfiguration.tags track by $index" class="dl-horizontal dl-flex">
+        <dt>{{item.key}}</dt>
+        <dd>{{item.value}}</dd>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="SystemDisk">
+      <dl class="dl-horizontal dl-flex">
+        <dt>Category</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.systemDiskCategory}}</dd>
+        <dt>Size</dt>
+        <dd>{{serverGroup.result.scalingConfiguration.systemDiskSize}}</dd>
+        <button ng-disabled="serverGroup.isDisabled" ng-click="ctrl.updateLaunchConfigServerGroup()">UpdateLaunchConfig</button>
+      </dl>
+    </collapsible-section>
+
+    <collapsible-section heading="dvancedSetting">
+      <dl>
+        <dt>ScalingPolicy</dt>
+        <dd>{{serverGroup.result.scalingGroup.scalingPolicy}}</dd>
+        <dt>MultiAZPolicy</dt>
+        <dd>{{serverGroup.result.scalingGroup.multiAZPolicy}}</dd>
+        <dt>RemovalPolicies</dt>
+        <dd ng-repeat="item in serverGroup.result.scalingGroup.removalPolicies">{{item}}</dd>
+      </dl>
+    </collapsible-section>
+  </div>
+</div>

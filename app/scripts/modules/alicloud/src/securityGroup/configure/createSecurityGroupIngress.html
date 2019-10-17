@@ -1,0 +1,113 @@
+<div class="modal-body">
+  <div class="row"></div>
+  <div class="form-group">
+    <div class="form-group">
+      <div class="col-md-12">
+        <table class="table table-condensed packed">
+          <thead>
+            <tr>
+              <th style="width: 21%">Protocol</th>
+              <th style="width: 32%">
+                Source IP/CIDR ranges<help-field key="alicloud.securityGroup.ingress.sourceIPCIDRRanges"></help-field>
+              </th>
+              <th style="width: 16%">
+                Start Port ranges<help-field key="alicloud.securityGroup.ingress.destPortRanges"></help-field>
+              </th>
+              <th style="width: 16%">
+                End Port ranges<help-field key="alicloud.securityGroup.ingress.destPortRanges"></help-field>
+              </th>
+              <th style width="15%">Actions<help-field key="alicloud.securityGroup.ingress.actions"></help-field></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="rule in securityGroup.securityGroupIngress track by $index">
+              <td>
+                <select class="form-control input-sm" ng-model="rule.ipProtocol">
+                  <option value="tcp">TCP</option>
+                  <option value="udp">UDP</option>
+                  <option value="icmp">ICMP</option>
+                  <option value="gry">GRY</option>
+                  <option value="*">ALL</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  class="form-control input-sm"
+                  type="text"
+                  value="*"
+                  pattern="^\*$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)[.]){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)(\/([1-9]|[1-2]\d|3[0-2]))?(,((25[0-5]|2[0-4]\d|[01]?\d\d?)[.]){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)(\/([1-9]|[1-2]\d|3[0-2]))?)*$"
+                  ng-model="rule.sourceCidrIp"
+                  ng-change="ctrl.sourceIPCIDRUpdated(securityGroup.securityGroupIngress, $index)"
+                  required
+                />
+              </td>
+              <td ng-if="rule.ipProtocol == 'tcp'||rule.ipProtocol == 'udp'">
+                <input
+                  class="form-control input-sm"
+                  type="number"
+                  min="1"
+                  max="65536"
+                  name="minSize"
+                  ng-model="rule.startPortRange"
+                  required
+                  ng-blur="ctrl.maxSizePattern(rule)"
+                >
+              </td>
+              <td ng-if="rule.ipProtocol == 'icmp'||rule.ipProtocol == 'gry'||rule.ipProtocol == '*'">
+                <input
+                  class="form-control input-sm"
+                  type="number"
+                  min="-1"
+                  max="-1"
+                  ng-model="rule.startPortRange"
+                  required
+                >
+              </td>
+              <td ng-if="rule.ipProtocol == 'tcp'||rule.ipProtocol == 'udp'">
+                <input
+                  class="form-control input-sm"
+                  type="number"
+                  min="1"
+                  max="65536"
+                  name="maxSize"
+                  ng-model="rule.endPortRange"
+                  required
+                  ng-blur="ctrl.minSizePattern(rule)"
+                >
+              </td>
+              <td ng-if="rule.ipProtocol == 'icmp'||rule.ipProtocol == 'gry'||rule.ipProtocol == '*'">
+                <input
+                  class="form-control input-sm"
+                  type="number"
+                  min="-1"
+                  max="-1"
+                  ng-model="rule.endPortRange"
+                  required
+                >
+              </td>
+              <td>
+                <a class="btn-link sm-label" ng-click="ctrl.moveUp(securityGroup.securityGroupIngress, $index)"
+                  ><span class="glyphicon glyphicon-arrow-up"></span>
+                </a>
+                <a class="btn-link sm-label" ng-click="ctrl.moveDown(securityGroup.securityGroupIngress, $index)"
+                  ><span class="glyphicon glyphicon-arrow-down"></span>
+                </a>
+                <a class="btn-link sm-label" ng-click="ctrl.removeRule(securityGroup.securityGroupIngress, $index)"
+                  ><span class="glyphicon glyphicon-trash"></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="form-group small" style="margin-top: 20px">
+      <div class="col-md-12">
+        <button class="add-new col-md-12" ng-click="ctrl.addRule(securityGroup.securityGroupIngress)">
+          <span class="glyphicon glyphicon-plus-sign"></span> Add new
+          <firewall-label label="Firewall"></firewall-label> Rule
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

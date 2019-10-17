@@ -53,6 +53,7 @@ window.spinnakerSettings = {
   defaultProviders: [
     'appengine',
     'aws',
+    'alicloud',
     'azure',
     'cloudfoundry',
     'dcos',
@@ -152,6 +153,12 @@ window.spinnakerSettings = {
       defaults: {
         account: 'azure-test',
         region: 'westus',
+      },
+    },
+    alicloud: {
+      defaults: {
+        account: 'ali-account',
+        region: 'ch-hangzhou',
       },
     },
     cloudfoundry: {

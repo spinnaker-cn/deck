@@ -79,6 +79,8 @@ function configure(env, webpackOpts) {
         '@spinnaker/google': path.join(__dirname, 'app', 'scripts', 'modules', 'google', 'src'),
         kubernetes: path.join(__dirname, 'app', 'scripts', 'modules', 'kubernetes', 'src'),
         '@spinnaker/kubernetes': path.join(__dirname, 'app', 'scripts', 'modules', 'kubernetes', 'src'),
+        alicloud: path.join(__dirname, 'app', 'scripts', 'modules', 'alicloud', 'src'),
+        '@spinnaker/alicloud': path.join(__dirname, 'app', 'scripts', 'modules', 'alicloud', 'src'),
         openstack: path.join(__dirname, 'app', 'scripts', 'modules', 'openstack', 'src'),
         '@spinnaker/openstack': path.join(__dirname, 'app', 'scripts', 'modules', 'openstack', 'src'),
         ecs: path.join(__dirname, 'app', 'scripts', 'modules', 'ecs', 'src'),

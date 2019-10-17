@@ -1,0 +1,138 @@
+<div class="details-panel">
+  <div ng-if="state.loading" class="header">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="horizontal center middle">
+      <loading-spinner size="'small'"></loading-spinner>
+    </div>
+  </div>
+
+  <div ng-if="!state.loading" class="header">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="header-text horizontal middle">
+      <i class="fa icon-sitemap"></i>
+      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
+        {{loadBalancer.name}}
+      </h3>
+    </div>
+    <div>
+      <div class="actions">
+        <div class="dropdown" uib-dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-sm btn-primary dropdown-toggle" uib-dropdown-toggle>
+            Load Balancer Actions <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li><a href ng-click="ctrl.editLoadBalancer()">Edit Load Balancer</a></li>
+            <li ng-if="!loadBalancer.serverGroups.length">
+              <a href ng-click="ctrl.deleteLoadBalancer()">Delete Load Balancer</a>
+            </li>
+            <li
+              ng-if="loadBalancer.serverGroups.length"
+              class="disabled"
+              tooltip="You must detach all server groups before you can delete this load balancer."
+            >
+              <a href ng-click="ctrl.deleteLoadBalancer()">Delete Load Balancer</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!state.loading" class="content">
+    <collapsible-section heading="Load Balancer Details" expanded="true">
+      <dl class="dl-horizontal dl-flex">
+        <dt>Created</dt>
+        <dd>{{loadBalancer.elb.results.createTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}</dd>
+        <dt>In</dt>
+        <dd>
+          <account-tag account="loadBalancer.account" pad="right" provider="loadBalancer.type"></account-tag>
+          {{loadBalancer.region}}
+        </dd>
+        <dt ng-if="loadBalancer.elb.results.attributes.addressType!='internet'">VPC</dt>
+        <dd ng-if="loadBalancer.elb.results.attributes.addressType!='internet'">{{loadBalancer.elb.results.vpcId}}</dd>
+        <dt ng-if="loadBalancer.elb.results.attributes.addressType!='internet'">Subnet</dt>
+        <dd ng-if="loadBalancer.elb.results.attributes.addressType!='internet'">
+          {{loadBalancer.elb.results.vswitchId}}
+        </dd>
+      </dl>
+      <dl>
+        <dt>Address</dt>
+        <dd>{{loadBalancer.elb.results.attributes.address}}</dd>
+        <dt>AddressIPVersion</dt>
+        <dd>{{loadBalancer.elb.results.attributes.addressIPVersion}}</dd>
+        <dt>AddressType</dt>
+        <dd>{{loadBalancer.elb.results.attributes.addressType}}</dd>
+        <dt>LoadBalancerSpec</dt>
+        <dd>{{loadBalancer.elb.results.attributes.loadBalancerSpec}}</dd>
+      </dl>
+      <dl class="horizontal-when-filters-collapsed">
+        <dt ng-if="loadBalancer.serverGroups">Server Groups</dt>
+        <dd ng-if="loadBalancer.serverGroups">
+          <ul class="collapse-margin-on-filter-collapse">
+            <li ng-repeat="serverGroup in loadBalancer.serverGroups | orderBy: ['isDisabled', '-name']">
+              <a
+                ui-sref="^.serverGroup({region: serverGroup.region,
+                                          accountId: serverGroup.account,
+                                          serverGroup: serverGroup.name,
+                                          provider: 'alicloud'})"
+              >
+                {{serverGroup.name}}
+              </a>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="Listeners">
+      <dl
+        ng-repeat="loadBalancingRule in loadBalancer.elb.results.attributes.listenerPortsAndProtocal"
+        style="border-bottom:1px solid #eee;padding-bottom:20px;"
+      >
+        <dt>Load Balancer &rarr; Instance</dt>
+        <dd>
+          {{loadBalancingRule.listenerProtocal}}:{{loadBalancingRule.listenerPort}} &rarr;
+          {{loadBalancingRule.backendServerPort}}
+        </dd>
+        <dt>Target</dt>
+        <dd>{{loadBalancingRule.listenerProtocal}}</dd>
+        <dt>Interval</dt>
+        <dd>{{loadBalancingRule.healthCheckInterval}} seconds</dd>
+        <dt>Unhealthy Threshold</dt>
+        <dd>{{loadBalancingRule.unhealthyThreshold}}</dd>
+        <dt>Timeout</dt>
+        <dd>{{loadBalancingRule.healthCheckTimeout}} seconds</dd>
+        <dt ng-show="loadBalancingRule.cookie== null || !loadBalancingRule.cookie">Cookie</dt>
+        <dd ng-show="loadBalancingRule.cookie== null || !loadBalancingRule.cookie">{{loadBalancingRule.cookie}}</dd>
+        <dt ng-show="loadBalancingRule.cookieTimeout== null || !loadBalancingRule.cookieTimeout">CookieTimeout</dt>
+        <dd ng-show="loadBalancingRule.cookieTimeout== null || !loadBalancingRule.cookieTimeout">
+          {{loadBalancingRule.cookieTimeout}} seconds
+        </dd>
+        <dt ng-show="loadBalancingRule.gzip== null || !loadBalancingRule.gzip">Gzip</dt>
+        <dd ng-show="loadBalancingRule.gzip== null || !loadBalancingRule.gzip">{{loadBalancingRule.gzip}}</dd>
+        <dt>HealthCheckHttpCode</dt>
+        <dd>{{loadBalancingRule.healthCheckHttpCode}}</dd>
+        <dt>IdleTimeout</dt>
+        <dd>{{loadBalancingRule.idleTimeout}} seconds</dd>
+        <dt ng-show="loadBalancingRule.stickySessionType== null || !loadBalancingRule.stickySessionType">
+          StickySessionType
+        </dt>
+        <dd ng-show="loadBalancingRule.stickySessionType== null || !loadBalancingRule.stickySessionType">
+          {{loadBalancingRule.stickySessionType}}
+        </dd>
+        <dt ng-show="loadBalancingRule.requestTimeout== null || !loadBalancingRule.requestTimeout">RequestTimeout</dt>
+        <dd ng-show="loadBalancingRule.requestTimeout== null || !loadBalancingRule.requestTimeout">
+          {{loadBalancingRule.requestTimeout}} seconds
+        </dd>
+        <dt>Scheduler</dt>
+        <dd>{{loadBalancingRule.scheduler}}</dd>
+      </dl>
+    </collapsible-section>
+  </div>
+</div>

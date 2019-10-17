@@ -1,0 +1,63 @@
+<div class="details-panel">
+  <div class="header">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div ng-if="state.loading" class="horizontal center middle">
+      <loading-spinner size="'small'"></loading-spinner>
+    </div>
+    <div class="header-text horizontal middle" ng-if="!state.loading">
+      <span class="glyphicon glyphicon-transfer"></span>
+      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
+        {{securityGroup.name || '(not found)'}}
+      </h3>
+    </div>
+    <div class="actions">
+      <div class="dropdown" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" ng-disabled="disabled" uib-dropdown-toggle>
+          <firewall-label label="Firewall"></firewall-label> Actions <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+          <li>
+            <a href ng-click="ctrl.deleteSecurityGroup()">Delete <firewall-label label="Firewall"></firewall-label></a>
+          </li>
+          <li><a href ng-click="ctrl.editInboundRules()">Edit Inbound Rules</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="content" ng-if="!state.loading">
+    <collapsible-section heading="{{firewallLabel}} Details" expanded="true">
+      <dl class="dl-horizontal dl-medium">
+        <dt>ID</dt>
+        <dd>{{securityGroup.id}}</dd>
+        <dt>Account</dt>
+        <dd><account-tag account="securityGroup.accountName"></account-tag></dd>
+        <dt>Region</dt>
+        <dd>{{securityGroup.region}}</dd>
+        <dt>Description:</dt>
+        <dd>{{securityGroup.application}}</dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section
+      heading="Security Rules ({{securityGroup.inboundRules.length || 0}})"
+      expanded="{{!!(securityGroup.inboundRules && securityGroup.inboundRules.length)}}"
+    >
+      <div ng-if="!securityGroup.inboundRules.length">None</div>
+      <dl
+        ng-class="insightCtrl.vm.filtersExpanded ? '' : 'dl-horizontal dl-medium'"
+        ng-repeat="rule in securityGroup.inboundRules | orderBy: 'rule.priority'"
+      >
+        <dt>sourceCidrIp</dt>
+        <dd>{{rule.permissions.sourceCidrIp}}</dd>
+        <dt>Protocol</dt>
+        <dd>{{rule.permissions.ipProtocol}}</dd>
+        <dt>portRange</dt>
+        <dd>{{rule.permissions.portRange}}</dd>
+        <hr />
+      </dl>
+    </collapsible-section>
+  </div>
+</div>

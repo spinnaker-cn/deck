@@ -1,0 +1,169 @@
+<div>
+  <div ng-if="!state.accountsLoaded" style="height: 200px" class="horizontal center middle">
+    <loading-spinner size="'small'"></loading-spinner>
+  </div>
+  <div class="modal-body" ng-if="state.accountsLoaded">
+
+    <div class="form-group">
+      <div
+        class="col-md-12 well"
+        ng-class="{'alert-danger': form.loadBalancerName.$error.validateUnique, 'alert-info': !form.loadBalancerName.$error.validateUnique}"
+      >
+        <strong>Your load balancer will be named:</strong>
+        <span>{{ctrl.getName()}}</span>
+        <!-- Angular does not seem to run length validation on hidden inputs, hence the text + display:none -->
+        <input
+          type="text"
+          style="display: none"
+          ng-maxlength="32"
+          class="form-control input-sm"
+          ng-model="loadBalancer.name"
+          validate-unique="existingLoadBalancerNames"
+          validate-ignore-case="true"
+          name="loadBalancerName"
+        />
+        <div ng-show="isNew">
+          <validation-error
+            ng-if="form.loadBalancerName.$error.validateUnique"
+            message="There is already a load balancer in {{loadBalancer.credentials}}:{{loadBalancer.region}} with that name."
+          ></validation-error>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">Account</div>
+      <div class="col-md-7">
+        <account-select-field
+          required
+          component="loadBalancer"
+          field="credentials"
+          accounts="accounts"
+          provider="'alicloud'"
+          on-change="ctrl.accountUpdated()"
+        ></account-select-field>
+      </div>
+    </div>
+
+    <region-select-field
+      required
+      label-columns="3"
+      component="loadBalancer"
+      field="region"
+      account="accounts"
+      provider="'alicloud'"
+      on-change="ctrl.regionUpdated()"
+      regions="regions"
+    ></region-select-field>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">Stack <help-field key="alicloud.loadBalancer.stack"></help-field></div>
+      <div class="col-md-3">
+        <input
+          type="text"
+          class="form-control input-sm"
+          ng-model="loadBalancer.stack"
+          name="stackName"
+          ng-change="ctrl.updateName()"
+          ng-pattern="/^[a-zA-Z0-9]*$/"
+        />
+      </div>
+      <div class="col-md-6 form-inline">
+        <label class="sm-label-right"> Detail <help-field key="alicloud.loadBalancer.detail"></help-field> </label>
+        <input
+          type="text"
+          class="form-control input-sm"
+          ng-model="loadBalancer.detail"
+          name="detailName"
+          ng-change="ctrl.updateName()"
+          ng-pattern="/^[a-zA-Z0-9-]*$/"
+        />
+      </div>
+      <div class="col-md-7 col-md-offset-3" ng-if="form.stackName.$error.pattern">
+        <validation-error message="Stack can only contain letters and numbers."></validation-error>
+      </div>
+      <div class="col-md-7 col-md-offset-3" ng-if="form.detailName.$error.pattern">
+        <validation-error message="Detail can only contain letters, numbers, and dashes."></validation-error>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">
+          AddressIPVersion <help-field key="alicloud.loadBalancer.AddressIPVersion"></help-field>
+      </div>
+      <div class="col-md-7">
+        <select
+          class="form-control input-sm"
+          ng-model="loadBalancer.addressIPVersion"
+          ng-options="AddressIPVersion for AddressIPVersion in ['ipv4','ipv6']"
+        ></select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">AddressType</div>
+      <div class="col-md-7">
+        <select
+          class="form-control input-sm"
+          ng-model="loadBalancer.addressType"
+          ng-change="ctrl.addresstypechange(loadBalancer.addressType)"
+          ng-options="AddressType for AddressType in ['internet','intranet']"
+        ></select>
+      </div>
+    </div>
+
+    <div class="form-group" ng-show="isNew">
+      <div class="col-md-3 sm-label-right">ZoneId</div>
+      <div class="col-md-7">
+        <ui-select
+          required
+          class="form-control input-sm"
+          ng-model="loadBalancer.masterZoneId"
+          no-select="changeZoneId(loadBalancer.masterZoneId)"
+        >
+          <ui-select-match placeholder="select a subnet" >{{$select.selected}}</ui-select-match>
+          <ui-select-choices repeat="item in zoneIds | highlight: $select.search"">
+          <span ng-bind-html="item"></span>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">Subnet</div>
+      <div class="col-md-7">
+        <ui-select
+          required
+          class="form-control input-sm"
+          ng-model="loadBalancer.vSwitchId"
+          on-select="ctrl.selectedSubnetChanged($item)"
+        >
+          <ui-select-match placeholder="Select from existing subnets"
+            >{{loadBalancer.vSwitchId}}／{{loadBalancer.vSwitchName}}</ui-select-match
+          >
+          <ui-select-choices repeat="selectSubnet in subnets">
+            <span ng-bind-html="selectSubnet.vswitchId+'/'+selectSubnet.vswitchName"></span>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">LoadBalancerSpec</div>
+      <div class="col-md-7">
+        <select
+          class="form-control input-sm"
+          ng-model="loadBalancer.loadBalancerSpec"
+          ng-options="LoadBalancerSpec for LoadBalancerSpec in ['slb.s1.small','slb.s2.small','slb.s2.medium','slb.s3.small','slb.s3.medium','slb.s3.large']"
+        ></select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-9 col-md-offset-3" ng-if="form.loadBalancerName.$error.maxlength">
+        <validation-error message="Load Balancer name can only be 32 characters."></validation-error>
+      </div>
+    </div>
+
+  </div>
+</div>
