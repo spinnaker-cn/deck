@@ -1,0 +1,113 @@
+<div class="details-panel">
+  <div class="header" ng-if="state.loading">
+    <div class="close-button" ng-if="!state.standalone">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <h4 class="text-center">
+      <loading-spinner size="'small'"></loading-spinner>
+    </h4>
+  </div>
+
+  <div class="header" ng-if="!state.loading">
+    <div class="close-button" ng-if="!state.standalone">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="header-text horizontal middle">
+      <span class="glyphicon glyphicon-hdd {{instance.healthState}}"></span>
+      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
+        {{instance ? instance.attributes.instanceId : instanceIdNotFound}}
+      </h3>
+    </div>
+  </div>
+  <div class="content" ng-if="!state.loading">
+    <collapsible-section heading="Instance Information" expanded="true">
+      <dl class="dl-horizontal dl-flex">
+        <dt>Launched</dt>
+        <dd ng-if="instance.attributes.creationTime">{{instance.attributes.creationTime | date:'yyyy-MM-dd HH:mm:ss'}}</dd>
+        <dd ng-if="!instance.attributes.creationTime">(Unknown)</dd>
+        <dt>In</dt>
+        <dd>
+          <account-tag account="instance.attributes.account" provider="instance.attributes.cloudProvider" pad="right"></account-tag>
+          {{instance.attributes.regionId || '(Unknown)'}}
+        </dd>
+        <dt>Type</dt>
+        <dd>{{instance.attributes.instanceType || '(Unknown)'}}</dd>
+        <dt ng-if="instance.attributes.serverGroup">Server Group</dt>
+        <dd ng-if="instance.attributes.serverGroup">
+          <a
+            ui-sref="^.serverGroup({region: instance.attributes.regionId,
+              accountId: instance.attributes.account,
+              serverGroup: instance.attributes.serverGroup,
+              provider: instance.attributes.cloudProvider})"
+            >{{instance.serverGroup}}</a
+          >
+        </dd>
+        <dt ng-if="instance.attributes.vpcAttributes.vpcId">VPC</dt>
+        <dd ng-if="instance.attributes.vpcAttributes.vpcId">
+          <vpc-tag vpc-id="instance.attributes.vpcAttributes.vpcId"></vpc-tag>
+        </dd>
+        <dt ng-if="instance.attributes.vpcAttributes.vswitchId">Subnet</dt>
+        <dd ng-if="instance.attributes.vpcAttributes.vswitchId">
+          {{instance.attributes.vpcAttributes.vswitchId}}
+        </dd>
+        <dt ng-if="instance.attributes.imageId">Image ID</dt>
+        <dd ng-if="instance.attributes.imageId">{{instance.attributes.imageId}}</dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="DNS">
+      <dl class="horizontal-when-filters-collapsed">
+        <dt ng-if="instance.attributes.vpcAttributes.privateIpAddress">Private IP Address</dt>
+        <dd ng-if="instance.attributes.vpcAttributes.privateIpAddress">
+          <a href="http://{{instance.attributes.vpcAttributes.privateIpAddress[0]}}" target="_blank"
+            >{{instance.attributes.vpcAttributes.privateIpAddress}}</a
+          >
+          <copy-to-clipboard
+            class="copy-to-clipboard copy-to-clipboard-sm"
+            text="instance.attributes.vpcAttributes.privateIpAddress"
+            tool-tip="'Copy to clipboard'"
+          >
+          </copy-to-clipboard>
+        </dd>
+        <dt ng-if="instance.attributes.eipAddress.ipAddress">Public IP Address</dt>
+        <dd ng-if="instance.attributes.eipAddress.ipAddress">
+          <a href="http://{{instance.attributes.eipAddress.ipAddress}}" target="_blank"
+            >{{instance.attributes.eipAddress.ipAddress}}</a
+          >
+          <copy-to-clipboard
+            class="copy-to-clipboard copy-to-clipboard-sm"
+            text="instance.attributes.eipAddress.ipAddress"
+            tool-tip="'Copy to clipboard'"
+          >
+          </copy-to-clipboard>
+        </dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="Tags">
+      <div ng-if=" !instance.attributes.tags.length">No tags associated with this server</div>
+      <dl ng-if="instance.attributes.tags.length">
+        <dt ng-repeat-start="tag in instance.attributes.tags | orderBy: 'key.toLowerCase()'">{{tag.tagKey}}</dt>
+        <dd ng-repeat-end>{{tag.tagValue}}</dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="SecurityGroupsLabel">
+      <ul>
+        <li ng-repeat="securityGroup in instance.attributes.securityGroupIds">
+          <a>
+            {{securityGroup}}
+          </a>
+        </li>
+      </ul>
+    </collapsible-section>
+  </div>
+  <div class="content" ng-if="!state.loading && !instance">
+    <div class="content-section">
+      <div class="content-body text-center">
+        <h3>Instance not found.</h3>
+      </div>
+    </div>
+  </div>
+</div>

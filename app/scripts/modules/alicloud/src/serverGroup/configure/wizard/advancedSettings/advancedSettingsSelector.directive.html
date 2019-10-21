@@ -1,0 +1,39 @@
+<div class="form-horizontal">
+  <div class="form-group">
+    <!--<div class="form-group">-->
+      <!--<div class="col-md-4 sm-label-right">Number of Instances</div>-->
+      <!--<div class="col-md-2">-->
+        <!--<input-->
+          <!--type="number"-->
+          <!--class="form-control input-sm"-->
+          <!--ng-model="adv.command.sku.capacity"-->
+          <!--min="0"-->
+          <!--max="100"-->
+          <!--required-->
+        <!--/>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="form-group">
+      <div class="col-md-3 sm-label-right">
+        <label class="sm-label-right"> MultiAZPolicy </label>
+      </div>
+      <div class="col-md-3">
+        <select
+          class="form-control input-sm"
+          ng-model="adv.command.scalingConfigurations.multiAZPolicy"
+          ng-options="MultiAZPolicy for MultiAZPolicy in ['PRIORITY','COST_OPTIMIZED','BALANCE']"
+        ></select>
+      </div>
+      <div class="col-md-6 form-inline">
+        <label class="sm-label-right">
+          ScalingPolicy
+        </label>
+        <select
+          class="form-control input-sm"
+          ng-model="adv.command.scalingConfigurations.scalingPolicy"
+          ng-options="ScalingPolicy for ScalingPolicy in ['recycle','release']"
+        ></select>
+      </div>
+    </div>
+
+</div>

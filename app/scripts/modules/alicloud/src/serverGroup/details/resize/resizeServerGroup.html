@@ -1,0 +1,108 @@
+<div modal-page class="confirmation-modal">
+  <task-monitor monitor="taskMonitor"></task-monitor>
+  <form role="form" ng-if="!ctrl.submitting">
+    <modal-close dismiss="$dismiss()"></modal-close>
+    <div class="modal-header">
+      <h3>Resize {{serverGroup.name}}</h3>
+    </div>
+    <div class="modal-body confirmation-modal">
+      <div class="form-group row">
+        <label class="col-md-3 sm-label-right"></label>
+        <label class="col-md-3 sm-label-left">Min</label>
+        <label class="col-md-4 sm-label-left">Max</label>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-3 sm-label-right">Current</label>
+          <div class="col-md-3">
+            <input
+              disabled
+              type="number"
+              required
+              class="form-control input-sm"
+              ng-model="serverGroup.result.scalingGroup.minSize"
+              name="search"
+              ng-focus=""
+              ng-change=""
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              disabled
+              type="number"
+              required
+              class="form-control input-sm"
+              ng-model="serverGroup.result.scalingGroup.maxSize"
+              name="search"
+              ng-focus=""
+              ng-change=""
+            />
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-3 sm-label-right">Resize to</label>
+          <div class="col-md-3">
+            <input
+              type="number"
+              required
+              class="form-control input-sm"
+              ng-model="newSize.minSize"
+              name="MinSize"
+              ng-focus=""
+              ng-change=""
+              ng-pattern="ctrl.minSizePattern"
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              required
+              class="form-control input-sm"
+              ng-model="newSize.maxSize"
+              name="MaxSize"
+              ng-focus=""
+              ng-change=""
+              ng-pattern="ctrl.maxSizePattern"
+            />
+          </div>
+      </div>
+      <div class="form-group row slide-in" ng-if="!ctrl.minSizePattern">
+        <div class="col-sm-9 col-sm-offset-2 error-message">
+          <span>MinSize do not large than MaxSize.</span>
+        </div>
+      </div>
+      <div class="form-group row slide-in" ng-if="!ctrl.maxSizePattern">
+        <div class="col-sm-9 col-sm-offset-2 error-message">
+          <span>MxaSize do not small than MinSize.</span>
+        </div>
+      </div>
+
+      <div class="row" ng-if="command.platformHealthOnlyShowOverride">
+        <div class="col-sm-10 col-sm-offset-1">
+          <platform-health-override
+            command="command"
+            platform-health-type="'AliCloud'"
+            show-help-details="true"
+            field-columns="12"
+          >
+          </platform-health-override>
+        </div>
+      </div>
+
+      <task-reason command="command"></task-reason>
+      <div class="form-group row">
+        <label class="col-md-3 sm-label-right">Changes</label>
+        <div class="col-md-7 sm-control-field">
+          <div>Min:<b>{{serverGroup.result.scalingGroup.minSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.minSize}}</b></div>
+          <div>Max:<b>{{serverGroup.result.scalingGroup.maxSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.maxSize}}</b></div>
+        </div>
+      </div>
+    </div>
+    <alicloud-footer
+      action="ctrl.resize()"
+      cancel="ctrl.cancel()"
+      is-valid="ctrl.isValid()"
+      account="serverGroup.account"
+      verification="verification"
+    ></alicloud-footer>
+  </form>
+</div>

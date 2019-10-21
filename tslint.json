@@ -11,6 +11,7 @@
       true,
       "amazon",
       "appengine",
+      "alicloud",
       "azure",
       "canary",
       "cloudfoundry",

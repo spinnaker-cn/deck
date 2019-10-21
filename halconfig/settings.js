@@ -70,6 +70,12 @@ var azure = {
     region: '{%azure.default.region%}',
   },
 };
+var alicloud = {
+  defaults: {
+    account: '{%alicloud.default.account%}',
+    region: '{%alicloud.default.region%}',
+  },
+};
 var cloudfoundry = {
   defaults: {
     account: '{%cloudfoundry.default.account%}',
@@ -142,6 +148,7 @@ window.spinnakerSettings = {
   defaultProviders: [
     'appengine',
     'aws',
+    'alicloud',
     'azure',
     'cloudfoundry',
     'dcos',
@@ -212,6 +219,7 @@ window.spinnakerSettings = {
   providers: {
     appengine: appengine,
     aws: aws,
+    alicloud: alicloud,
     azure: azure,
     cloudfoundry: cloudfoundry,
     dcos: dcos,

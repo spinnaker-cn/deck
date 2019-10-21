@@ -1,0 +1,40 @@
+<div modal-page class="confirmation-modal">
+  <task-monitor monitor="taskMonitor"></task-monitor>
+  <form role="form" ng-if="!ctrl.submitting">
+    <modal-close dismiss="$dismiss()"></modal-close>
+    <div class="modal-header">
+      <h3>UpdateSecurityGroupsFor {{serverGroup.name}}</h3>
+    </div>
+    <div class="modal-body confirmation-modal">
+      <div class="form-group row">
+        <div class="col-md-3 sm-label-right">
+          <label class="sm-label-right"> SecurityGroupId </label>
+        </div>
+        <div class="col-md-7" ng-if="serverGroupId != []">
+          <ui-select
+            required
+            ng-model="serverGroup.result.scalingConfiguration.securityGroupId"
+            class="form-control input-sm"
+            on-select="ctrl.securityGroupChanged($item)"
+          >
+            <ui-select-match placeholder="select a {{firewallLabel}}">{{serverGroup.result.scalingConfiguration.securityGroupId}}/{{serverGroup.result.scalingConfiguration.securityGroupName}}</ui-select-match>
+            <ui-select-choices
+              repeat="securityGroup in serverGroupId"
+            >
+              <span ng-bind-html="securityGroup.id+'/'+ securityGroup.name"></span>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+        <div ng-if="serverGroupId==[]">no SecurityGroupId toselect!</div>
+      </div>
+
+    </div>
+    <alicloud-footer
+      action="ctrl.submit()"
+      cancel="ctrl.cancel()"
+      is-valid="ctrl.isValid()"
+      account="serverGroup.account"
+      verification="verification"
+    ></alicloud-footer>
+  </form>
+</div>

@@ -1,0 +1,36 @@
+<div modal-page class="confirmation-modal">
+  <task-monitor monitor="taskMonitor"></task-monitor>
+  <form role="form" ng-if="!ctrl.submitting">
+    <modal-close dismiss="$dismiss()"></modal-close>
+    <div class="modal-header">
+      <h3>Edit {{serverGroup.name}}</h3>
+    </div>
+    <div class="modal-body confirmation-modal">
+      <div class="form-group row">
+        <div class="col-md-3 sm-label-right">
+          <label class="sm-label-right"> DefaultCooldown </label>
+        </div>
+        <div class="col-md-3">
+          <input
+            type="number"
+            min="0"
+            max="86400"
+            required
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingGroup.defaultCooldown"
+            name="DefaultCooldown"
+            ng-change=""
+          />
+        </div>
+      </div>
+
+    </div>
+    <alicloud-footer
+      action="ctrl.submit()"
+      cancel="ctrl.cancel()"
+      is-valid="ctrl.isValid()"
+      account="serverGroup.account"
+      verification="verification"
+    ></alicloud-footer>
+  </form>
+</div>

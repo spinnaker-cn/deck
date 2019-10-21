@@ -1,0 +1,281 @@
+<div class="container-fluid form-horizontal">
+  <div class="form-group">
+    <div class="col-md-12">
+      <div
+        ng-repeat="rule in loadBalancer.listeners"
+        class="listenerstable"
+        style="border:1px solid #eee;margin-bottom:20px;"
+      >
+        <table class="table table-condensed packed">
+          <thead>
+            <tr style="background:var(--color-cirrus)">
+              <th>ListenerType</th>
+              <th>External Port</th>
+              <th></th>
+              <th>Internal Port</th>
+              <th>Bandwidth</th>
+              <th>HealthCheck</th>
+              <th>
+                <a href class="sm-label" ng-click="ctrl.removeListener($index)">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <select
+                  class="form-control input-sm formtype listenerProtocal"
+                  ng-model="rule.listenerProtocal"
+                  ng-change="typeChange($index,rule.listenerProtocal,rule)"
+                  ng-options="protocol for protocol in ['HTTP','TCP','HTTPS']"
+                ></select>
+              </td>
+              <td>
+                <input
+                  class="form-control input-sm formlisenerport listenerPort"
+                  type="number"
+                  min="1"
+                  max="65535"
+                  ng-model="rule.listenerPort"
+                  required
+                />
+              </td>
+              <td class="small" style="padding-top: 10px;">&rarr;</td>
+              <td>
+                <input
+                  class="form-control input-sm formbackendport backendServerPort"
+                  type="number"
+                  min="1"
+                  max="65535"
+                  ng-model="rule.backendServerPort"
+                />
+              </td>
+              <td>
+                <div class="">
+                  <input
+                    class="form-control input-sm formBandwidth bandwidth"
+                    type="number"
+                    max="5120"
+                    required
+                    ng-model="rule.bandwidth"
+                  />
+                </div>
+              </td>
+              <td colspan="2">
+                <select
+                  class="form-control input-sm formhealthcheck"
+                  ng-model="rule.healthCheck"
+                  ng-disabled="rule.listenerProtocal=='TCP'"
+                  ng-required="rule.listenerProtocal!='TCP'"
+                  ng-change="healthChange(rule.healthCheck,$index,rule)"
+                  ng-options="healthcheck for healthcheck in ['on','off']"
+                ></select>
+              </td>
+            </tr>
+            <tr>
+              <th>HealthCheckURI</th>
+              <td colspan="3">
+                <input
+                  class="form-control input-sm formuri"
+                  ng-required = "rule.healthCheck=='on'"
+                  ng-disabled="rule.healthCheck=='off'||rule.listenerProtocal=='TCP'"
+                  type="text"
+                  ng-pattern="/\/(.*?\.html)?$/"
+                  ng-model="rule.healthCheckURI"
+                />
+              </td>
+              <th>Interval</th>
+              <td colspan="2">
+                <div class="">
+                  <input
+                    class="form-control input-sm forminterval"
+                    ng-disabled="rule.healthCheck=='off'"
+                    type="number"
+                    min="1"
+                    max="50"
+                    ng-model="rule.healthCheckInterval"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Unhealthy Threshold</th>
+              <td colspan="2">
+                <div class="">
+                  <input
+                    class="form-control input-sm formunthreshold"
+                    ng-disabled="rule.healthCheck=='off'"
+                    type="number"
+                    min="2"
+                    max="10"
+                    ng-model="rule.unhealthyThreshold"
+                  />
+                </div>
+              </td>
+              <td></td>
+              <th>HealthyThreshold</th>
+              <td colspan="2">
+                <div class="">
+                  <input
+                    class="form-control input-sm formthreshold"
+                    ng-disabled="rule.healthCheck=='off'"
+                    type="number"
+                    min="2"
+                    max="10"
+                    ng-model="rule.healthyThreshold"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>HealthCheckTimeout</th>
+              <td colspan="2">
+                <div class="">
+                  <input
+                    class="form-control input-sm formchecktime"
+                    ng-disabled="rule.healthCheck=='off'"
+                    type="number"
+                    min="1"
+                    max="300"
+                    ng-model="rule.healthCheckTimeout"
+                  />
+                </div>
+              </td>
+              <td></td>
+              <th>StickySession</th>
+              <td colspan="2">
+                <div class="">
+                  <select
+                    ng-required="rule.listenerProtocal!='TCP' && rule.healthCheck!='off'"
+                    ng-disabled="rule.listenerProtocal=='TCP' || rule.healthCheck=='off'"
+                    class="form-control input-sm formSticksession"
+                    ng-model="rule.stickySession"
+                    ng-change="stickySessionchange(rule.stickySession,rule)"
+                    ng-options="stickysession for stickysession in ['on','off']"
+                  ></select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Cookie</th>
+              <td colspan="3">
+                <div class="">
+                  <input
+                    class="form-control input-sm"
+                    type="text"
+                    ng-disabled="rule.listenerProtocal=='TCP' || rule.stickySession == 'off' || rule.healthCheck=='off' "
+                    ng-required="rule.stickySession=='on' && rule.stickySessionType=='server' && rule.listenerProtocal!='TCP'"
+                    ng-pattern="/^(?=[^,; ]+$)[^\$][\x00-\x7f]{1,200}/"
+                    ng-model="rule.cookie"
+                  />
+                </div>
+              </td>
+              <th>CookieTimeout</th>
+              <td>
+                <div class="">
+                  <input
+                    class="form-control input-sm"
+                    ng-disabled="rule.stickySession == 'off' || rule.healthCheck=='off' || rule.listenerProtocal=='TCP'"
+                    type="number"
+                    min="1"
+                    max="86400"
+                    ng-model="rule.cookieTimeout"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Gzip</th>
+              <td colspan="2">
+                <select
+                  class="form-control input-sm"
+                  ng-model="rule.gzip"
+                  ng-disabled="rule.healthCheck == 'off' || rule.listenerProtocal=='TCP'"
+                  ng-required="rule.stickySession=='on' && rule.stickySessionType=='insert' && rule.listenerProtocal!='TCP'"
+                  ng-change="Gzipchange()"
+                  ng-options="Gzip for Gzip in ['on','off']"
+                ></select>
+              </td>
+              <th>HealthCheckHttpCode</th>
+              <td colspan="3">
+                {{rule.healthCheckHttpCode}}
+                <select
+                  class="form-control input-sm"
+                  ng-disabled="rule.healthCheck=='off'"
+                  ng-model="rule.healthCheckHttpCode"
+                  ng-change="HealthCheckHttpCodechange(this,rule,$index)"
+                  ng-options="HealthCheckHttpCode for HealthCheckHttpCode in ['','http_2xx','http_3xx','http_4xx','http_5xx']"
+                ></select>
+              </td>
+            </tr>
+            <tr>
+              <th>IdleTimeout</th>
+              <td colspan="2">
+                <div>
+                  <input
+                    class="form-control input-sm"
+                    ng-disabled="rule.healthCheck=='off'|| rule.listenerProtocal=='TCP'"
+                    type="number"
+                    min="1"
+                    max="60"
+                    ng-model="rule.idleTimeout"
+                  />
+                </div>
+              </td>
+              <th>StickySessionType</th>
+              <td colspan="3">
+                <select
+                  class="form-control input-sm"
+                  ng-required="rule.stickySession=='on'"
+                  ng-disabled="rule.stickySession == 'off' || rule.listenerProtocal=='TCP' || rule.healthCheck=='off' "
+                  ng-model="rule.stickySessionType"
+                  ng-change="StickySessionTypechange()"
+                  ng-options="StickySessionType for StickySessionType in ['insert','server']"
+                ></select>
+              </td>
+            </tr>
+            <tr>
+              <th>RequestTimeout</th>
+              <td colspan="3">
+                <div class="">
+                  <input
+                    class="form-control input-sm"
+                    ng-disabled="rule.healthCheck=='off' || rule.listenerProtocal=='TCP'"
+                    type="number"
+                    min="1"
+                    max="180"
+                    ng-model="rule.requestTimeout"
+                  />
+                </div>
+              </td>
+              <th>Scheduler</th>
+              <td colspan="2">
+                <div>
+                  <select
+                    class="form-control input-sm"
+                    ng-model="rule.scheduler"
+                    ng-change="Schedulerchange()"
+                    ng-disabled="rule.healthCheck=='off'"
+                    ng-options="Scheduler for Scheduler in ['wrr','wlc','rr']"
+                  ></select>
+                </div>
+              </td>
+            </tr>
+            <tr class="formcertificate">
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="row">
+        <button class="add-new col-md-12" ng-click="ctrl.addListener()">
+          <span class="glyphicon glyphicon-plus-sign"></span> Add new port mapping
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
