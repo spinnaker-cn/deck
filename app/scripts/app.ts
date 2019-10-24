@@ -8,6 +8,7 @@ import { APPENGINE_MODULE } from '@spinnaker/appengine';
 import { GOOGLE_MODULE } from '@spinnaker/google';
 import { OPENSTACK_MODULE } from '@spinnaker/openstack';
 import { CANARY_MODULE } from './modules/canary/canary.module';
+import { ALICLOUD_MODULE } from '@spinnaker/alicloud';
 import { KUBERNETES_V1_MODULE, KUBERNETES_V2_MODULE } from '@spinnaker/kubernetes';
 import { ORACLE_MODULE } from '@spinnaker/oracle';
 import { KAYENTA_MODULE } from '@spinnaker/kayenta';
@@ -18,6 +19,7 @@ import { TENCENT_MODULE } from '@spinnaker/tencent';
 module('netflix.spinnaker', [
   CORE_MODULE,
   AMAZON_MODULE,
+  ALICLOUD_MODULE,
   GOOGLE_MODULE,
   ECS_MODULE,
   CLOUD_FOUNDRY_MODULE,
