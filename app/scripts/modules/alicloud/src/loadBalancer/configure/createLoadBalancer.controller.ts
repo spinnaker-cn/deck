@@ -41,11 +41,6 @@ angular
 
       $scope.isNew = isNew;
       $scope.typeChange = function(index: number, type: string, rule: any) {
-        angular
-          .element('.listenerstable')
-          .eq(index)
-          .find('.formcertificate')
-          .empty();
         if (type === 'TCP') {
           $scope.loadBalancer.listeners[index].healthCheck = 'on';
           rule.healthCheckURI = null;
@@ -59,18 +54,6 @@ angular
           rule.ServerCertificateId = null;
         } else {
           if (type === 'HTTPS') {
-            const html =
-              '<th>ServerCertificateId</th>' +
-              '<td colspan="6">' +
-              '<input class="form-control input-sm" type="text" ng-model="rule.ServerCertificateId"/>' +
-              ' </td>';
-            const template = angular.element(html);
-            const mobileDialogElement = $compile(template)($scope);
-            angular
-              .element('.listenerstable')
-              .eq(index)
-              .find('.formcertificate')
-              .append(mobileDialogElement);
           } else {
             rule.ServerCertificateId = null;
           }
@@ -369,7 +352,7 @@ angular
       };
 
       this.addListener = function() {
-        const un = { listenerProtocal: 'HTTP', healthCheck: 'on', bandwidth: -1, };
+        const un = { listenerProtocal: 'HTTP', healthCheck: 'on', bandwidth: -1 };
         $scope.loadBalancer.listeners.push(un);
       };
       $scope.$watch(
@@ -393,7 +376,8 @@ angular
             regionId: $scope.loadBalancer.region,
             subnetId: $scope.loadBalancer.vSwitchId,
           };
-          $scope.loadBalancer.name = application.name + '-' + $scope.loadBalancer.stack + '-' + $scope.loadBalancer.detail;
+          $scope.loadBalancer.name =
+            application.name + '-' + $scope.loadBalancer.stack + '-' + $scope.loadBalancer.detail;
           if ($scope.loadBalancer.selectedVnet) {
             $scope.loadBalancer.vnet = $scope.loadBalancer.selectedVnet.name;
             $scope.loadBalancer.vnetResourceGroup = $scope.loadBalancer.selectedVnet.resourceGroup;
