@@ -1,26 +1,26 @@
-<div class="row form-group" id = "enquiry_contact" ng-show="imageIdSelectorCtrl.command.viewState.mode  == 'create' ">
+<div class="row form-group" id="enquiry_contact" ng-show="imageIdSelectorCtrl.command.viewState.mode  == 'create' ">
   <label class="col-md-3 sm-label-right" ng-if="imageIdSelectorCtrl.laybel==3">ImageId</label>
   <label class="col-md-4 sm-label-right" ng-if="imageIdSelectorCtrl.laybel==4">ImageId</label>
   <div class="col-md-7" ng-show="!isimage">
     <input
       type="search"
       ng-show="imageIdSelectorCtrl.laybel==3"
-      ng-required = 'imageIdSelectorCtrl.require'
+      ng-required="imageIdSelectorCtrl.require"
       placeholder="select a imageId"
       class="form-control input-sm imageId"
       ng-model="imageName"
       name="search"
-      ng-focus="imageIdSelectorCtrl.setfocus()"
+      ng-click="imageIdSelectorCtrl.setfocus()"
     />
     <input
       type="search"
       ng-show="imageIdSelectorCtrl.laybel==4"
-      ng-required = 'imageIdSelectorCtrl.require'
+      ng-required="imageIdSelectorCtrl.require"
       placeholder="select a imageId"
       class="form-control input-sm imageId"
       ng-model="imageName"
       name="search"
-      ng-focus="imageIdSelectorCtrl.setfocus()"
+      ng-click="imageIdSelectorCtrl.setfocus()"
     />
   </div>
   <div class="col-md-7" style="height:30px;position:relative;z-index:3" ng-show="isimage">
@@ -36,13 +36,20 @@
     />
     <div ng-show="loading === false" class="form-control input-sm">searching...</div>
     <div ng-show="loading && ImageId == []" class="form-control input-sm">no imageId</div>
-    <div ng-show="loading && ImageId != []" style="max-height:120px;overflow-y:scroll;border:1px solid #1d8499;background:#fff;webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);">
-      <div ng-show="loading" style="line-height:30px;border-bottom:1px solid #eee;padding:0 10px;"
-           ng-repeat="images in ImageId track by $index"
-           ng-style="{'background': imageName == images.imageName ? '#1d8499':''}"
-           ng-click="imageIdSelectorCtrl.searchImage(images)"
-      >{{images.imageName}}</div>
+    <div
+      ng-show="loading && ImageId != []"
+      style="max-height:120px;overflow-y:scroll;border:1px solid #1d8499;background:#fff;webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);"
+    >
+      <div
+        ng-show="loading"
+        style="line-height:30px;border-bottom:1px solid #eee;padding:0 10px;"
+        ng-repeat="images in ImageId track by $index"
+        ng-style="{'background': imageName == images.imageName ? '#1d8499':''}"
+        ng-click="imageIdSelectorCtrl.searchImage(images)"
+      >
+        {{images.imageName}}
+      </div>
     </div>
   </div>
 </div>

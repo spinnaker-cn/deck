@@ -1,4 +1,6 @@
-<h5 class="text-center" ng-if="!command.viewState.loadBalancersConfigured || command.vSwitchId==null">Please select an account,region and subnet.</h5>
+<h5 class="text-center" ng-if="!command.viewState.loadBalancersConfigured || command.vSwitchId==null">
+  Please select an account,region and subnet.
+</h5>
 <div
   ng-if="command.viewState.loadBalancersConfigured && command.vSwitchId!=null"
   ng-controller="alicloudServerGroupLoadBalancersCtrl as loadBalancerCtrl"
@@ -7,14 +9,16 @@
     <div class="col-md-3 sm-label-right"><b>Load Balancers</b></div>
     <div class="col-md-7">
       <ui-select
-        ng-required = "!command.loadBalancers"
+        ng-required="!command.loadBalancers"
         ng-model="command.loadBalancerIds"
         class="form-control input-sm"
         ng-change="loadBalancerCtrl.loadBalancerChanged($select.selected)"
       >
-        <ui-select-match placeholder="select a loadBalancer">{{$select.selected}}</ui-select-match>
+        <ui-select-match placeholder="select a loadBalancer"
+        >{{command.loadBalancerIds}}/({{command.loadBalancerName}})</ui-select-match
+        >
         <ui-select-choices repeat="loadBalancer in command.loadBalancers | filter: $select.search">
-          <span ng-bind-html="loadBalancer | highlight: $select.search"></span>
+          <span ng-bind-html="loadBalancer.id+'/'+loadBalancer.name | highlight: $select.search"></span>
         </ui-select-choices>
       </ui-select>
     </div>

@@ -14,34 +14,45 @@ angular
       ModalWizard.markClean('load-balancers');
 
       function loadVnetSubnets() {
-        loadBalancerReader.getLoadBalancerDetails('alicloud', $scope.command.credentials, $scope.command.region, $scope.command.application)
+        loadBalancerReader
+          .getLoadBalancerDetails(
+            'alicloud',
+            $scope.command.credentials,
+            $scope.command.region,
+            $scope.command.application,
+          )
           .then(function(LBs: any) {
             $scope.command.loadBalancers = LBs.map((item: any) => {
               if ($scope.command.vpcId === item.results.vpcId) {
-                return item.results.loadBalancerId
+                const obj: any = {
+                  id: item.results.loadBalancerId,
+                  name: item.results.loadBalancerName,
+                };
+                return obj;
               }
-            })
+            });
             $scope.command.selectedVnetSubnets = LBs.map((item: any) => {
-              return item.results.vpcId
-            })
+              return item.results.vpcId;
+            });
           });
       }
 
-      if ($scope.command.credentials && $scope.command.region ) {
+      if ($scope.command.credentials && $scope.command.region) {
         $scope.command.viewState.networkSettingsConfigured = true;
         $scope.command.selectedVnetSubnets = [];
       }
 
-      $scope.$watch('command.vSwitchId', function (newVal: any) {
+      $scope.$watch('command.vSwitchId', function(newVal: any) {
         if (newVal) {
           loadVnetSubnets();
         }
-      })
+      });
 
       this.loadBalancerChanged = function(item: any) {
         $scope.command.viewState.networkSettingsConfigured = true;
-        $scope.command.loadBalancerIds = '[' + "'" + item + "'" + ']';
-        $scope.command.newloadBalancerIds = '[' + "'" + item + "'" + ']';
+        $scope.command.loadBalancerIds = '[' + "'" + item.id + "'" + ']';
+        $scope.command.newloadBalancerIds = '[' + "'" + item.id + "'" + ']';
+        $scope.command.loadBalancerName = item.name;
       };
     },
   ]);
