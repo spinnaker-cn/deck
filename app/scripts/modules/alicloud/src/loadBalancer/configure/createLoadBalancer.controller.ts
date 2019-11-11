@@ -23,7 +23,7 @@ angular
       alicloudLoadBalancerTransformer: any,
       application: any,
       loadBalancer: any,
-      $compile: any,
+      _$compile: any,
       isNew: any,
     ) {
       const ctrl = this;

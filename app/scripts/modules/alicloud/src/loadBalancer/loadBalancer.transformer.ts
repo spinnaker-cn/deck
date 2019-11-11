@@ -4,10 +4,8 @@ import { module, IQService } from 'angular';
 
 export class AlicloudLoadBalancerTransformer {
   public static $inject = ['$q'];
-  constructor(
-    private $q: IQService,
-  ) {}
-  public normalizeLoadBalancer( loadBalancer: any ): any {
+  constructor(private $q: IQService) {}
+  public normalizeLoadBalancer(loadBalancer: any): any {
     loadBalancer.serverGroups.forEach(function(serverGroup: any) {
       serverGroup.account = loadBalancer.account;
       serverGroup.region = loadBalancer.region;
@@ -19,6 +17,15 @@ export class AlicloudLoadBalancerTransformer {
       } else {
         serverGroup.detachedInstances = [];
       }
+      serverGroup.instances.forEach((item: any) => {
+        item.healthState = item.health.state
+            ? item.health.state === 'healthy'
+              ? 'Up'
+              : item.health.state === 'unknown'
+              ? 'Unknown'
+              : 'Down'
+            : 'Down';
+      });
     });
     loadBalancer.provider = loadBalancer.type;
     return this.$q.resolve(loadBalancer);
@@ -53,10 +60,11 @@ export class AlicloudLoadBalancerTransformer {
       toEdit.probes = elb.probes;
     }
     return toEdit;
-  };
+  }
 
   public constructNewLoadBalancerTemplate(application: any) {
-    const defaultCredentials: string = application.defaultCredentials.alicloud || AliCloudProviderSettings.defaults.account,
+    const defaultCredentials: string =
+        application.defaultCredentials.alicloud || AliCloudProviderSettings.defaults.account,
       defaultRegion: string = application.defaultRegions.alicloud || AliCloudProviderSettings.defaults.region;
     return {
       stack: '',
@@ -124,5 +132,4 @@ export class AlicloudLoadBalancerTransformer {
 }
 
 export const ALICLOUD_LOADBALANCER_BALANCER = 'spinnaker.alicloud.loadBalancer.transformer';
-module(ALICLOUD_LOADBALANCER_BALANCER, [])
-  .service('alicloudLoadBalancerTransformer', AlicloudLoadBalancerTransformer);
+module(ALICLOUD_LOADBALANCER_BALANCER, []).service('alicloudLoadBalancerTransformer', AlicloudLoadBalancerTransformer);
