@@ -1,26 +1,117 @@
 <h5 class="text-center" ng-if="!command.viewState.loadBalancersConfigured || command.vSwitchId==null">
   Please select an account,region and subnet.
+
 </h5>
+
 <div
   ng-if="command.viewState.loadBalancersConfigured && command.vSwitchId!=null"
   ng-controller="alicloudServerGroupLoadBalancersCtrl as loadBalancerCtrl"
+
 >
-  <div class="form-group">
-    <div class="col-md-3 sm-label-right"><b>Load Balancers</b></div>
-    <div class="col-md-7">
-      <ui-select
-        ng-required="!command.loadBalancers"
-        ng-model="command.loadBalancerIds"
-        class="form-control input-sm"
-        ng-change="loadBalancerCtrl.loadBalancerChanged($select.selected)"
-      >
-        <ui-select-match placeholder="select a loadBalancer"
-        >{{command.loadBalancerIds}}/({{command.loadBalancerName}})</ui-select-match
+  <div ng-repeat="res in command.vServerGroups track by $index" ng-init="$parentIndex = $index">
+    <div class="col-md-10" style="margin-top:20px">
+      <div class="col-md-3 sm-label-right"><b>Load Balancers</b></div>
+      <div class="col-md-8">
+
+        <ui-select
+          name="loadBalancerId"
+          ng-required="!res.loadBalancerId"
+          ng-model="res.loadBalancerId"
+          class="form-control input-sm"
+          ng-change="loadBalancerChanged($index, res.loadBalancerId,res)"
         >
-        <ui-select-choices repeat="loadBalancer in command.loadBalancers | filter: $select.search">
-          <span ng-bind-html="loadBalancer.id+'/'+loadBalancer.name | highlight: $select.search"></span>
-        </ui-select-choices>
-      </ui-select>
+          <ui-select-match placeholder="select a loadBalancer"
+          >{{res.loadBalancerId}}/({{res.loadBalancerName}})
+          </ui-select-match
+          >
+          <ui-select-choices repeat="loadBalancer in command.loadBalancers | filter: $select.search">
+            <span ng-bind-html="loadBalancer.id+'/'+loadBalancer.name | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+
+
+        <small class="error" style="color:red"
+               ng-show="res.ifExitloadBalancerIds">
+          loadBalancerId不能重复
+        </small>
+
+
+      </div>
+    </div>
+    <div class="col-md-12" ng-repeat="res1 in res.vServerGroupAttributes track by $index"
+         style="display:flex;align-items: center;">
+      <div class="col-md-10" style="margin-top:10px">
+        <div class="form-group">
+          <div class="col-md-3 sm-label-right"><b>vServerGroups</b></div>
+          <div class="col-md-8">
+            <ui-select
+              id="domain{{$index + 1}}"
+              ng-model="res1.vServerGroupId"
+              class="form-control input-sm"
+              ng-change="vServerGroupChanged(res1.vServerGroupId,res1)"
+            >
+              <ui-select-match placeholder="select a vServerGroup">
+                {{res1.vServerGroupId}}/({{res1.vServerGroupName}})
+              </ui-select-match>
+              <ui-select-choices repeat="vServerGroup in res.vServerGroups ">
+                <span ng-bind-html="vServerGroup.vserverGroupId+'/'+vServerGroup.vserverGroupName "></span>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+
+        <div class="col-md-5 form-inline">
+          <div class="col-md-3 sm-label-right">port</div>
+          <div class="col-md-7 sm-label-right">
+            <input
+
+              type="text"
+              class="form-control input-sm"
+              ng-model="res1.port"
+            />
+          </div>
+        </div>
+        <div class="col-md-5 form-inline">
+          <div class="col-md-4 sm-label-right">
+            weight
+          </div>
+          <div class="col-md-7 sm-label-right">
+            <input
+              type="text"
+              class="form-control input-sm"
+              ng-model="res1.weight"
+            />
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-1 form-inline sm-label-left">
+        <button className="btn btn-primary" ng-click="loadBalancerCtrl.addChild($parentIndex,$index)">+</button>
+      </div>
+      <div class="col-md-1 form-inline  sm-label-left">
+        <button className="btn btn-primary" ng-click="loadBalancerCtrl.deleteChild($parentIndex,$index)">-</button>
+      </div>
+
+
+    </div>
+
+    <div class="col-md-10 form-inline sm-label-right">
+      <a class="btn btn-link sm-label" ng-click="loadBalancerCtrl.delete($index)">
+        <span style="font-size:16px" class="glyphicon glyphicon-trash"></span>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="form-group" style="margin-top: 10px">
+    <div class="col-md-10 col-md-offset-1">
+      <button ng-disabled="command.vServerGroups.length>=5" class="add-new col-md-12" style="margin:5px 0 10px"
+              ng-click="loadBalancerCtrl.add()">
+        <span class="glyphicon glyphicon-plus-sign"></span> Add new
+        <firewall-label label="Firewall"></firewall-label>
+        loadBalance
+      </button>
+      <span ng-show="command.vServerGroups.length>=5" style="color:red;text-align:center">最多支持5个loadBalancerId</span>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 'use strict';
-import { module } from 'angular';
+import {module} from 'angular';
 
 const angular = require('angular');
 
@@ -26,7 +26,7 @@ export class AlicloudServerGroupTransformer {
         configuration.customScriptsSettings.fileUris = [fileUrisTemp];
       }
 
-      configuration.customScriptsSettings.fileUris.forEach(function(v: any, index: number) {
+      configuration.customScriptsSettings.fileUris.forEach(function (v: any, index: number) {
         configuration.customScriptsSettings.fileUris[index] = v.trim();
       });
     }
@@ -37,6 +37,36 @@ export class AlicloudServerGroupTransformer {
     if (Object.keys(command.scalingConfigurations.tags).length === 0 || !command.scalingConfigurations.tags) {
       tags = '';
     }
+    let loadBalancerIdsData: any = ''
+    if (command.vServerGroups) {
+      let arr: any = []
+
+      loadBalancerIdsData = `[`
+      command.vServerGroups.map((item: any, index: any) => {
+        if (arr.indexOf(item.loadBalancerId) === -1) {
+          let isPush=true
+          item.vServerGroupAttributes.map((res:any)=>{
+            if(res.vServerGroupId){
+              isPush=false
+            }
+          })
+          if(isPush){
+            arr.push(item.loadBalancerId)
+          }
+
+        }
+      })
+      arr.map((item: any, index: any) => {
+        if (index === arr.length - 1) {
+          loadBalancerIdsData += `'${item}']`
+        } else {
+          loadBalancerIdsData += `'${item}',`
+        }
+      })
+
+    }
+
+
     const configuration: any = {
       interestingHealthProviderNames: [
         'Alibabacloud'
@@ -68,7 +98,8 @@ export class AlicloudServerGroupTransformer {
       minSize: command.minSize,
       useSourceCapacity: command.useSourceCapacity,
       defaultCooldown: command.defaultCooldown,
-      loadBalancerIds: command.loadBalancerIds,
+      loadBalancerIds: loadBalancerIdsData,
+      vServerGroups: command.vServerGroups,
       scalingPolicy: 'recycle',
       scalingConfigurations: [{
         imageId: command.scalingConfigurations.imageId,

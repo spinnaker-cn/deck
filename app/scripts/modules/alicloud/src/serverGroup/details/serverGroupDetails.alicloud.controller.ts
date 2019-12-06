@@ -1,6 +1,6 @@
-'use strict';
+'use  strict';
 
-import * as _ from 'lodash';
+import *  as  _ from 'lodash';
 
 const angular = require('angular');
 import {
@@ -10,17 +10,17 @@ import {
   SERVER_GROUP_WRITER,
   FirewallLabels,
 } from '@spinnaker/core';
-import { ALICLOUD_SERVERGROUP_COMMSNDBUILDER } from '../configure/serverGroupCommandBuilder.service';
-import { ALICLOUD_DETAILS_RESIZE } from './resize/resizeServerGroup.controller';
-import { ALICLOUD_SERVERGROUP_DETAIL_SCLAINGGROUP  } from './reScalingGroup/reScalingGroupServerGroup.controller';
-import { ALICLOUD_SERVERGROUP_DETAIL_UPDATESECURITY } from './updateSecurityGroup/updateSecurityGroupServerGroup.controller';
-import { ALICLOUD_SERVERGROUP_DETAIL_UPDATELAUNCHCONFIG } from './updateLaunchConfig/updateLaunchConfigServerGroup.controller';
-import { ALICLOUD_DETAILS_ROLLBACK } from './rollback/rollbackServerGroup.controller';
-// import { AlicloudReScalingServerGroupModal } from './reScalingGroup/AlicloudReScalingServerGroupModal';
-// import { AlicloudResizeServerGroupModal } from './resize/AlicloudResizeServerGroupModal';
-// import { AlicloudRollbackServerGroupModal } from './rollback/AlicloudRollbackServerGroupModal';
-// import { AlicloudUpdateServerGroupModal } from './updateSecurityGroup/AlicloudUpdateServerGroupModal'
-// import { UpdateLaunchConfigServerGroup } from './updateLaunchConfig/UpdateLaunchConfigServerGroup'
+import {ALICLOUD_SERVERGROUP_COMMSNDBUILDER} from '../configure/serverGroupCommandBuilder.service';
+import {ALICLOUD_DETAILS_RESIZE} from './resize/resizeServerGroup.controller';
+import {ALICLOUD_SERVERGROUP_DETAIL_SCLAINGGROUP} from './reScalingGroup/reScalingGroupServerGroup.controller';
+import {ALICLOUD_SERVERGROUP_DETAIL_UPDATESECURITY} from './updateSecurityGroup/updateSecurityGroupServerGroup.controller';
+import {ALICLOUD_SERVERGROUP_DETAIL_UPDATELAUNCHCONFIG} from './updateLaunchConfig/updateLaunchConfigServerGroup.controller';
+import {ALICLOUD_DETAILS_ROLLBACK} from './rollback/rollbackServerGroup.controller';
+//  import  {  AlicloudReScalingServerGroupModal  }  from  './reScalingGroup/AlicloudReScalingServerGroupModal';
+//  import  {  AlicloudResizeServerGroupModal  }  from  './resize/AlicloudResizeServerGroupModal';
+//  import  {  AlicloudRollbackServerGroupModal  }  from  './rollback/AlicloudRollbackServerGroupModal';
+//  import  {  AlicloudUpdateServerGroupModal  }  from  './updateSecurityGroup/AlicloudUpdateServerGroupModal'
+//  import  {  UpdateLaunchConfigServerGroup  }  from  './updateLaunchConfig/UpdateLaunchConfigServerGroup'
 
 export const ALICLOUD_SERVERGROUP_DETAILSCTRL = 'spinnaker.alicloud.serverGroup.details.controller';
 angular
@@ -44,7 +44,7 @@ angular
     '$uibModal',
     'confirmationModalService',
     'serverGroupWriter',
-    function(
+    function (
       $scope: any,
       $state: any,
       _$templateCache: any,
@@ -63,7 +63,7 @@ angular
       this.application = app;
 
       function extractServerGroupSummary() {
-        let summary: any = _.find(app.serverGroups.data, function(toCheck: any) {
+        let summary: any = _.find(app.serverGroups.data, function (toCheck: any) {
           return (
             toCheck.name === serverGroup.name &&
             toCheck.account === serverGroup.accountId &&
@@ -71,9 +71,9 @@ angular
           );
         });
         if (!summary) {
-          app.loadBalancers.data.some(function(loadBalancer: any) {
+          app.loadBalancers.data.some(function (loadBalancer: any) {
             if (loadBalancer.account === serverGroup.accountId && loadBalancer.region === serverGroup.region) {
-              return loadBalancer.serverGroups.some(function(possibleServerGroup: any) {
+              return loadBalancer.serverGroups.some(function (possibleServerGroup: any) {
                 if (possibleServerGroup.name === serverGroup.name) {
                   summary = possibleServerGroup;
                   return true;
@@ -97,7 +97,7 @@ angular
           serverGroup.accountId,
           serverGroup.region,
           serverGroup.name,
-        ).then(function(details: any) {
+        ).then(function (details: any) {
           cancelLoader();
           angular.extend(details, summary);
           details.account = serverGroup.accountId;
@@ -106,7 +106,7 @@ angular
             $scope.image = details.image ? details.image : undefined;
             if (details.image && details.image.description) {
               const tags: any[] = details.image.description.split(',');
-              tags.forEach(function(tag) {
+              tags.forEach(function (tag) {
                 const keyVal: any[] = tag.split('=');
                 if (keyVal.length === 2 && keyVal[0] === 'ancestor_name') {
                   details.image.baseImage = keyVal[1];
@@ -115,7 +115,7 @@ angular
             }
             if (details.launchConfig && details.launchConfig.securityGroups) {
               $scope.securityGroups = _.chain(details.launchConfig.securityGroups)
-                .map(function(id: any) {
+                .map(function (id: any) {
                   return (
                     _.find(app.securityGroups.data, {
                       accountName: serverGroup.accountId,
@@ -153,7 +153,7 @@ angular
           application: app,
           title: 'Destroying ' + serverGroup.name,
         };
-        const submitMethod = function() {
+        const submitMethod = function () {
           return serverGroupWriter.destroyServerGroup(serverGroups, app);
         };
         const stateParams = {
@@ -167,7 +167,7 @@ angular
           account: serverGroup.account,
           taskMonitorConfig: taskMonitor,
           submitMethod: submitMethod,
-          onTaskComplete: function() {
+          onTaskComplete: function () {
             if ($state.includes('**.serverGroup', stateParams)) {
               $state.go('^');
             }
@@ -200,6 +200,15 @@ angular
       };
 
       this.cloneServerGroup = function cloneServerGroup() {
+        let loadBalancerIdsData = `[`
+        $scope.serverGroup.result.scalingGroup.loadBalancerIds.map((res: any, index: any) => {
+          if (index === $scope.serverGroup.result.scalingGroup.loadBalancerIds.length - 1) {
+            loadBalancerIdsData += `'${res}']`
+          } else {
+            loadBalancerIdsData += `'${res}',`
+          }
+
+        })
         $scope.serverGroup.scalingGroupName = $scope.serverGroup.serverGroupName;
         $scope.serverGroup.application = $scope.serverGroup.result.application;
         $scope.serverGroup.credentials = $scope.serverGroup.result.account;
@@ -211,7 +220,8 @@ angular
         $scope.serverGroup.defaultCooldown = $scope.serverGroup.result.scalingGroup.defaultCooldown;
         $scope.serverGroup.cloudProvider = $scope.serverGroup.result.provider;
         $scope.serverGroup.selectedProvider = $scope.serverGroup.result.provider;
-        $scope.serverGroup.loadBalancerIds = $scope.serverGroup.result.scalingGroup.loadBalancerIds;
+        $scope.serverGroup.loadBalancerIds = loadBalancerIdsData;
+        $scope.serverGroup.vServerGroups = $scope.serverGroup.result.scalingGroup.vserverGroups
         $scope.serverGroup.freeFormDetails = $scope.serverGroup.detail;
         $scope.serverGroup.viewState = {
           'mode': 'create'
@@ -294,7 +304,7 @@ angular
                 account: serverGroups.account,
                 serverGroups: [],
               });
-              return _.filter(cluster.serverGroups, { isDisabled: true, region: serverGroups.region });
+              return _.filter(cluster.serverGroups, {isDisabled: true, region: serverGroups.region});
             },
             application: () => app,
           },
@@ -353,7 +363,7 @@ angular
         });
       };
 
-      this.truncateCommitHash = function() {
+      this.truncateCommitHash = function () {
         if ($scope.serverGroup && $scope.serverGroup.buildInfo && $scope.serverGroup.buildInfo.commit) {
           return $scope.serverGroup.buildInfo.commit.substring(0, 8);
         }
