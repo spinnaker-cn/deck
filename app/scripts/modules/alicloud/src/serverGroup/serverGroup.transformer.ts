@@ -63,7 +63,9 @@ export class AlicloudServerGroupTransformer {
           loadBalancerIdsData += `'${item}',`
         }
       })
-
+      if(arr.length === 0){
+        loadBalancerIdsData  += `]`
+      }
     }
 
 

@@ -53,7 +53,7 @@ export class ServerGroupLoadBalancers
         errors.loadBalancers = 'Listener required.';
       } else if (
         values.forwardLoadBalancers.some(
-          flb => listenerLocationMap[flb.listenerId] && listenerLocationMap[flb.listenerId].isL7 && !flb.locationId,
+          (flb, index) => listenerLocationMap[index] && listenerLocationMap[index].isL7 && !flb.locationId,
         )
       ) {
         errors.loadBalancers = 'Domain and URL required.';
@@ -116,7 +116,7 @@ export class ServerGroupLoadBalancers
     });
   };
 
-  private listenerChanged(forwardLoadBalancer: ITencentForwardLoadBalancer, listenerId: string) {
+  private listenerChanged(forwardLoadBalancer: ITencentForwardLoadBalancer, listenerId: string, index: number) {
     forwardLoadBalancer.listenerId = listenerId;
     forwardLoadBalancer.locationId = '';
     this.updateLoadBalancers();
@@ -126,7 +126,7 @@ export class ServerGroupLoadBalancers
     this.setState({
       listenerLocationMap: {
         ...this.state.listenerLocationMap,
-        [listenerId]: {
+        [index]: {
           domain: '',
           url: '',
           urlList: [],
@@ -157,14 +157,14 @@ export class ServerGroupLoadBalancers
     return protocol === 'HTTP' || protocol === 'HTTPS';
   };
 
-  private domainChanged = (forwardLoadBalancer: ITencentForwardLoadBalancer, domain: string) => {
+  private domainChanged = (forwardLoadBalancer: ITencentForwardLoadBalancer, domain: string, index: number) => {
     const { listenerLocationMap } = this.state;
     forwardLoadBalancer.locationId = '';
-    const listenerLocation = listenerLocationMap[forwardLoadBalancer.listenerId];
+    const listenerLocation = listenerLocationMap[index];
     this.setState({
       listenerLocationMap: {
         ...listenerLocationMap,
-        [forwardLoadBalancer.listenerId]: {
+        [index]: {
           ...listenerLocation,
           domain: domain,
           url: '',
@@ -174,9 +174,9 @@ export class ServerGroupLoadBalancers
     });
   };
 
-  private urlChanged = (forwardLoadBalancer: ITencentForwardLoadBalancer, url: string) => {
+  private urlChanged = (forwardLoadBalancer: ITencentForwardLoadBalancer, url: string, index: number) => {
     const { listenerLocationMap } = this.state;
-    const listenerLocation = listenerLocationMap[forwardLoadBalancer.listenerId];
+    const listenerLocation = listenerLocationMap[index];
     const rule = listenerLocation.selectedListener.rules.find(
       r => r.domain === listenerLocation.domain && r.url === url,
     );
@@ -185,7 +185,7 @@ export class ServerGroupLoadBalancers
     this.setState({
       listenerLocationMap: {
         ...listenerLocationMap,
-        [forwardLoadBalancer.listenerId]: {
+        [index]: {
           ...listenerLocation,
           url,
         },
@@ -224,12 +224,12 @@ export class ServerGroupLoadBalancers
         listenerLocationMap: Object.assign(
           {},
           this.state.listenerLocationMap,
-          forwardLoadBalancers.reduce((p: ITencentLocationMap, c) => {
+          forwardLoadBalancers.reduce((p: ITencentLocationMap, c, index) => {
             const listenerList = lbListenerMap[c.loadBalancerId] || [];
             const selectedListener = listenerList.find(l => l.listenerId === c.listenerId);
             const rule = selectedListener && selectedListener.rules.find(r => r.locationId === c.locationId);
             if (selectedListener) {
-              p[c.listenerId] = {
+              p[index] = {
                 domain: (rule && rule.domain) || '',
                 url: (rule && rule.url) || '',
                 isL7: this.isL7(selectedListener.protocol),
@@ -295,7 +295,7 @@ export class ServerGroupLoadBalancers
                                 forwardLoadBalancer.loadBalancerId
                               ].map(lb => ({ label: `${lb.listenerName}(${lb.listenerId})`, value: lb.listenerId }))}
                               onChange={(option: Option<string>) =>
-                                this.listenerChanged(forwardLoadBalancer, option.value)
+                                this.listenerChanged(forwardLoadBalancer, option.value, index)
                               }
                             />
                           ) : (
@@ -306,26 +306,23 @@ export class ServerGroupLoadBalancers
                     </div>
                   </div>
                 ) : null}
-                {forwardLoadBalancer.listenerId &&
-                listenerLocationMap[forwardLoadBalancer.listenerId] &&
-                listenerLocationMap[forwardLoadBalancer.listenerId].isL7 ? (
+                {forwardLoadBalancer.listenerId && listenerLocationMap[index] && listenerLocationMap[index].isL7 ? (
                   <div className="wizard-pod-row">
                     <div className="wizard-pod-row-title">Domain</div>
                     <div className="wizard-pod-row-contents">
                       <div className="wizard-pod-row-data">
                         <div className="col-md-10">
-                          {listenerLocationMap[forwardLoadBalancer.listenerId].domainList &&
-                          listenerLocationMap[forwardLoadBalancer.listenerId].domainList.length ? (
+                          {listenerLocationMap[index].domainList && listenerLocationMap[index].domainList.length ? (
                             <Select
-                              value={listenerLocationMap[forwardLoadBalancer.listenerId].domain}
+                              value={listenerLocationMap[index].domain}
                               required={true}
                               clearable={false}
-                              options={listenerLocationMap[forwardLoadBalancer.listenerId].domainList.map(d => ({
+                              options={listenerLocationMap[index].domainList.map(d => ({
                                 label: d,
                                 value: d,
                               }))}
                               onChange={(option: Option<string>) =>
-                                this.domainChanged(forwardLoadBalancer, option.value)
+                                this.domainChanged(forwardLoadBalancer, option.value, index)
                               }
                             />
                           ) : (
@@ -337,25 +334,26 @@ export class ServerGroupLoadBalancers
                   </div>
                 ) : null}
                 {forwardLoadBalancer.listenerId &&
-                listenerLocationMap[forwardLoadBalancer.listenerId] &&
-                listenerLocationMap[forwardLoadBalancer.listenerId].isL7 &&
-                listenerLocationMap[forwardLoadBalancer.listenerId].domain ? (
+                listenerLocationMap[index] &&
+                listenerLocationMap[index].isL7 &&
+                listenerLocationMap[index].domain ? (
                   <div className="wizard-pod-row">
                     <div className="wizard-pod-row-title">URL</div>
                     <div className="wizard-pod-row-contents">
                       <div className="wizard-pod-row-data">
                         <div className="col-md-10">
-                          {listenerLocationMap[forwardLoadBalancer.listenerId].urlList &&
-                          listenerLocationMap[forwardLoadBalancer.listenerId].urlList.length ? (
+                          {listenerLocationMap[index].urlList && listenerLocationMap[index].urlList.length ? (
                             <Select
-                              value={listenerLocationMap[forwardLoadBalancer.listenerId].url}
+                              value={listenerLocationMap[index].url}
                               required={true}
                               clearable={false}
-                              options={listenerLocationMap[forwardLoadBalancer.listenerId].urlList.map(d => ({
+                              options={listenerLocationMap[index].urlList.map(d => ({
                                 label: d,
                                 value: d,
                               }))}
-                              onChange={(option: Option<string>) => this.urlChanged(forwardLoadBalancer, option.value)}
+                              onChange={(option: Option<string>) =>
+                                this.urlChanged(forwardLoadBalancer, option.value, index)
+                              }
                             />
                           ) : (
                             'No url found in the selected URL'
