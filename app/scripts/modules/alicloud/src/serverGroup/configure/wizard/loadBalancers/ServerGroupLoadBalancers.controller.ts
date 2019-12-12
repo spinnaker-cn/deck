@@ -24,7 +24,7 @@ angular
           )
           .then(function (LBs: any) {
             $scope.command.loadBalancers = LBs.map((item: any) => {
-              if ($scope.command.vpcId === item.results.vpcId) {
+              if ($scope.command.vpcId === item.results.vpcId || item.results.vpcId === '') {
                 const obj: any = {
                   id: item.results.loadBalancerId,
                   name: item.results.loadBalancerName,
