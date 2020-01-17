@@ -1,5 +1,5 @@
 'use strict';
-import {module} from 'angular';
+import { module } from 'angular';
 
 const angular = require('angular');
 
@@ -26,7 +26,7 @@ export class AlicloudServerGroupTransformer {
         configuration.customScriptsSettings.fileUris = [fileUrisTemp];
       }
 
-      configuration.customScriptsSettings.fileUris.forEach(function (v: any, index: number) {
+      configuration.customScriptsSettings.fileUris.forEach(function(v: any, index: number) {
         configuration.customScriptsSettings.fileUris[index] = v.trim();
       });
     }
@@ -37,51 +37,58 @@ export class AlicloudServerGroupTransformer {
     if (Object.keys(command.scalingConfigurations.tags).length === 0 || !command.scalingConfigurations.tags) {
       tags = '';
     }
-    let loadBalancerIdsData: any = ''
+    let loadBalancerIdsData: any = '';
     if (command.vServerGroups) {
-      let arr: any = []
-
-      loadBalancerIdsData = `[`
+      let arr: any = [];
+      loadBalancerIdsData = `[`;
       command.vServerGroups.map((item: any, index: any) => {
         if (arr.indexOf(item.loadBalancerId) === -1) {
-          let isPush=true
-          item.vServerGroupAttributes.map((res:any)=>{
-            if(res.vServerGroupId){
-              isPush=false
-            }
-          })
-          if(isPush){
-            arr.push(item.loadBalancerId)
+          let isPush = true;
+          if (item.vServerGroupAttributes) {
+            item.vServerGroupAttributes.map((res: any) => {
+              if (res.vServerGroupId) {
+                isPush = false;
+              }
+            });
           }
-
+          if (item.vserverGroupAttributes) {
+            item.vserverGroupAttributes.map((res: any) => {
+              if (res.vserverGroupId) {
+                isPush = false;
+              }
+            });
+          }
+          if (isPush) {
+            arr.push(item.loadBalancerId);
+          }
         }
-      })
+      });
       arr.map((item: any, index: any) => {
         if (index === arr.length - 1) {
-          loadBalancerIdsData += `'${item}']`
+          loadBalancerIdsData += `'${item}']`;
         } else {
-          loadBalancerIdsData += `'${item}',`
+          loadBalancerIdsData += `'${item}',`;
         }
-      })
-      if(arr.length === 0){
-        loadBalancerIdsData  += `]`
+      });
+      if (arr.length === 0) {
+        loadBalancerIdsData += `]`;
       }
     }
 
-
     const configuration: any = {
-      interestingHealthProviderNames: [
-        'Alibabacloud'
-      ],
+      interestingHealthProviderNames: ['Alibabacloud'],
       backingData: command.backingData,
       InstanceName: command.application,
       instancetype: command.instancetype,
       instancetypes: command.instancetypes,
       masterZoneId: command.masterZoneId,
+      zoneIds: command.zoneIds,
       securityGroupId: command.securityGroupId,
       vSwitchId: command.vSwitchId,
+      vSwitchIds: command.vSwitchIds,
       vSwitchName: command.vSwitchName,
       vpcId: command.vpcId,
+      vpcIds: command.vpcIds,
       name: command.application,
       scalingGroupName: command.application,
       cloudProvider: command.selectedProvider,
@@ -102,30 +109,36 @@ export class AlicloudServerGroupTransformer {
       defaultCooldown: command.defaultCooldown,
       loadBalancerIds: loadBalancerIdsData,
       vServerGroups: command.vServerGroups,
-      scalingPolicy: 'recycle',
-      scalingConfigurations: [{
-        imageId: command.scalingConfigurations.imageId,
-        instanceType: command.scalingConfigurations.instanceType,
-        instanceTypes: command.scalingConfigurations.instanceTypes,
-        internetMaxBandwidthOut: command.scalingConfigurations.internetMaxBandwidthOut,
-        ramRoleName: command.scalingConfigurations.ramRoleName || null,
-        spotStrategy: command.scalingConfigurations.spotStrategy,
-        multiAZPolicy: command.scalingConfigurations.multiAZPolicy,
-        spotPriceLimit: command.scalingConfigurations.spotPriceLimit,
-        systemDiskCategory: command.systemDiskCategory,
-        systemDiskSize: command.systemDiskSize,
-        tags: tags,
-        spotPriceLimits: command.scalingConfigurations.spotPriceLimits || [],
-        loadBalancerWeight: command.scalingConfigurations.loadBalancerWeight,
-        password: command.scalingConfigurations.password,
-        securityGroupId: command.scalingConfigurations.securityGroupId,
-        internetChargeType: 'PayByTraffic',
-        keyPairName: command.scalingConfigurations.keyPairName,
-        dataDisks: [{
-          category: command.systemDiskCategory,
-          size: command.systemDiskSize
-        }]
-      }],
+      //scalingPolicy: 'recycle',
+      multiAZPolicy: command.multiAZPolicy,
+      scalingPolicy: command.scalingPolicy,
+      scalingConfigurations: [
+        {
+          imageId: command.scalingConfigurations.imageId,
+          instanceType: command.scalingConfigurations.instanceType,
+          instanceTypes: command.scalingConfigurations.instanceTypes,
+          internetMaxBandwidthOut: command.scalingConfigurations.internetMaxBandwidthOut,
+          ramRoleName: command.scalingConfigurations.ramRoleName || null,
+          spotStrategy: command.scalingConfigurations.spotStrategy,
+          multiAZPolicy: command.scalingConfigurations.multiAZPolicy,
+          spotPriceLimit: command.scalingConfigurations.spotPriceLimit,
+          systemDiskCategory: command.systemDiskCategory,
+          systemDiskSize: command.systemDiskSize,
+          tags: tags,
+          spotPriceLimits: command.scalingConfigurations.spotPriceLimits || [],
+          loadBalancerWeight: command.scalingConfigurations.loadBalancerWeight,
+          password: command.scalingConfigurations.password,
+          securityGroupId: command.scalingConfigurations.securityGroupId,
+          internetChargeType: 'PayByTraffic',
+          keyPairName: command.scalingConfigurations.keyPairName,
+          dataDisks: [
+            {
+              category: command.systemDiskCategory,
+              size: command.systemDiskSize,
+            },
+          ],
+        },
+      ],
       account: command.credentials,
       selectedProvider: 'alicloud',
       credentials: command.credentials,

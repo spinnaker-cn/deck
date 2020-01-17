@@ -7,7 +7,7 @@ const angular = require('angular');
 
 export const ALICLOUD_SERVERGROUP_BASICSETTING = 'spinnaker.alicloud.serverGroup.configure.basicSettings';
 angular
-  .module(ALICLOUD_SERVERGROUP_BASICSETTING , [
+  .module(ALICLOUD_SERVERGROUP_BASICSETTING, [
     require('@uirouter/angularjs').default,
     require('angular-ui-bootstrap'),
     ALICLOUD_SERVERGROUP_IMAGE,
@@ -28,7 +28,7 @@ angular
       $scope.command.selectedProvider = 'alicloud';
       const rinput: any[] = [];
       $scope.command.backingData.filtered.regions.forEach((item: any) => {
-        rinput.push({ 'name': item })
+        rinput.push({ name: item });
       });
       $scope.command.backingData.filtered.regions = rinput;
 
@@ -41,28 +41,45 @@ angular
         }
       });
 
-      $scope.$watch('command.region', function( newVal: any, oldVal: any) {
+      $scope.$watch('command.region', function(newVal: any, oldVal: any) {
         if (newVal) {
-          API.one('subnets/alicloud').getList().then((vnets: any) => {
-            const subnets: any[] = [];
-            vnets.forEach((vnet: any) => {
-              if (vnet.account === $scope.command.credentials && vnet.region === $scope.command.region) {
-                subnets.push(vnet);
+          API.one('subnets/alicloud')
+            .getList()
+            .then((vnets: any) => {
+              const subnets: any[] = [];
+              vnets.forEach((vnet: any) => {
+                if (vnet.account === $scope.command.credentials && vnet.region === $scope.command.region) {
+                  subnets.push(vnet);
+                }
+              });
+              $scope.selectedSubnets = subnets;
+                        const subn: any[] = [];
+                        if($scope.command.zoneIds){
+                          $scope.selectedSubnets.forEach((vnet: any) => {
+                            $scope.command.zoneIds.forEach((id: any) => {
+                              if (vnet.zoneId === id) {
+                                subn.push(vnet)
+                              }
+                            });
+                          });
+                        }
+                      $scope.subns = subn;
+              console.info($scope.subns)
+              const zoneIds = subnets.map(item => {
+                return item.zoneId;
+              });
+              $scope.zoneIds = Array.from(new Set(zoneIds));
+              $scope.selected = { value: [] };
+              if ($scope.command.vSwitchIds) {
+                $scope.command.vSwitchIds.forEach((id: any) => {
+                  $scope.subns.forEach((vnet: any) => {
+                    if (id === vnet.vswitchId) {
+                      $scope.selected.value.push(vnet);
+                    }
+                  });
+                });
               }
             });
-            $scope.selectedSubnets = subnets;
-            const subn: any[] = [];
-            $scope.selectedSubnets.forEach((vnet: any) => {
-              if (vnet.zoneId === $scope.command.masterZoneId) {
-                subn.push(vnet)
-              }
-            });
-            $scope.subns = subn;
-            const zoneIds = subnets.map((item) => {
-              return item.zoneId
-            });
-            $scope.zoneIds = Array.from(new Set(zoneIds))
-          });
           if (oldVal !== newVal) {
             $scope.command.masterZoneId = null;
             $scope.command.vSwitchId = null;
@@ -72,28 +89,56 @@ angular
         }
       });
 
-      $scope.$watch('command.masterZoneId', function(newVal: any, oldVal: any ) {
-        if (newVal) {
-          const subn: any[] = [];
-          $scope.selectedSubnets.forEach((vnet: any) => {
-            if (vnet.zoneId === $scope.command.masterZoneId) {
+      /*      $scope.$watch('command.masterZoneId', function(newVal: any, oldVal: any ) {
+              console.info("22")
+              if (newVal) {
+                const subn: any[] = [];
+                $scope.selectedSubnets.forEach((vnet: any) => {
+                  if (vnet.zoneId === $scope.command.masterZoneId) {
+                    subn.push(vnet)
+                  }
+                });
+                $scope.subns = subn
+                if (oldVal !== newVal) {
+                  $scope.command.vSwitchId = null;
+
+                }
+              } else {
+                return
+              }
+            });*/
+      this.selectedZoneIdChanged = function(zoneid: any) {
+        $scope.command.zoneIds = zoneid;
+        const subn: any[] = [];
+        $scope.selectedSubnets.forEach((vnet: any) => {
+          $scope.command.zoneIds.forEach((id: any) => {
+            if (vnet.zoneId === id) {
               subn.push(vnet)
             }
           });
-          $scope.subns = subn
-          if (oldVal !== newVal) {
-            $scope.command.vSwitchId = null;
-
-          }
-        } else {
-          return
-        }
-      });
+        });
+        $scope.subns = subn
+       console.info($scope.command.zoneIds)
+      };
 
       this.selectedSubnetChanged = function(subnet: any) {
-        $scope.command.vSwitchId = subnet.vswitchId;
-        $scope.command.vSwitchName = subnet.vswitchName;
-        $scope.command.vpcId = subnet.vpcId;
+        $scope.command.vSwitchIds = [];
+        $scope.command.vpcIds = [];
+      //  $scope.command.zoneIds = [];
+        subnet.forEach(function(sub: { vswitchId: any; id: any; zoneId: any }) {
+          if (!$scope.command.vSwitchIds.includes(sub.vswitchId)) {
+            $scope.command.vSwitchIds.push(sub.vswitchId);
+          }
+          if (!$scope.command.vpcIds.includes(sub.id)) {
+            $scope.command.vpcIds.push(sub.id);
+          }
+         // if (!$scope.command.zoneIds.includes(sub.zoneId)) {
+         //   $scope.command.zoneIds.push(sub.zoneId);
+         // }
+        });
+        console.info($scope.command.vSwitchIds);
+        //$scope.command.vSwitchName = subnet.vswitchName;
+        //$scope.command.vpcId = subnet.vpcId;
       };
 
       this.useSourceCapacityUpdated = function() {
@@ -125,7 +170,9 @@ angular
 
       this.detailPattern = {
         test: function(detail: any) {
-          const pattern = $scope.command.viewState.templatingEnabled ? /^([a-zA-Z0-9-]*(\${.+})*)*$/ : /^[a-zA-Z0-9-]*$/;
+          const pattern = $scope.command.viewState.templatingEnabled
+            ? /^([a-zA-Z0-9-]*(\${.+})*)*$/
+            : /^[a-zA-Z0-9-]*$/;
           return pattern.test(detail);
         },
       };

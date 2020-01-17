@@ -3,23 +3,22 @@
   ng-if="command.viewState.securityGroupsConfigured"
   ng-controller="alicloudServerGroupSecurityGroupsCtrl as securityGroupCtrl"
 >
-
   <div class="form-group">
     <div class="col-md-3 sm-label-right">
       <label class="sm-label-right"> SecurityGroupId </label>
     </div>
-    <h5 ng-show="command.vSwitchId==null" class="text-center col-md-7">(please select a subnet)</h5>
-    <div class="col-md-7" ng-show="command.vSwitchId!=null">
+    <h5 ng-show="command.vSwitchIds==null" class="text-center col-md-7">(please select a subnet)</h5>
+    <div class="col-md-7" ng-show="command.vSwitchIds!=null">
       <ui-select
         required
         ng-model="command.scalingConfigurations.securityGroupId"
         class="form-control input-sm"
         on-select="securityGroupCtrl.securityGroupChanged($item)"
       >
-        <ui-select-match placeholder="select a {{firewallLabel}}">{{command.scalingConfigurations.securityGroupId}}/{{command.scalingConfigurations.securityGroupName}}</ui-select-match>
-        <ui-select-choices
-          repeat="securityGroup in serverGroupId"
+        <ui-select-match placeholder="select a {{firewallLabel}}"
+        >{{command.scalingConfigurations.securityGroupId}}/{{command.scalingConfigurations.securityGroupName}}</ui-select-match
         >
+        <ui-select-choices repeat="securityGroup in serverGroupId">
           <span ng-bind-html="securityGroup.id+'/'+ securityGroup.name"></span>
         </ui-select-choices>
       </ui-select>
@@ -36,19 +35,14 @@
         on-select=""
       >
         <ui-select-match placeholder="select a {{firewallLabel}}">{{$select.selected}}</ui-select-match>
-        <ui-select-choices
-          repeat="securityGroup in keyPairs"
-        >
+        <ui-select-choices repeat="securityGroup in keyPairs">
           <span ng-bind-html="securityGroup | highlight: $select.search"></span>
         </ui-select-choices>
       </ui-select>
     </div>
   </div>
 
-  <alicloud-security-image-id-directive
-    command="command"
-    laybel="3"
-    require="true">
+  <alicloud-security-image-id-directive command="command" laybel="3" require="true">
   </alicloud-security-image-id-directive>
 
   <div class="form-group">
@@ -80,11 +74,7 @@
     </div>
   </div>
 
-  <alicloud-security-instance-directive
-    command="command"
-    laybel="3"
-    require="true"
-    instanceType="instanceType">
+  <alicloud-security-instance-directive command="command" laybel="3" require="true" instanceType="instanceType">
   </alicloud-security-instance-directive>
 
   <div class="form-group">
@@ -141,17 +131,12 @@
       RamRoleName
     </div>
     <div class="col-md-7">
-      <input
-        class="form-control input-sm"
-        ng-model="command.scalingConfigurations.ramRoleName"
-        ng-change=""
-      />
+      <input class="form-control input-sm" ng-model="command.scalingConfigurations.ramRoleName" ng-change="" />
     </div>
   </div>
 
   <div class="form-group">
-    <div class="col-md-3 sm-label-right">MaxBandwidthOut
-    </div>
+    <div class="col-md-3 sm-label-right">MaxBandwidthOut</div>
     <div class="col-md-3">
       <input
         type="number"
@@ -193,5 +178,4 @@
       </p>
     </div>
   </div>
-
 </div>

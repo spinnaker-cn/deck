@@ -13,60 +13,60 @@
       </div>
       <div class="form-group row">
         <label class="col-md-3 sm-label-right">Current</label>
-          <div class="col-md-3">
-            <input
-              disabled
-              type="number"
-              required
-              class="form-control input-sm"
-              ng-model="serverGroup.result.scalingGroup.minSize"
-              name="search"
-              ng-focus=""
-              ng-change=""
-            />
-          </div>
-          <div class="col-md-4">
-            <input
-              disabled
-              type="number"
-              required
-              class="form-control input-sm"
-              ng-model="serverGroup.result.scalingGroup.maxSize"
-              name="search"
-              ng-focus=""
-              ng-change=""
-            />
-          </div>
+        <div class="col-md-3">
+          <input
+            disabled
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingGroup.minSize"
+            name="search"
+            ng-focus=""
+            ng-change=""
+          />
+        </div>
+        <div class="col-md-4">
+          <input
+            disabled
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingGroup.maxSize"
+            name="search"
+            ng-focus=""
+            ng-change=""
+          />
+        </div>
       </div>
       <div class="form-group row">
         <label class="col-md-3 sm-label-right">Resize to</label>
-          <div class="col-md-3">
-            <input
-              type="number"
-              required
-              class="form-control input-sm"
-              ng-model="newSize.minSize"
-              name="MinSize"
-              ng-focus=""
-              ng-change=""
-              ng-pattern="ctrl.minSizePattern"
-            />
-          </div>
-          <div class="col-md-4">
-            <input
-              type="number"
-              required
-              class="form-control input-sm"
-              ng-model="newSize.maxSize"
-              name="MaxSize"
-              ng-focus=""
-              ng-change=""
-              ng-pattern="ctrl.maxSizePattern"
-            />
-          </div>
+        <div class="col-md-3">
+          <input
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="newSize.minSize"
+            name="MinSize"
+            ng-focus=""
+            ng-change="ctrl.maxSizePatternChange()"
+            ng-pattern=""
+          />
+        </div>
+        <div class="col-md-4">
+          <input
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="newSize.maxSize"
+            name="MaxSize"
+            ng-focus=""
+            ng-change="ctrl.maxSizePatternChange()"
+            ng-pattern=""
+          />
+        </div>
       </div>
-      <div class="form-group row slide-in" ng-if="!ctrl.minSizePattern">
-        <div class="col-sm-9 col-sm-offset-2 error-message">
+      <div class="form-group row slide-in" ng-if="!ctrl.minSizePattern" >
+        <div style="text-align:center;" class="col-sm-9 col-sm-offset-2 error-message">
           <span>MinSize do not large than MaxSize.</span>
         </div>
       </div>

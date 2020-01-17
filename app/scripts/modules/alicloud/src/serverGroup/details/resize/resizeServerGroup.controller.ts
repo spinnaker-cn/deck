@@ -34,10 +34,15 @@ angular
       $scope.newSize.minSize = $scope.serverGroup.result.scalingGroup.minSize
       $scope.newSize.maxSize = $scope.serverGroup.result.scalingGroup.maxSize
 
+      this.maxSizePatternChange = function() {
+        console.info($scope.newSize.maxSize+"---"+$scope.newSize.minSize)
+        this.minSizePattern = $scope.newSize.maxSize >= $scope.newSize.minSize
+      }
 
       this.minSizePattern = {
         test: function(MinSize: number) {
           if (MinSize > $scope.newSize.maxSize) {
+            console.info(MinSize+"---"+$scope.newSize.maxSize)
             return false;
           } else {
             return true;
@@ -47,8 +52,10 @@ angular
       this.maxSizePattern = {
         test: function(MaxSize: number) {
           if (MaxSize < $scope.newSize.minSize) {
+            console.info("111")
             return false;
           } else {
+            console.info("123")
             return true;
           }
         },

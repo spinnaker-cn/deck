@@ -6,14 +6,19 @@
     <div class="col-md-4 sm-label-right" ng-show="instanceSelectorCtrl.laybel==4">
       InstanceType
     </div>
-    <h5 class="text-center col-md-7" ng-show="instanceSelectorCtrl.command.masterZoneId==null && instanceSelectorCtrl.laybel==3 ">(please select a zoneId)</h5>
-    <div class="col-md-7" ng-show="instanceSelectorCtrl.command.masterZoneId!=null || instanceSelectorCtrl.laybel==4">
+    <h5
+      class="text-center col-md-7"
+      ng-show="instanceSelectorCtrl.command.zoneIds==null && instanceSelectorCtrl.laybel==3 "
+    >
+      (please select a zoneId)
+    </h5>
+    <div class="col-md-7" ng-show="instanceSelectorCtrl.command.zoneIds!=null || instanceSelectorCtrl.laybel==4">
       <!--<button type="button" ng-show="instanceSelectorCtrl.laybel==3" style="margin-right:5px;margin-bottom:3px;" ng-click="instanceSelectorCtrl.deleteinstancetype($index)" class="btn btn-info myAlert" ng-repeat = "item in instanceSelectorCtrl.command.scalingConfigurations.instanceTypes">-->
-        <!--{{item}}-->
-        <!--<span>&times;</span>-->
-        <!--<button type="button" ng-show="instanceSelectorCtrl.laybel==4" style="margin-right:5px;margin-bottom:3px;" ng-click="instanceSelectorCtrl.deleteinstancetype($index)" class="btn btn-info myAlert" ng-repeat = "item in instanceSelectorCtrl.command.scalingConfiguration.instanceTypes">-->
-          <!--{{item}}-->
-          <!--<span>&times;</span>-->
+      <!--{{item}}-->
+      <!--<span>&times;</span>-->
+      <!--<button type="button" ng-show="instanceSelectorCtrl.laybel==4" style="margin-right:5px;margin-bottom:3px;" ng-click="instanceSelectorCtrl.deleteinstancetype($index)" class="btn btn-info myAlert" ng-repeat = "item in instanceSelectorCtrl.command.scalingConfiguration.instanceTypes">-->
+      <!--{{item}}-->
+      <!--<span>&times;</span>-->
       <!--</button>-->
       <!--ng-change = "instanceSelectorCtrl.getinsatncetype(instanceSelectorCtrl.command.scalingConfigurations.instanceType)"-->
       <select
@@ -33,4 +38,3 @@
     </div>
   </div>
 </div>
-

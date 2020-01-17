@@ -1,26 +1,23 @@
 'use  strict';
 
 const angular = require('angular');
-import *  as  _ from 'lodash';
-import {NameUtils} from '@spinnaker/core';
-import {ALICLOUD_SERVERGROUP_TRANSFORMER} from '../serverGroup.transformer';
-import {ALICLOUD_IMAGE} from '../../image/image.reader';
+import * as _ from 'lodash';
+import { NameUtils } from '@spinnaker/core';
+import { ALICLOUD_SERVERGROUP_TRANSFORMER } from '../serverGroup.transformer';
+import { ALICLOUD_IMAGE } from '../../image/image.reader';
 
 export const ALICLOUD_SERVERGROUP_COMMSNDBUILDER = 'spinnaker.alicloud.serverGroupCommandBuilder.service';
 angular
-  .module(ALICLOUD_SERVERGROUP_COMMSNDBUILDER, [
-    ALICLOUD_IMAGE,
-    ALICLOUD_SERVERGROUP_TRANSFORMER,
-  ])
+  .module(ALICLOUD_SERVERGROUP_COMMSNDBUILDER, [ALICLOUD_IMAGE, ALICLOUD_SERVERGROUP_TRANSFORMER])
   .factory('alicloudServerGroupCommandBuilder', [
     '$q',
     'alicloudImageReader',
     'alicloudServerGroupTransformer',
-    function ($q: any, alicloudImageReader: any, alicloudServerGroupTransformer: any) {
+    function($q: any, alicloudImageReader: any, alicloudServerGroupTransformer: any) {
       function buildNewServerGroupCommand(application: any, defaults: any) {
         defaults = defaults || {};
 
-        const imageLoader: any[] = alicloudImageReader.findImages({provider: 'alicloud'});
+        const imageLoader: any[] = alicloudImageReader.findImages({ provider: 'alicloud' });
 
         const defaultCredentials = defaults.account || application.defaultCredentials.alicloud;
         const defaultRegion = defaults.region || application.defaultRegions.alicloud;
@@ -29,9 +26,13 @@ angular
           .all({
             images: imageLoader,
           })
-          .then(function (backingData: any) {
-            const loadbalancers: any[] = [], tags: any = {}, selectedVnetSubnets: any[] = [], zones: any[] = [],
-              instanceType: any = null, priceLimit: any = null;
+          .then(function(backingData: any) {
+            const loadbalancers: any[] = [],
+              tags: any = {},
+              selectedVnetSubnets: any[] = [],
+              zones: any[] = [],
+              instanceType: any = null,
+              priceLimit: any = null;
             return {
               application: application.name,
               credentials: defaultCredentials,
@@ -49,13 +50,13 @@ angular
               systemDiskSize: 40,
               selectedProvider: 'alicloud',
               scalingConfigurations: {
-                'spotPriceLimits': [
+                spotPriceLimits: [
                   {
-                    'priceLimit': priceLimit,
-                    'instanceType': instanceType,
-                  }
+                    priceLimit: priceLimit,
+                    instanceType: instanceType,
+                  },
                 ],
-                'tags': tags,
+                tags: tags,
               },
               viewState: {
                 instanceProfile: 'custom',
@@ -76,19 +77,20 @@ angular
 
       function buildNewServerGroupCommands(application: any, defaults: any) {
         defaults = defaults || {};
-        const imageLoader: any[] = alicloudImageReader.findImages({provider: 'alicloud'});
+        const imageLoader: any[] = alicloudImageReader.findImages({ provider: 'alicloud' });
         const defaultCredentials = defaults.account || application.defaultCredentials.alicloud;
         const defaultRegion = defaults.region || application.defaultRegions.alicloud;
-
         return $q
           .all({
             images: imageLoader,
           })
-          .then(function (backingData: any) {
-            const loadbalancers: any[] = [], selectedVnetSubnets: any[] = [], zones: any[] = []
+          .then(function(backingData: any) {
+            const loadbalancers: any[] = [],
+              selectedVnetSubnets: any[] = [],
+              zones: any[] = [];
             defaults.scalingConfigurations[0].scalingPolicy = defaults.scalingPolicy;
             if (defaults.scalingConfigurations[0].tags === '') {
-              defaults.scalingConfigurations[0].tags = {}
+              defaults.scalingConfigurations[0].tags = {};
             } else {
               defaults.scalingConfigurations[0].tags = angular.fromJson(defaults.scalingConfigurations[0].tags);
             }
@@ -107,10 +109,15 @@ angular
               freeFormDetails: defaults.detail,
               defaultCooldown: defaults.defaultCooldown,
               vSwitchId: defaults.vSwitchId,
+              vSwitchIds: defaults.vSwitchIds,
               vSwitchName: defaults.vSwitchName,
               vpcId: defaults.vpcId,
+              vpcIds: defaults.vpcIds,
+              zoneIds: defaults.zoneIds,
               loadBalancerIds: defaults.loadBalancerIds,
               vServerGroups: defaults.vServerGroups,
+              multiAZPolicy: defaults.multiAZPolicy,
+              scalingPolicy: defaults.scalingPolicy,
               maxSize: defaults.maxSize,
               minSize: defaults.minSize,
               strategy: defaults.strategy || '',
@@ -139,18 +146,19 @@ angular
 
       // Only used to prepare view requiring template selecting
       function buildNewServerGroupCommandForPipeline() {
-        const instanceType: any = null, priceLimit: any = null;
+        const instanceType: any = null,
+          priceLimit: any = null;
         return $q.when({
           viewState: {
             // requiresTemplateSelection: true,
             mode: 'createPipline',
           },
           scalingConfigurations: {
-            'spotPriceLimits': [
+            spotPriceLimits: [
               {
-                'priceLimit': priceLimit,
-                'instanceType': instanceType,
-              }
+                priceLimit: priceLimit,
+                instanceType: instanceType,
+              },
             ],
           },
         });
@@ -160,8 +168,11 @@ angular
         mode = mode || 'clone';
         serverGroup.result.scalingConfiguration.multiAZPolicy = serverGroup.result.scalingGroup.multiAZPolicy;
         serverGroup.result.scalingConfiguration.scalingPolicy = serverGroup.result.scalingGroup.scalingPolicy;
-        if (serverGroup.result.scalingConfiguration.tags === '' || serverGroup.result.scalingConfiguration.tags === {}) {
-          serverGroup.result.scalingConfiguration.tags = {}
+        if (
+          serverGroup.result.scalingConfiguration.tags === '' ||
+          serverGroup.result.scalingConfiguration.tags === {}
+        ) {
+          serverGroup.result.scalingConfiguration.tags = {};
         } else {
           serverGroup.result.scalingConfiguration.tags = angular.fromJson(serverGroup.result.scalingConfiguration.tags);
         }
@@ -242,7 +253,7 @@ angular
         const asyncLoader: any = $q.all({
           command: buildNewServerGroupCommands(application, originalCluster),
         });
-        return asyncLoader.then(function (asyncData: any) {
+        return asyncLoader.then(function(asyncData: any) {
           const command = asyncData.command;
           return command;
         });
