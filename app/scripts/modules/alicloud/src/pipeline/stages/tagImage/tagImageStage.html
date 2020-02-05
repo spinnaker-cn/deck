@@ -1,0 +1,13 @@
+<div ng-controller="alicloudTagImageStageCtrl as tagImageStageCtrl" class="form-horizontal">
+  <stage-config-field label="Account">
+    <select ng-model="stage.credentials" ng-options="x for x in accounts">
+    </select>
+  </stage-config-field>
+  <stage-config-field label="Region">
+    <select ng-model="stage.region" ng-options="region for region in regions">
+    </select>
+  </stage-config-field>
+  <stage-config-field label="Tags">
+    <map-editor model="stage.tags" allow-empty="true"></map-editor>
+  </stage-config-field>
+</div>

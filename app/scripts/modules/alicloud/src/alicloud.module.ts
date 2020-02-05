@@ -44,6 +44,7 @@ module(ALICLOUD_MODULE, [
   require('./pipeline/stages/rollbackCluster/alicloudRollbackClusterStage').name,
   require('./pipeline/stages/resizeAsg/alicloudResizeAsgStage').name,
   require('./pipeline/stages/findImageFromTags/alicloudFindImageFromTagsStage').name,
+  require('./pipeline/stages/tagImage/alicloudTagImageStage').name,
   require('./pipeline/stages/disableCluster/alicloudDisableClusterStage').name,
   require('./pipeline/stages/rollbackCluster/alicloudRollbackClusterStage').name,
   require('./pipeline/stages/cloneServerGroup/alicloudCloneServerGroupStage').name,

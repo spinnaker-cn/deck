@@ -108,6 +108,9 @@ angular
                   }
                 });
                 $scope.instanceType = typeval;
+
+                $scope.selected = { value: [] };
+                $scope.selected.value = $scope.command.scalingConfigurations.instanceTypes;
               }
             });
           // if (oldVal !== newVal) {
@@ -137,5 +140,9 @@ angular
           }
         }
       });
+
+      this.instanceTypeChanged = function(instanceTypes: any) {
+        $scope.command.scalingConfigurations.instanceTypes = instanceTypes;
+      };
     },
   ]);

@@ -1,4 +1,4 @@
-<div>
+<div  ng-controller="alicloudServerGroupSecurityGroupsCtrl as serverGroupSecurityGroups">
   <div class="form-group row">
     <div class="col-md-3 sm-label-right" ng-show="instanceSelectorCtrl.laybel==3">
       InstanceType
@@ -20,7 +20,7 @@
       <!--{{item}}-->
       <!--<span>&times;</span>-->
       <!--</button>-->
-      <!--ng-change = "instanceSelectorCtrl.getinsatncetype(instanceSelectorCtrl.command.scalingConfigurations.instanceType)"-->
+      <!--ng-change = "instanceSelectorCtrl.getinsatncetype(instanceSelectorCtrl.command.scalingConfigurations.instanceType)"
       <select
         ng-required="instanceSelectorCtrl.require"
         class="form-control input-sm"
@@ -29,12 +29,31 @@
         ng-options="instancetype for instancetype in instanceType"
       ></select>
       <select
+        multiple
         ng-required="instanceSelectorCtrl.require"
         ng-show="instanceSelectorCtrl.laybel==4"
         class="form-control input-sm"
         ng-model="instanceSelectorCtrl.command.scalingConfiguration.instanceType"
         ng-options="instancetype for instancetype in instanceType"
-      ></select>
+      ></select>-->
+
+      <ui-select
+        required
+        class="form-control input-sm"
+        ng-model="selected.value"
+        multiple
+        ng-change="serverGroupSecurityGroups.instanceTypeChanged($select.selected)"
+      >
+        <ui-select-match>
+          <span ng-bind-html="$item"></span>
+        </ui-select-match>
+        <ui-select-choices repeat="instance in instanceType | highlight: $select.search">
+          <span ng-bind-html="instance"></span>
+        </ui-select-choices>
+      </ui-select
+        required>
+
+
     </div>
   </div>
 </div>
