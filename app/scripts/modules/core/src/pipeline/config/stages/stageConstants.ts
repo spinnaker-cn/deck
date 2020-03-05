@@ -14,7 +14,7 @@ export class StageConstants {
   }
 
   public static get IMAGE_PRODUCING_STAGES(): string[] {
-    return ['bake', 'findImageFromTags', 'findImage', 'findAmi'];
+    return ['bake', 'findImageFromTags', 'findImage', 'findAmi', 'findImageFromName'];
   }
 
   public static get MANIFEST_CRITERIA_OPTIONS(): IStageConstant[] {

@@ -91,6 +91,7 @@ module(PIPELINE_MODULE, [
   FIND_AMI_STAGE,
   FIND_ARTIFACT_FROM_EXECUTION_STAGE,
   require('./config/stages/findImageFromTags/findImageFromTagsStage.module').name,
+  require('./config/stages/findImageFromName/findImageFromNameStage.module').name,
   require('./config/stages/jenkins/jenkinsStage.module').name,
   MANUAL_JUDGMENT_STAGE_MODULE,
   require('./config/stages/tagImage/tagImageStage.module').name,

@@ -28,7 +28,7 @@ module.exports = angular
         validators: [
           {
             type: 'stageBeforeType',
-            stageTypes: ['bake', 'findAmi', 'findImage', 'findImageFromTags'],
+            stageTypes: ['bake', 'findAmi', 'findImage', 'findImageFromTags', 'findImageFromName'],
             message: 'You must have a Bake or Find Image stage before any deploy stage.',
             skipValidation: (pipeline, stage) =>
               (stage.clusters || []).every(

@@ -61,6 +61,7 @@ module(TENCENT_MODULE, [
   require('./pipeline/stages/enableAsg/awsEnableAsgStage').name,
   require('./pipeline/stages/findAmi/awsFindAmiStage').name,
   require('./pipeline/stages/findImageFromTags/awsFindImageFromTagsStage').name,
+  require('./pipeline/stages/findImageFromName/tencentFindImageFromNameStage').name,
   require('./pipeline/stages/modifyScalingProcess/modifyScalingProcessStage').name,
   require('./pipeline/stages/resizeAsg/awsResizeAsgStage').name,
   require('./pipeline/stages/scaleDownCluster/awsScaleDownClusterStage').name,
