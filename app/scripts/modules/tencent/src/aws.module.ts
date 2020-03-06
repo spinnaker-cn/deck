@@ -66,7 +66,6 @@ module(TENCENT_MODULE, [
   require('./pipeline/stages/resizeAsg/awsResizeAsgStage').name,
   require('./pipeline/stages/scaleDownCluster/awsScaleDownClusterStage').name,
   require('./pipeline/stages/shrinkCluster/awsShrinkClusterStage').name,
-  require('./pipeline/stages/tagImage/awsTagImageStage').name,
   SERVER_GROUP_DETAILS_MODULE,
   COMMON_MODULE,
   AWS_SERVER_GROUP_TRANSFORMER,
