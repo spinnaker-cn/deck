@@ -251,6 +251,9 @@ angular
           regions.forEach((item: any) => {
             Region.push({ name: item });
           });
+          if (Region[0]) {
+            $scope.loadBalancer.region = Region[0].name;
+          }
           $scope.regions = Region;
           ctrl.regions = $scope.regions;
           ctrl.regionUpdated();
