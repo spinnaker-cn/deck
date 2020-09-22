@@ -131,12 +131,6 @@ export class AlicloudServerGroupTransformer {
           securityGroupId: command.scalingConfigurations.securityGroupId,
           internetChargeType: 'PayByTraffic',
           keyPairName: command.scalingConfigurations.keyPairName,
-          dataDisks: [
-            {
-              category: command.systemDiskCategory,
-              size: command.systemDiskSize,
-            },
-          ],
         },
       ],
       account: command.credentials,
@@ -166,3 +160,4 @@ export class AlicloudServerGroupTransformer {
 
 export const ALICLOUD_SERVERGROUP_TRANSFORMER = 'spinnaker.alicloud.serverGroup.transformer';
 module(ALICLOUD_SERVERGROUP_TRANSFORMER, []).service('alicloudServerGroupTransformer', AlicloudServerGroupTransformer);
+
