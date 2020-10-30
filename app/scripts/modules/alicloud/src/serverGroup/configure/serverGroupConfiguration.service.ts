@@ -58,14 +58,14 @@ angular
         return $q
           .all({
             credentialsKeyedByAccount: AccountService.getCredentialsKeyedByAccount('alicloud'),
-         //   securityGroups: securityGroupReader.loadSecurityGroups(),
-         //   loadBalancers: loadBalancerReader.loadLoadBalancers(application.name),
+            //securityGroups: securityGroupReader.loadSecurityGroups(),
+            //loadBalancers: loadBalancerReader.loadLoadBalancers(application.name),
             dataDiskTypes: $q.when(angular.copy(dataDiskTypes)),
             dataDiskCachingTypes: $q.when(angular.copy(dataDiskCachingTypes)),
           })
           .then(function(backingData: any) {
             backingData.accounts = _.keys(backingData.credentialsKeyedByAccount);
-            //backingData.filtered = {};
+            backingData.filtered = {};
             command.backingData = backingData;
             attachEventHandlers(command);
           });

@@ -220,9 +220,9 @@ angular
           scalingConfigurations: serverGroup.result.scalingConfiguration,
           scalingGroup: serverGroup.result.scalingGroup,
           backingData: {
-           // filtered: {
-           //   regions: [],
-           // },
+            filtered: {
+              regions: [],
+            },
           },
           viewState: {
             allImageSelection: null,

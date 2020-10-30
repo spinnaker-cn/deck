@@ -98,8 +98,8 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       this.command = {
         backingData: {
-      //    securityGroups: this.allSecurityGroups,
-      //    filtered: {},
+          securityGroups: this.allSecurityGroups,
+          filtered: {},
         },
         viewState: {
           securityGroupsConfigured: false,
@@ -115,14 +115,14 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       const result = service.configureSecurityGroupOptions(this.command);
 
-    //  expect(this.command.backingData.filtered.securityGroups).toEqual(expected);
+      expect(this.command.backingData.filtered.securityGroups).toEqual(expected);
       expect(result).toEqual({ dirty: { securityGroups: true } });
       // expect(this.command.viewState.securityGroupConfigured).toBeTrue ;
     });
 
     it('finds matching firewalls, sets dirty flag for subsequent time', function() {
       this.command.region = 'eastus';
-     // this.command.backingData.filtered.securityGroups = this.allSecurityGroups.alicloudcred1['westus'];
+      this.command.backingData.filtered.securityGroups = this.allSecurityGroups.alicloudcred1['westus'];
       const expected = this.allSecurityGroups.alicloudcred1['eastus'];
 
       const result = service.configureSecurityGroupOptions(this.command);
@@ -155,14 +155,14 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
     it('returns no firewalls if none match', function() {
       this.command.region = 'eastasia';
-   //   this.command.backingData.filtered.securityGroups = this.allSecurityGroups.alicloudcred1['westus'];
+      this.command.backingData.filtered.securityGroups = this.allSecurityGroups.alicloudcred1['westus'];
 
       const result = service.configureSecurityGroupOptions(this.command);
 
-      // expect (this.command.selectedSecurityGroup).toBeUndefined;
+       //expect (this.command.selectedSecurityGroup).toBeUndefined;
       expect(result).toEqual({ dirty: { securityGroups: true } });
-     // expect(this.command.backingData.filtered.securityGroups).toEqual([]);
-      // expect(this.command.viewState.securityGroupConfigured).toBeFalse;
+      expect(this.command.backingData.filtered.securityGroups).toEqual([]);
+     //  expect(this.command.viewState.securityGroupConfigured).toBeFalse;
     });
 
     it('returns empty zone list if region is not supported', function() {
@@ -175,7 +175,7 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       service.configureZones(this.command);
 
-      //expect(this.command.backingData.filtered.zones).toEqual([]);
+      expect(this.command.backingData.filtered.zones).toEqual([]);
     });
 
     it('returns actual zone list if region is supported', function() {
@@ -203,7 +203,7 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       service.configureZones(this.command);
 
-    //  expect(this.command.backingData.filtered.zones).toBeUndefined();
+      expect(this.command.backingData.filtered.zones).toBeUndefined();
     });
   });
 });
