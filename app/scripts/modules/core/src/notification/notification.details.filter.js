@@ -40,7 +40,10 @@ module.exports = angular
     return function(input) {
       if (input.type === 'pubsub') {
         return 'Publisher Name: ' + input.publisherName;
-      } else if (input.type !== 'email') {
+      }else if(input.type=='youdu'){
+        return 'userName:'+input.userName;
+      }
+      else if (input.type !== 'email') {
         return input.address;
       } else {
         let addresses = [];

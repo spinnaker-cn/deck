@@ -1,0 +1,20 @@
+<ng-form name="youduForm">
+  <div class="form-group row">
+    <div class="col-sm-3 sm-label-right">User Name</div>
+    <div class="col-sm-9">
+      <input
+        type="text"
+        name="topic"
+        class="form-control input-sm "
+        ng-model="vm.notification.userName"
+        placeholder="enter a youdu user name"
+        ng-required="!vm.notification.userName.length"
+      />
+    </div>
+  </div>
+  <div class="form-group row slide-in" ng-if="youduForm.userName.$dirty && youduForm.userName.$invalid">
+    <div class="col-sm-9 col-sm-offset-3 error-message">
+      <span>Please enter a valid youdu user</span>
+    </div>
+  </div>
+</ng-form>

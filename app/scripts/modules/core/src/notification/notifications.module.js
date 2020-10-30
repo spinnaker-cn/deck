@@ -19,4 +19,5 @@ module.exports = angular.module('spinnaker.core.notifications', [
   require('./types/pubsub/pubsub.notification.type.module').name,
   require('./types/slack/slack.notification.type.module').name,
   require('./types/sms/sms.notification.type.module').name,
+  require('./types/youdu/youdu.notification.type.module').name,
 ]);
