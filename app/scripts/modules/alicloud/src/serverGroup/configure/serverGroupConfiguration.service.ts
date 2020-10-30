@@ -58,8 +58,8 @@ angular
         return $q
           .all({
             credentialsKeyedByAccount: AccountService.getCredentialsKeyedByAccount('alicloud'),
-            securityGroups: securityGroupReader.loadSecurityGroups(),
-            loadBalancers: loadBalancerReader.loadLoadBalancers(application.name),
+            //securityGroups: securityGroupReader.loadSecurityGroups(),
+            //loadBalancers: loadBalancerReader.loadLoadBalancers(application.name),
             dataDiskTypes: $q.when(angular.copy(dataDiskTypes)),
             dataDiskCachingTypes: $q.when(angular.copy(dataDiskCachingTypes)),
           })
@@ -157,7 +157,7 @@ angular
           result.dirty.securityGroups = true;
         }
         if (currentOptions !== newRegionalSecurityGroups) {
-          command.backingData.filtered.securityGroups = newRegionalSecurityGroups;
+        //  command.backingData.filtered.securityGroups = newRegionalSecurityGroups;
           result.dirty.securityGroups = true;
         }
 
@@ -173,7 +173,7 @@ angular
       function refreshSecurityGroups(command: any, skipCommandReconfiguration: any) {
         return cacheInitializer.refreshCache('securityGroups').then(function() {
           return securityGroupReader.getAllSecurityGroups().then(function(securityGroups: any) {
-            command.backingData.securityGroups = securityGroups;
+           // command.backingData.securityGroups = securityGroups;
             if (!skipCommandReconfiguration) {
               configureSecurityGroupOptions(command);
             }
@@ -204,13 +204,13 @@ angular
             result.dirty.loadBalancers = removed;
           }
         }
-        command.backingData.filtered.loadBalancers = newLoadBalancers;
+       // command.backingData.filtered.loadBalancers = newLoadBalancers;
         return result;
       }
 
       function refreshLoadBalancers(command: any, skipCommandReconfiguration: any) {
         return loadBalancerReader.listLoadBalancers('alicloud').then(function(loadBalancers: any) {
-          command.backingData.loadBalancers = loadBalancers;
+        //  command.backingData.loadBalancers = loadBalancers;
           if (!skipCommandReconfiguration) {
             configureLoadBalancerOptions(command);
           }
