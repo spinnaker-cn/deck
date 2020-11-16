@@ -117,7 +117,7 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       expect(this.command.backingData.filtered.securityGroups).toEqual(expected);
       expect(result).toEqual({ dirty: { securityGroups: true } });
-      // expect(this.command.viewState.securityGroupConfigured).toBeTrue ;
+       expect(this.command.viewState.securityGroupConfigured).toBeTrue ;
     });
 
     it('finds matching firewalls, sets dirty flag for subsequent time', function() {
@@ -127,9 +127,9 @@ describe('Service: alicloudServerGroupConfiguration', function() {
 
       const result = service.configureSecurityGroupOptions(this.command);
 
-    //  expect(this.command.backingData.filtered.securityGroups).toEqual(expected);
+      expect(this.command.backingData.filtered.securityGroups).toEqual(expected);
       expect(result).toEqual({ dirty: { securityGroups: true } });
-      // expect(this.command.viewState.securityGroupConfigured).toBeTrue;
+       expect(this.command.viewState.securityGroupConfigured).toBeTrue;
     });
 
     it('clears the selected securityGroup', function() {
