@@ -143,3 +143,4 @@ module(TENCENT_MODULE, [
 });
 
 DeploymentStrategyRegistry.registerProvider('tencent', ['custom', 'redblack', 'rollingpush', 'rollingredblack']);
+

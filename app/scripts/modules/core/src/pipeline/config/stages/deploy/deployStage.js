@@ -246,3 +246,4 @@ module.exports = angular
       }
     },
   ]);
+

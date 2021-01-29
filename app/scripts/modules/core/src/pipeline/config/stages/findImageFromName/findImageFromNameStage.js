@@ -12,3 +12,4 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.findImageFromName
     description: 'Finds an image to deploy from existing name',
   });
 });
+

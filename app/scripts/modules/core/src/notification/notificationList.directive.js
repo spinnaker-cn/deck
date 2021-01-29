@@ -47,7 +47,7 @@ module.exports = angular
         AppNotificationsService.getNotificationsForApplication($scope.application).then(function(notifications) {
           $scope.notifications = _.filter(
             _.flatten(
-              _.map(['email', 'bearychat', 'googlechat', 'sms', 'hipchat', 'slack', 'githubstatus', 'pubsub','youdu'], function(
+              _.map(['email', 'youdu', 'bearychat', 'googlechat', 'sms', 'hipchat', 'slack', 'githubstatus', 'pubsub'], function(
                 type,
               ) {
                 if (notifications[type]) {

@@ -5,20 +5,20 @@ var artifactsEnabled = process.env.ARTIFACTS_ENABLED === 'true';
 var artifactsRewriteEnabled = process.env.ARTIFACTS_REWRITE_ENABLED === 'true';
 var atlasWebComponentsUrl = process.env.ATLAS_WEB_COMPONENTS_URL;
 var authEndpoint = process.env.AUTH_ENDPOINT || apiHost + '/auth/user';
-var authEnabled = false;
+var authEnabled = true;
 var bakeryDetailUrl =
   process.env.BAKERY_DETAIL_URL || apiHost + '/bakery/logs/{{context.region}}/{{context.status.resourceId}}';
 var canaryAccount = process.env.CANARY_ACCOUNT || '';
-var canaryEnabled = process.env.CANARY_ENABLED === 'true';
-var canaryFeatureDisabled = process.env.CANARY_FEATURE_ENABLED !== 'true';
-var canaryStagesEnabled = process.env.CANARY_STAGES_ENABLED === 'true';
+var canaryEnabled = 'true' === 'true';
+var canaryFeatureDisabled = 'true' !== 'true';
+var canaryStagesEnabled = 'true' === 'true';
 var chaosEnabled = process.env.CHAOS_ENABLED === 'true' ? true : false;
 var debugEnabled = process.env.DEBUG_ENABLED === 'false' ? false : true;
 var defaultMetricStore = process.env.METRIC_STORE || 'atlas';
 var displayTimestampsInUserLocalTime = process.env.DISPLAY_TIMESTAMPS_IN_USER_LOCAL_TIME === 'true';
 var dryRunEnabled = process.env.DRYRUN_ENABLED === 'true' ? true : false;
 var entityTagsEnabled = process.env.ENTITY_TAGS_ENABLED === 'true' ? true : false;
-var fiatEnabled = process.env.FIAT_ENABLED === 'true' ? true : false;
+var fiatEnabled = 'true' === 'true';
 var gremlinEnabled = process.env.GREMLIN_ENABLED === 'false' ? false : true;
 var iapRefresherEnabled = process.env.IAP_REFRESHER_ENABLED === 'true' ? true : false;
 var infrastructureEnabled = process.env.INFRA_ENABLED === 'true' ? true : false;
@@ -53,8 +53,8 @@ window.spinnakerSettings = {
   defaultProviders: [
     'appengine',
     'aws',
-    'alicloud',
     'azure',
+    'alicloud',
     'cloudfoundry',
     'dcos',
     'ecs',

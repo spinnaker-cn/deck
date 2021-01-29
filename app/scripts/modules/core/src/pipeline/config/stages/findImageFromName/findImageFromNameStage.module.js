@@ -9,3 +9,4 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.findImageFromName
   STAGE_COMMON_MODULE,
   require('./findImageFromNameStage').name,
 ]);
+

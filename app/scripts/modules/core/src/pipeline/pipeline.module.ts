@@ -110,3 +110,4 @@ module(PIPELINE_MODULE, [
   require('./config/preconditions/types/expression/expression.precondition.type.module').name,
   PIPELINE_TEMPLATES_V2_STATES_CONFIG,
 ]);
+

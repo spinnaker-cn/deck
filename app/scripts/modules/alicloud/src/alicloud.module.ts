@@ -116,3 +116,4 @@ module(ALICLOUD_MODULE, [
 });
 
 DeploymentStrategyRegistry.registerProvider('alicloud', ['custom', 'redblack', 'rollingpush', 'rollingredblack']);
+
