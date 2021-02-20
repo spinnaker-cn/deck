@@ -1,0 +1,313 @@
+import * as React from 'react';
+import Select, { Option } from 'react-select';
+import { FormikProps } from 'formik';
+
+import { IWizardPageComponent, TetheredSelect, ReactInjector } from '@spinnaker/core';
+
+import {
+  IHuaweiCloudServerGroupCommand,
+  IHuaweiCloudForwardLoadBalancer,
+  IHuaweiCloudLbPoolMap,
+} from '../../serverGroupConfiguration.service';
+
+import { IALBPool } from 'huaweicloud/domain';
+
+export interface IServerGroupLoadBalancersProps {
+  formik: FormikProps<IHuaweiCloudServerGroupCommand>;
+}
+interface IHuaweiCloudLocation {
+  selectedPool: IALBPool;
+}
+interface IHuaweiCloudLocationMap {
+  [key: string]: IHuaweiCloudLocation;
+}
+export interface IServerGroupLoadBalancersState {
+  refreshing: boolean;
+  poolLocationMap: IHuaweiCloudLocationMap;
+}
+
+export class ServerGroupLoadBalancers
+  extends React.Component<IServerGroupLoadBalancersProps, IServerGroupLoadBalancersState>
+  implements IWizardPageComponent<IHuaweiCloudServerGroupCommand> {
+  public state = {
+    refreshing: false,
+    poolLocationMap: {} as IHuaweiCloudLocationMap,
+  };
+
+  public validate(values: IHuaweiCloudServerGroupCommand) {
+    const errors = {} as any;
+    const { poolLocationMap } = this.state;
+    if (values.viewState.dirty.loadBalancers) {
+      errors.loadBalancers = 'You must confirm the removed load balancers.';
+    }
+
+    if (values.forwardLoadBalancers.length) {
+      if (values.forwardLoadBalancers.some(flb => !flb.loadBalancerId)) {
+        errors.loadBalancers = 'Load Balancer required.';
+      } else if (values.forwardLoadBalancers.some(flb => !flb.poolId)) {
+        errors.loadBalancers = 'Pool required.';
+      } else if (
+        values.forwardLoadBalancers.some(
+          flb => !flb.targetAttributes || !flb.targetAttributes[0].port || !flb.targetAttributes[0].weight,
+        )
+      ) {
+        errors.loadBalancers = 'Port and Weight required.';
+      }
+    }
+    return errors;
+  }
+
+  private updateLoadBalancers(): void {
+    this.props.formik.setFieldValue('forwardLoadBalancers', this.props.formik.values.forwardLoadBalancers);
+  }
+
+  private addLoadBalancer(): void {
+    const { values } = this.props.formik;
+    values.forwardLoadBalancers.push({
+      loadBalancerId: '',
+      listenerId: '',
+      poolId: '',
+      targetAttributes: [
+        {
+          port: null,
+          weight: null,
+        },
+      ],
+    });
+    this.updateLoadBalancers();
+  }
+
+  private removeLoadBalancer(index: number): void {
+    this.props.formik.values.forwardLoadBalancers.splice(index, 1);
+    this.updateLoadBalancers();
+  }
+
+  private loadBalancerChanged(forwardLoadBalancer: IHuaweiCloudForwardLoadBalancer, loadBalancerId: string): void {
+    forwardLoadBalancer.loadBalancerId = loadBalancerId;
+    forwardLoadBalancer.listenerId = '';
+    forwardLoadBalancer.poolId = '';
+    this.updateLoadBalancers();
+    this.refreshLBPoolMap();
+  }
+
+  private refreshLBPoolMap = () => {
+    const { values } = this.props.formik;
+    this.setState({ refreshing: true });
+    const configurationService: any = ReactInjector.providerServiceDelegate.getDelegate(
+      values.cloudProvider || values.selectedProvider,
+      'serverGroup.configurationService',
+    );
+    configurationService.refreshLoadBalancerPoolMap(values).then(() => {
+      this.setState({
+        refreshing: false,
+        poolLocationMap: {},
+      });
+    });
+  };
+
+  private poolChanged(forwardLoadBalancer: IHuaweiCloudForwardLoadBalancer, poolId: string, index: number) {
+    forwardLoadBalancer.poolId = poolId;
+    this.updateLoadBalancers();
+    const selectedPool = this.props.formik.values.backingData.filtered.lbPoolMap[
+      forwardLoadBalancer.loadBalancerId
+    ].find(item => item.poolId === poolId);
+    this.setState({
+      poolLocationMap: {
+        ...this.state.poolLocationMap,
+        [index]: {
+          selectedPool,
+        },
+      },
+    });
+  }
+
+  private portChanged(forwardLoadBalancer: IHuaweiCloudForwardLoadBalancer, port: number) {
+    forwardLoadBalancer.targetAttributes[0].port = port;
+    this.updateLoadBalancers();
+  }
+
+  private weightChanged(forwardLoadBalancer: IHuaweiCloudForwardLoadBalancer, weight: number) {
+    forwardLoadBalancer.targetAttributes[0].weight = weight;
+    this.updateLoadBalancers();
+  }
+
+  public clearWarnings(key: 'loadBalancers'): void {
+    this.props.formik.values.viewState.dirty[key] = null;
+    this.props.formik.validateForm();
+  }
+
+  public componentWillReceiveProps(nextProps: IServerGroupLoadBalancersProps): void {
+    const {
+      values: {
+        forwardLoadBalancers = [],
+        backingData: {
+          filtered: { lbPoolMap = {} as IHuaweiCloudLbPoolMap },
+        },
+        viewState: { submitButtonLabel },
+      },
+    } = nextProps.formik;
+    if (
+      submitButtonLabel !== 'Create' &&
+      forwardLoadBalancers.length &&
+      forwardLoadBalancers.every(flb => !!flb.loadBalancerId)
+    ) {
+      this.setState({
+        poolLocationMap: Object.assign(
+          {},
+          this.state.poolLocationMap,
+          forwardLoadBalancers.reduce((p: IHuaweiCloudLocationMap, c, index) => {
+            const poolList = lbPoolMap[c.loadBalancerId] || [];
+            const selectedPool = poolList.find(l => l.poolId === c.poolId);
+            if (selectedPool) {
+              p[index] = {
+                selectedPool: selectedPool,
+              };
+            }
+            return p;
+          }, {}),
+        ),
+      });
+    }
+  }
+
+  public render() {
+    const { values } = this.props.formik;
+    const { refreshing, poolLocationMap } = this.state;
+    const loadBalancerOptions: Option[] = (values.backingData.filtered.lbList || []).map(lb => ({
+      label: `${lb.name}(${lb.id})`,
+      value: lb.id,
+    }));
+    const lbPoolOptions: Option[] = (values.backingData.filtered.lbPoolMap || []).map(lb => ({
+      label: `${lb.poolName}(${lb.poolId})`,
+      value: lb.poolId,
+    }));
+    alert(JSON.stringify(values.backingData.filtered.lbPoolMap));
+    return (
+      <div className="container-fluid form-horizontal">
+        <div className="form-group">
+          {values.forwardLoadBalancers.map((forwardLoadBalancer, index) => (
+            <div key={index} className="col-md-12">
+              <div className="wizard-pod">
+                <div className="wizard-pod-row header">
+                  <div className="wizard-pod-row-title">Load Balancer</div>
+                  <div className="wizard-pod-row-contents spread">
+                    <div className="col-md-10">
+                      <Select
+                        value={forwardLoadBalancer.loadBalancerId}
+                        required={true}
+                        clearable={false}
+                        options={loadBalancerOptions}
+                        onChange={(option: Option<string>) =>
+                          this.loadBalancerChanged(forwardLoadBalancer, option.value)
+                        }
+                      />
+                    </div>
+                    <div className="col-md-2">
+                      <a className="sm-label clickable" onClick={() => this.removeLoadBalancer(index)}>
+                        <span className="glyphicon glyphicon-trash" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                {forwardLoadBalancer.loadBalancerId ? (
+                  <div className="wizard-pod-row">
+                    <div className="wizard-pod-row-title">Pool</div>
+                    <div className="wizard-pod-row-contents">
+                      <div className="wizard-pod-row-data">
+                        <div className="col-md-10">
+                          {values.backingData.filtered.lbPoolMap[forwardLoadBalancer.loadBalancerId] ? (
+                            <Select
+                              isLoading={refreshing}
+                              value={forwardLoadBalancer.poolId}
+                              required={true}
+                              clearable={false}
+                              options={values.backingData.filtered.lbPoolMap[
+                                forwardLoadBalancer.loadBalancerId
+                              ].map(lb => ({ label: `${lb.poolName}(${lb.poolId})`, value: lb.poolId }))}
+                              onChange={(option: Option<string>) =>
+                                this.poolChanged(forwardLoadBalancer, option.value, index)
+                              }
+                            />
+                          ) : (
+                            'No pools found in the selected LoadBalancer'
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="wizard-pod-row">
+                  <div className="wizard-pod-row-title">Target Attributes</div>
+                  <div className="wizard-pod-row-contents">
+                    <div className="wizard-pod-row-data">
+                      <div className="col-md-5">
+                        <label>Port </label>
+                        <input
+                          type="number"
+                          className="form-control input-sm inline-number"
+                          style={{ width: '80%' }}
+                          value={
+                            (forwardLoadBalancer.targetAttributes[0] && forwardLoadBalancer.targetAttributes[0].port) ||
+                            ''
+                          }
+                          min={1}
+                          max={65535}
+                          placeholder="1~65535"
+                          onChange={e => this.portChanged(forwardLoadBalancer, parseInt(e.target.value, 10))}
+                          required={true}
+                        />
+                      </div>
+                      <div className="col-md-5">
+                        <label>Weight </label>
+                        <input
+                          type="number"
+                          className="form-control input-sm inline-number"
+                          style={{ width: '70%' }}
+                          value={
+                            (forwardLoadBalancer.targetAttributes[0] &&
+                              forwardLoadBalancer.targetAttributes[0].weight) ||
+                            ''
+                          }
+                          min={1}
+                          max={100}
+                          placeholder="1~100"
+                          onChange={e => this.weightChanged(forwardLoadBalancer, parseInt(e.target.value, 10))}
+                          required={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+          {loadBalancerOptions.length === 0 ? (
+            <div className="form-control-static text-center">
+              No load balancers found in the selected account/region/VPC
+            </div>
+          ) : values.forwardLoadBalancers.length < 6 ? (
+            <div className="col-md-12">
+              <table className="table table-condensed packed">
+                <tbody>
+                  <tr>
+                    <td>
+                      <button type="button" className="add-new col-md-12" onClick={() => this.addLoadBalancer()}>
+                        <span className="glyphicon glyphicon-plus-sign" />
+                        Add New Load Balancer
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="form-control-static text-center">
+              Up to 6 Load Balancers can be added for a server group
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+

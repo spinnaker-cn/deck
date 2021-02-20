@@ -204,7 +204,7 @@ module.exports = angular
         });
 
         return asyncLoader.then(function(asyncData) {
-          var zones = serverGroup.asg.availabilityZones.sort();
+          var zones = serverGroup.asg.availabilityZones;
           var usePreferredZones = false;
           var preferredZonesForAccount = asyncData.preferredZones[serverGroup.account];
           if (preferredZonesForAccount) {
