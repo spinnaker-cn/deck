@@ -99,6 +99,12 @@ var gce = {
   },
   associatePublicIpAddress: true,
 };
+var huaweicloud = {
+  defaults: {
+    account: '{%huaweicloud.default.account%}',
+    region: '{%huaweicloud.default.region%}',
+  },
+};
 var kubernetes = {
   defaults: {
     account: '{%kubernetes.default.account%}',
@@ -154,6 +160,7 @@ window.spinnakerSettings = {
     'dcos',
     'ecs',
     'gce',
+    'huaweicloud',
     'kubernetes',
     'openstack',
     'oracle',
@@ -225,6 +232,7 @@ window.spinnakerSettings = {
     dcos: dcos,
     ecs: ecs,
     gce: gce,
+    huaweicloud: huaweicloud,
     kubernetes: kubernetes,
     openstack: openstack,
     oracle: oracle,

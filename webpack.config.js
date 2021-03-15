@@ -85,6 +85,8 @@ function configure(env, webpackOpts) {
         '@spinnaker/openstack': path.join(__dirname, 'app', 'scripts', 'modules', 'openstack', 'src'),
         ecs: path.join(__dirname, 'app', 'scripts', 'modules', 'ecs', 'src'),
         '@spinnaker/ecs': path.join(__dirname, 'app', 'scripts', 'modules', 'ecs', 'src'),
+        huaweicloud: path.join(__dirname, 'app', 'scripts', 'modules', 'huaweicloud', 'src'),
+        '@spinnaker/huaweicloud': path.join(__dirname, 'app', 'scripts', 'modules', 'huaweicloud', 'src'),
         coreImports: path.resolve(
           __dirname,
           'app',
@@ -106,7 +108,7 @@ function configure(env, webpackOpts) {
         titus: path.join(__dirname, 'app', 'scripts', 'modules', 'titus', 'src'),
         '@spinnaker/titus': path.join(__dirname, 'app', 'scripts', 'modules', 'titus', 'src'),
         tencent: path.join(__dirname, 'app', 'scripts', 'modules', 'tencent', 'src'),
-        '@spinnaker/tencent': path.join(__dirname, 'app', 'scripts', 'modules', 'tencent', 'src')
+        '@spinnaker/tencent': path.join(__dirname, 'app', 'scripts', 'modules', 'tencent', 'src'),
       },
     },
     module: {

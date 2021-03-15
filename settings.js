@@ -59,6 +59,7 @@ window.spinnakerSettings = {
     'dcos',
     'ecs',
     'gce',
+    'huaweicloud',
     'kubernetes',
     'openstack',
     'oracle',
@@ -198,6 +199,12 @@ window.spinnakerSettings = {
         },
         region: 'us-central1',
         zone: 'us-central1-f',
+      },
+    },
+    huaweicloud: {
+      defaults: {
+        account: 'my-huawei-account',
+        region: 'cn-north-4',
       },
     },
     kubernetes: {

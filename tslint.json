@@ -20,6 +20,7 @@
       "docker",
       "ecs",
       "google",
+      "huaweicloud",
       "kubernetes",
       "openstack",
       "oracle",
