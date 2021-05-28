@@ -88,7 +88,7 @@
   <div class="form-group" style="margin-top: 10px">
     <div class="col-md-10 col-md-offset-1">
       <button
-        ng-disabled="command.vServerGroups.length>=5"
+        ng-disabled="command.vServerGroups.length>=20"
         class="add-new col-md-12"
         style="margin:5px 0 10px"
         ng-click="loadBalancerCtrl.add()"
@@ -97,8 +97,8 @@
         <firewall-label label="Firewall"></firewall-label>
         loadBalance
       </button>
-      <span ng-show="command.vServerGroups.length>=5" style="color:red;text-align:center"
-      >最多支持5个loadBalancerId</span
+      <span ng-show="command.vServerGroups.length>=20" style="color:red;text-align:center"
+      >最多支持20个loadBalancerId</span
       >
     </div>
   </div>

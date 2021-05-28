@@ -412,7 +412,7 @@ export class ServerGroupLoadBalancers
             <div className="form-control-static text-center">
               No load balancers found in the selected account/region/VPC
             </div>
-          ) : values.forwardLoadBalancers.length < 5 ? (
+          ) : values.forwardLoadBalancers.length < 20 ? (
             <div className="col-md-12">
               <table className="table table-condensed packed">
                 <tbody>
@@ -429,7 +429,7 @@ export class ServerGroupLoadBalancers
             </div>
           ) : (
             <div className="form-control-static text-center">
-              Up to 5 Load Balancers can be added for a server group
+              Up to 20 Load Balancers can be added for a server group
             </div>
           )}
         </div>
