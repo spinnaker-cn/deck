@@ -48,6 +48,7 @@ export class ServerGroupDetail extends React.Component {
         serverGroup.name = serverGroup.moniker.cluster;
         serverGroup.minSize = serverGroup.capacity.min;
         serverGroup.maxSize = serverGroup.capacity.max;
+        serverGroup.desired = serverGroup.capacity.desired;
         serverGroup.defaultCooldown = serverGroup.result.scalingGroup.defaultCooldown;
         serverGroup.cloudProvider = serverGroup.result.provider;
         serverGroup.selectedProvider = serverGroup.result.provider;
@@ -284,6 +285,8 @@ export class ServerGroupDetail extends React.Component {
                                 <dd>{serverGroup.capacity.max}</dd>
                                 <dt>MinSize</dt>
                                 <dd>{serverGroup.capacity.min}</dd>
+                                <dt>Desired</dt>
+                                <dd>{serverGroup.capacity.desired}</dd>
                             </dl>
                         </CollapsibleSection>
 

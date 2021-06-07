@@ -32,9 +32,11 @@ export class AlicloudResizeServerGroupModal extends React.Component {
     this.state = {
       minSize: serverGroup.result.scalingGroup.minSize,
       maxSize: serverGroup.result.scalingGroup.maxSize,
+      desiredCapacity: serverGroup.result.scalingGroup.desiredCapacity,
       reason: '',
       minSizePattern: true,
       maxSizePattern: true,
+      desiredCapacityPattern: true,
       isvalid: false,
       taskMonitor: new TaskMonitor({
         application: application,
@@ -51,7 +53,8 @@ export class AlicloudResizeServerGroupModal extends React.Component {
 
   private stat = {
       minSize: this.serverGroups.serverGroup.result.scalingGroup.minSize,
-      maxSize: this.serverGroups.serverGroup.result.scalingGroup.maxSize
+      maxSize: this.serverGroups.serverGroup.result.scalingGroup.maxSize,
+      desiredCapacity: this.serverGroups.serverGroup.result.scalingGroup.desiredCapacity
   }
 
   private isValid = () => {
@@ -61,7 +64,9 @@ export class AlicloudResizeServerGroupModal extends React.Component {
             isvalid: true
         })
     })
-    if ( serverGroup.result.scalingGroup.minSize === this.stat.minSize && serverGroup.result.scalingGroup.maxSize === this.stat.maxSize ) {
+    if ( serverGroup.result.scalingGroup.minSize === this.stat.minSize
+        && serverGroup.result.scalingGroup.maxSize === this.stat.maxSize
+        && serverGroup.result.scalingGroup.desiredCapacity === this.stat.desiredCapacity) {
         this.setState({
             isvalid: false
         })
@@ -73,11 +78,13 @@ export class AlicloudResizeServerGroupModal extends React.Component {
         this.setState({
             minSizePattern: false,
             maxSizePattern: true,
+            desiredCapacityPattern: true
         })
     } else {
         this.setState({
             minSizePattern: true,
-            maxSizePattern: true
+            maxSizePattern: true,
+            desiredCapacityPattern: true
         })
     }
   };
@@ -86,15 +93,31 @@ export class AlicloudResizeServerGroupModal extends React.Component {
         this.setState({
             maxSizePattern: false,
             minSizePattern: true,
+            desiredCapacityPattern: true
         })
     } else {
         this.setState({
             minSizePattern: true,
-            maxSizePattern: true
+            maxSizePattern: true,
+            desiredCapacityPattern: true
         })
     }
   };
-
+  private desiredCapacityPatterns = (value: number) => {
+    if (value < this.stat.minSize || value > this.stat.maxSize) {
+      this.setState({
+        maxSizePattern: true,
+        minSizePattern: true,
+        desiredCapacityPattern: false
+      })
+    } else {
+      this.setState({
+        minSizePattern: true,
+        maxSizePattern: true,
+        desiredCapacityPattern: true
+      })
+    }
+  };
   private close = (args?: any): void => {
     const { dismissModal }: any = this.props;
     dismissModal.apply(null, args);
@@ -103,19 +126,20 @@ export class AlicloudResizeServerGroupModal extends React.Component {
   private submit = (): void => {
     const { serverGroup, application }: any = this.props;
     const { taskMonitor, reason }: any = this.state;
-    const capacity = { min: this.stat.minSize, max: this.stat.maxSize, desired: this.stat.minSize };
+    const capacity = { min: this.stat.minSize, max: this.stat.maxSize, desired: this.stat.desiredCapacity };
     taskMonitor.submit(() => {
       return ReactInjector.serverGroupWriter.resizeServerGroup(serverGroup, application, {
         capacity: capacity,
         minSize: this.stat.minSize,
         maxSize: this.stat.maxSize,
+        desiredCapacity: this.stat.desiredCapacity,
         reason: reason,
       });
     });
   };
   public render() {
     const { serverGroup }: any = this.props;
-    const { taskMonitor, maxSize, minSize, minSizePattern, reason, isvalid, maxSizePattern }: any = this.state;
+    const { taskMonitor, maxSize, minSize, minSizePattern, reason, isvalid, maxSizePattern,desiredCapacity,desiredCapacityPattern }: any = this.state;
     const { TaskMonitorWrapper } = NgReact;
     return (
       <div>
@@ -130,7 +154,8 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                     <div className="form-group row">
                         <label className="col-md-3 sm-label-right"/>
                         <label className="col-md-3 sm-label-left">Min</label>
-                        <label className="col-md-4 sm-label-left">Max</label>
+                        <label className="col-md-3 sm-label-left">Max</label>
+                        <label className="col-md-3 sm-label-left">Desired</label>
                     </div>
                     <div className="form-group row">
                         <label className="col-md-3 sm-label-right">Current</label>
@@ -143,7 +168,7 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                             name="search"
                             />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <input
                             disabled={ true }
                             type="number"
@@ -152,6 +177,15 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                             name="search"
                             />
                         </div>
+                      <div className="col-md-3">
+                        <input
+                          disabled={ true }
+                          type="number"
+                          className="form-control input-sm"
+                          value={serverGroup.result.scalingGroup.desiredCapacity}
+                          name="search"
+                        />
+                      </div>
                     </div>
                     <div className="form-group row">
                         <label className="col-md-3 sm-label-right">Resize to</label>
@@ -173,7 +207,7 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                             }}
                             />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <input
                             type="number"
                             required={ true }
@@ -191,6 +225,24 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                             }}
                             />
                         </div>
+                      <div className="col-md-3">
+                        <input
+                          type="number"
+                          required={true}
+                          className="form-control input-sm"
+                          value={desiredCapacity}
+                          name="desiredCapacity"
+                          onchange={(e: any) => {
+                            this.sub$.next(e.target.value)
+                            this.setState({
+                              desiredCapacity: e.target.value
+                            })
+                            this.stat.desiredCapacity = e.target.value;
+                            this.desiredCapacityPatterns(e.target.value);
+                            this.isValid()
+                          }}
+                        />
+                      </div>
                     </div>
                     {!minSizePattern && (
                         <div className="form-group row slide-in">
@@ -202,10 +254,17 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                     {!maxSizePattern && (
                         <div className="form-group row slide-in">
                             <div className="col-sm-9 col-sm-offset-2 error-message">
-                            <span>MxaSize do not small than MinSize.</span>
+                            <span>MaxSize do not small than MinSize.</span>
                             </div>
                         </div>
                     )}
+                  {!desiredCapacityPattern && (
+                    <div className="form-group row slide-in">
+                      <div className="col-sm-9 col-sm-offset-2 error-message">
+                        <span>DesiredCapacity must between MinSize and MaxSize.</span>
+                      </div>
+                    </div>
+                  )}
                     <TaskReason reason={ reason } onChange={(value: any) => {
                         this.sub$.next(value)
                         this.setState({
@@ -217,6 +276,7 @@ export class AlicloudResizeServerGroupModal extends React.Component {
                         <div className="col-md-7 sm-control-field">
                         <div>Min:<b>{serverGroup.result.scalingGroup.minSize}</b><i className="fa fa-long-arrow-alt-right"/><b>{minSize}</b></div>
                         <div>Max:<b>{serverGroup.result.scalingGroup.maxSize}</b><i className="fa fa-long-arrow-alt-right"/><b>{maxSize}</b></div>
+                        <div>Desired:<b>{serverGroup.result.scalingGroup.desiredCapacity}</b><i className="fa fa-long-arrow-alt-right"/><b>{desiredCapacity}</b></div>
                         </div>
                     </div>
                 </div>

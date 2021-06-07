@@ -177,25 +177,28 @@ angular
         },
       };
 
-      this.minSizePattern = {
-        test: function(MinSize: number) {
-          if (MinSize > $scope.command.maxSize) {
-            return false;
-          } else {
-            return true;
-          }
-        },
+      this.maxSizePattern = {
+        test:function () {
+          return $scope.command.minSize <= $scope.command.maxSize;
+        }
       };
 
-      this.maxSizePattern = {
-        test: function(MaxSize: number) {
-          if (MaxSize < $scope.command.minSize) {
-            return false;
-          } else {
-            return true;
-          }
-        },
+      this.minSizePattern = {
+        test:function () {
+          return $scope.command.minSize <= $scope.command.maxSize;
+        }
       };
+
+      this.desiredCapacityPattern = {
+        test:function () {
+          return $scope.command.desiredCapacity >= $scope.command.minSize && $scope.command.desiredCapacity <= $scope.command.maxSize;
+        }
+      };
+
+      this.capacityChange = function() {
+        this.minSizePattern = $scope.command.minSize <= $scope.command.maxSize;
+        this.desiredCapacityPattern = $scope.command.desiredCapacity >= $scope.command.minSize && $scope.command.desiredCapacity <= $scope.command.maxSize;
+      }
     },
   ]);
 

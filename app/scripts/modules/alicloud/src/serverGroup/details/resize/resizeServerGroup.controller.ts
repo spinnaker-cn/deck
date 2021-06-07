@@ -30,13 +30,16 @@ angular
       $scope.newSize = {
         minSize : null,
         maxSize : null,
+        desiredCapacity : null,
       }
       $scope.newSize.minSize = $scope.serverGroup.result.scalingGroup.minSize
       $scope.newSize.maxSize = $scope.serverGroup.result.scalingGroup.maxSize
+      $scope.newSize.desiredCapacity = $scope.serverGroup.result.scalingGroup.desiredCapacity
 
-      this.maxSizePatternChange = function() {
-        console.info($scope.newSize.maxSize+"---"+$scope.newSize.minSize)
+      this.resizedSizePatternChange = function() {
         this.minSizePattern = $scope.newSize.maxSize >= $scope.newSize.minSize
+        this.maxSizePattern = $scope.newSize.maxSize >= $scope.newSize.minSize
+        this.desiredCapacityPattern = $scope.newSize.desiredCapacity <= $scope.newSize.maxSize && $scope.newSize.desiredCapacity >= $scope.newSize.minSize
       }
 
       this.minSizePattern = {
@@ -49,23 +52,38 @@ angular
           }
         },
       };
+
       this.maxSizePattern = {
         test: function(MaxSize: number) {
           if (MaxSize < $scope.newSize.minSize) {
-            console.info("111")
             return false;
           } else {
-            console.info("123")
             return true;
           }
         },
       };
 
+      this.desiredCapacityPattern = {
+        test: function(DesiredCapacity: number) {
+          if (DesiredCapacity < $scope.newSize.minSize || DesiredCapacity > $scope.newSize.maxSize) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      };
       this.isValid = function() {
-        if ($scope.newSize.minSize === $scope.serverGroup.result.scalingGroup.minSize && $scope.newSize.maxSize === $scope.serverGroup.result.scalingGroup.maxSize) {
+        if ($scope.newSize.minSize === $scope.serverGroup.result.scalingGroup.minSize
+          && $scope.newSize.maxSize === $scope.serverGroup.result.scalingGroup.maxSize
+          && $scope.newSize.desiredCapacity === $scope.serverGroup.result.scalingGroup.desiredCapacity) {
           return false
         } else {
-          if ($scope.newSize.minSize > $scope.newSize.maxSize || $scope.newSize.maxSize < $scope.newSize.minSize || $scope.newSize.minSize == null || $scope.newSize.maxSize == null ) {
+          if ($scope.newSize.maxSize == null
+            || $scope.newSize.minSize == null
+            || $scope.newSize.desiredCapacity == null
+            || $scope.newSize.minSize > $scope.newSize.maxSize
+            || $scope.newSize.desiredCapacity < $scope.newSize.minSize
+            || $scope.newSize.desiredCapacity > $scope.newSize.maxSize) {
             return false;
           } else {
             return true
@@ -81,12 +99,13 @@ angular
 
       this.resize = function() {
         const serverGroups = $scope.serverGroup;
-        const capacity = { min: $scope.newSize.minSize, max: $scope.newSize.maxSize, desired: $scope.newSize.minSize };
+        const capacity = { min: $scope.newSize.minSize, max: $scope.newSize.maxSize, desired: $scope.newSize.desiredCapacity };
         const submitMethod = function() {
           return serverGroupWriter.resizeServerGroup(serverGroups, application, {
             capacity: capacity,
             minSize: $scope.newSize.minSize,
             maxSize: $scope.newSize.maxSize,
+            desiredCapacity: $scope.newSize.desiredCapacity,
             reason: $scope.command.reason,
           });
         };

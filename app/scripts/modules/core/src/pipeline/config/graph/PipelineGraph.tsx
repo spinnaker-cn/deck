@@ -123,17 +123,8 @@ export class PipelineGraph extends React.Component<IPipelineGraphProps, IPipelin
       ? PipelineGraphService.generateConfigGraph(pipeline, viewState, this.pipelineValidations)
       : PipelineGraphService.generateExecutionGraph(execution, viewState);
   }
-
-  /**
-   * Sets phases and adds children/parents to nodes
-   * Probably blows the stack if circular dependencies exist, maybe not
-   */
-  private applyPhasesAndLink(
-    props: IPipelineGraphProps,
-    nodes: IPipelineGraphNode[],
-    newState: IPipelineGraphState,
-  ): IPipelineGraphNode[][] {
-    nodes = nodes || this.createNodes(props);
+  private phaseResolve(
+    nodes: IPipelineGraphNode[]):boolean{
     let allPhasesResolved = true;
     nodes.forEach(node => {
       let phaseResolvable = true,
@@ -158,70 +149,83 @@ export class PipelineGraph extends React.Component<IPipelineGraphProps, IPipelin
         }
       }
     });
-    if (!allPhasesResolved) {
-      return this.applyPhasesAndLink(props, nodes, newState);
-    } else {
-      const highestPhaseNode = maxBy(nodes, 'phase');
-      newState.phaseCount = highestPhaseNode ? highestPhaseNode.phase : 0;
-      if (newState.phaseCount > 6) {
-        newState.nodeRadius = 6;
-        newState.labelOffsetX = newState.nodeRadius + 3;
-        newState.labelOffsetY = 15;
-      }
-      const groupedNodes: IPipelineGraphNode[][] = [];
-      nodes.forEach((node: IPipelineGraphNode) => {
-        node.children = uniq(node.children);
-        node.parents = uniq(node.parents);
-        node.leaf = node.children.length === 0;
-      });
-      nodes.forEach(node => (node.lastPhase = this.getLastPhase(node)));
-
-      // Collision minimization "Algorithm"
-      const grouped = groupBy(nodes, 'phase');
-      forOwn(grouped, (group: IPipelineGraphNode[], phase: any) => {
-        const sortedPhase = sortBy(
-          group,
-          // farthest, highest parent, e.g. phase 1 always before phase 2, row 1 always before row 2
-          (node: IPipelineGraphNode) => {
-            if (node.parents.length) {
-              const parents = sortBy(
-                node.parents,
-                (parent: IPipelineGraphNode) => 1 - parent.phase,
-                (parent: IPipelineGraphNode) => parent.row,
-              );
-              const firstParent = parents[0];
-              return firstParent.phase * 100 + firstParent.row;
-            }
-            return 0;
-          },
-          // same highest parent, prefer farthest last node
-          (node: IPipelineGraphNode) => 1 - node.lastPhase,
-          // same highest parent, prefer fewer terminal children if any
-          (node: IPipelineGraphNode) => node.children.filter(child => !child.children.length).length || 100,
-          // same highest parent, same number of terminal children, prefer fewer parents
-          (node: IPipelineGraphNode) => node.parents.length,
-          // same highest parent, same number of terminal children and parents
-          (node: IPipelineGraphNode) => 1 - node.children.length,
-          // same number of children, so sort by number of grandchildren (more first)
-          (node: IPipelineGraphNode) => 1 - sumBy(node.children, (child: IPipelineGraphNode) => child.children.length),
-          // great, same number of grandchildren, how about by nearest children, alphabetically by name, why not
-          (node: IPipelineGraphNode) =>
-            sortBy(node.children, 'phase')
-              .map((child: IPipelineGraphNode) => [child.phase - node.phase, child.name].join('-'))
-              .join(':'),
-          // if `id` is a number (or a string that maps to a number), sort above ids that are strings.
-          (node: IPipelineGraphNode) => (Number.isNaN(Number(node.id)) ? Number.MAX_SAFE_INTEGER : Number(node.id)),
-          // if `id` is a string.
-          ['id'],
-        );
-        sortedPhase.forEach((node: IPipelineGraphNode, index: number) => {
-          node.row = index;
-        });
-        groupedNodes[phase] = sortedPhase;
-      });
-      this.fixOverlaps(groupedNodes);
-      return groupedNodes;
+    return allPhasesResolved;
+  }
+  /**
+   * Sets phases and adds children/parents to nodes
+   * Probably blows the stack if circular dependencies exist, maybe not
+   */
+  private applyPhasesAndLink(
+    props: IPipelineGraphProps,
+    nodes: IPipelineGraphNode[],
+    newState: IPipelineGraphState,
+  ): IPipelineGraphNode[][] {
+    nodes = nodes || this.createNodes(props);
+    let resolvedCount = 0;
+    let allPhasesResolved = this.phaseResolve(nodes);
+    while (!allPhasesResolved && resolvedCount < 5) {
+      resolvedCount = resolvedCount + 1;
+      allPhasesResolved = this.phaseResolve(nodes);
     }
+    const highestPhaseNode = maxBy(nodes, 'phase');
+    newState.phaseCount = highestPhaseNode ? highestPhaseNode.phase : 0;
+    if (newState.phaseCount > 6) {
+      newState.nodeRadius = 6;
+      newState.labelOffsetX = newState.nodeRadius + 3;
+      newState.labelOffsetY = 15;
+    }
+    const groupedNodes: IPipelineGraphNode[][] = [];
+    nodes.forEach((node: IPipelineGraphNode) => {
+      node.children = uniq(node.children);
+      node.parents = uniq(node.parents);
+      node.leaf = node.children.length === 0;
+    });
+    nodes.forEach(node => (node.lastPhase = this.getLastPhase(node)));
+    // Collision minimization "Algorithm"
+    const grouped = groupBy(nodes, 'phase');
+    forOwn(grouped, (group: IPipelineGraphNode[], phase: any) => {
+      const sortedPhase = sortBy(
+        group,
+        // farthest, highest parent, e.g. phase 1 always before phase 2, row 1 always before row 2
+        (node: IPipelineGraphNode) => {
+          if (node.parents.length) {
+            const parents = sortBy(
+              node.parents,
+              (parent: IPipelineGraphNode) => 1 - parent.phase,
+              (parent: IPipelineGraphNode) => parent.row,
+            );
+            const firstParent = parents[0];
+            return firstParent.phase * 100 + firstParent.row;
+          }
+          return 0;
+        },
+        // same highest parent, prefer farthest last node
+        (node: IPipelineGraphNode) => 1 - node.lastPhase,
+        // same highest parent, prefer fewer terminal children if any
+        (node: IPipelineGraphNode) => node.children.filter(child => !child.children.length).length || 100,
+        // same highest parent, same number of terminal children, prefer fewer parents
+        (node: IPipelineGraphNode) => node.parents.length,
+        // same highest parent, same number of terminal children and parents
+        (node: IPipelineGraphNode) => 1 - node.children.length,
+        // same number of children, so sort by number of grandchildren (more first)
+        (node: IPipelineGraphNode) => 1 - sumBy(node.children, (child: IPipelineGraphNode) => child.children.length),
+        // great, same number of grandchildren, how about by nearest children, alphabetically by name, why not
+        (node: IPipelineGraphNode) =>
+          sortBy(node.children, 'phase')
+            .map((child: IPipelineGraphNode) => [child.phase - node.phase, child.name].join('-'))
+            .join(':'),
+        // if `id` is a number (or a string that maps to a number), sort above ids that are strings.
+        (node: IPipelineGraphNode) => (Number.isNaN(Number(node.id)) ? Number.MAX_SAFE_INTEGER : Number(node.id)),
+        // if `id` is a string.
+        ['id'],
+      );
+      sortedPhase.forEach((node: IPipelineGraphNode, index: number) => {
+        node.row = index;
+      });
+      groupedNodes[phase] = sortedPhase;
+    });
+    this.fixOverlaps(groupedNodes);
+    return groupedNodes;
   }
 
   // if any nodes in the same row as a parent node, but not in the immediately preceding phase, inject placeholder nodes

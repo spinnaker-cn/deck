@@ -277,7 +277,7 @@ angular
         $scope.command.capacity = {
           'max': $scope.command.maxSize,
           'min': $scope.command.minSize,
-          'desired': $scope.command.minSize,
+          'desired': $scope.command.desiredCapacity,
         }
         if ($scope.command.viewState.mode === 'createPipline') {
           $scope.command.serverGroupName = application.applicationName + '-' + $scope.command.stack + '-' + $scope.command.freeFormDetails;
