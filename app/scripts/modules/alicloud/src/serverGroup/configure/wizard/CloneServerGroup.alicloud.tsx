@@ -63,7 +63,7 @@ export class CloneServerGroupAlicloud extends React.Component {
     values.capacity = {
       'max': values.maxSize,
       'min': values.minSize,
-      'desired': values.minSize,
+      'desired': values.desiredCapacity,
     };
     const { taskMonitor }: any = this.state;
     if ( values.viewState.mode !== 'create' ) {

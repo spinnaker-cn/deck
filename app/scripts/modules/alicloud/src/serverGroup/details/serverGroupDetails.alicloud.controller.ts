@@ -216,6 +216,7 @@ angular
         $scope.serverGroup.name = $scope.serverGroup.moniker.cluster;
         $scope.serverGroup.minSize = $scope.serverGroup.capacity.min;
         $scope.serverGroup.maxSize = $scope.serverGroup.capacity.max;
+        $scope.serverGroup.desiredCapacity = $scope.serverGroup.capacity.desired;
         $scope.serverGroup.defaultCooldown = $scope.serverGroup.result.scalingGroup.defaultCooldown;
         $scope.serverGroup.cloudProvider = $scope.serverGroup.result.provider;
         $scope.serverGroup.selectedProvider = $scope.serverGroup.result.provider;

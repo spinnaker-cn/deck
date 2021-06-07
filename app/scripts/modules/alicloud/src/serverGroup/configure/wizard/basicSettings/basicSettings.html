@@ -112,46 +112,81 @@
       <div style="text-align:center;margin:20px 0;">
         <span ng-show="command.vSwitchIds.length>=5" style="color:red;">最多支持5个!!!</span>
       </div>
+
       <div class="form-group">
-        <div class="col-md-3 sm-label-right">
-          MaxSize
+        <div class="col-md-12" style="display: flex;flex: 1;flex-direction: row">
+        <div class="col-md-3 sm-label-right" style="align-items:center;">
+          capacity
         </div>
-        <div class="col-md-3">
-          <input
-            required
-            type="number"
-            min="0"
-            max="1000"
-            class="form-control input-sm"
-            name="MaxSize"
-            ng-model="command.maxSize"
-            ng-pattern="basicSettingsCtrl.maxSizePattern"
-          />
-        </div>
-        <div class="col-md-6 form-inline">
-          <div class="col-md-4 sm-label-right">
-            MinSize
+          <div class="col-md-3" style="flex: 1;flex-direction: column">
+            <div class="col-md-9 sm-label-right">
+              max
+            </div>
+            <div>
+              <input
+                required
+                type="number"
+                min="0"
+                max="1000"
+                class="form-control input-sm"
+                name="MaxSize"
+                ng-model="command.maxSize"
+                ng-change="basicSettingsCtrl.capacityChange()"
+                ng-pattern=""
+              />
+            </div>
           </div>
-          <input
-            required
-            min="0"
-            max="1000"
-            type="number"
-            class="form-control input-sm"
-            name="MinSize"
-            ng-model="command.minSize"
-            ng-pattern="basicSettingsCtrl.minSizePattern"
-          />
+          <div class="col-md-3" style="flex: 1;flex-direction: column">
+            <div class="col-md-9 sm-label-right">
+              min
+            </div>
+            <div>
+              <input
+                required
+                type="number"
+                min="0"
+                max="1000"
+                class="form-control input-sm"
+                name="MinSize"
+                ng-model="command.minSize"
+                ng-change="basicSettingsCtrl.capacityChange()"
+                ng-pattern=""
+              />
+            </div>
+          </div>
+          <div class="col-md-3" style="flex: 1;flex-direction: column">
+            <div class="col-md-9 sm-label-right">
+              desired
+            </div>
+            <div>
+              <input
+                required
+                type="number"
+                min="0"
+                max="1000"
+                class="form-control input-sm"
+                name="DesiredCapacity"
+                ng-model="command.desiredCapacity"
+                ng-change="basicSettingsCtrl.capacityChange()"
+                ng-pattern=""
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div class="form-group row slide-in" ng-if="basicSettings.MinSize.$error.pattern">
+      <div class="form-group row slide-in" ng-if="!basicSettingsCtrl.minSizePattern">
         <div class="col-sm-9 col-sm-offset-2 error-message">
           <span>MinSize do not large than MaxSize.</span>
         </div>
       </div>
-      <div class="form-group row slide-in" ng-if="basicSettings.MaxSize.$error.pattern">
+      <div class="form-group row slide-in" ng-if="!basicSettingsCtrl.maxSizePattern">
         <div class="col-sm-9 col-sm-offset-2 error-message">
-          <span>MxaSize do not small than MinSize.</span>
+          <span>MaxSize do not small than MinSize.</span>
+        </div>
+      </div>
+      <div class="form-group row slide-in" ng-if="!basicSettingsCtrl.desiredCapacityPattern">
+        <div class="col-sm-9 col-sm-offset-2 error-message">
+          <span>DesiredCapacity must between MinSize and MaxSize.</span>
         </div>
       </div>
 
@@ -188,7 +223,7 @@
               ng-click="basicSettingsCtrl.useSourceCapacityUpdated()"
             />
             Copy the capacity from the current server group
-            <HelpField />
+            <HelpField/>
           </label>
         </div>
       </div>

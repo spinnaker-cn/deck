@@ -9,7 +9,8 @@
       <div class="form-group row">
         <label class="col-md-3 sm-label-right"></label>
         <label class="col-md-3 sm-label-left">Min</label>
-        <label class="col-md-4 sm-label-left">Max</label>
+        <label class="col-md-3 sm-label-left">Max</label>
+        <label class="col-md-3 sm-label-left">Desired</label>
       </div>
       <div class="form-group row">
         <label class="col-md-3 sm-label-right">Current</label>
@@ -25,13 +26,25 @@
             ng-change=""
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <input
             disabled
             type="number"
             required
             class="form-control input-sm"
             ng-model="serverGroup.result.scalingGroup.maxSize"
+            name="search"
+            ng-focus=""
+            ng-change=""
+          />
+        </div>
+        <div class="col-md-3">
+          <input
+            disabled
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="serverGroup.result.scalingGroup.desiredCapacity"
             name="search"
             ng-focus=""
             ng-change=""
@@ -48,11 +61,11 @@
             ng-model="newSize.minSize"
             name="MinSize"
             ng-focus=""
-            ng-change="ctrl.maxSizePatternChange()"
+            ng-change="ctrl.resizedSizePatternChange()"
             ng-pattern=""
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <input
             type="number"
             required
@@ -60,22 +73,38 @@
             ng-model="newSize.maxSize"
             name="MaxSize"
             ng-focus=""
-            ng-change="ctrl.maxSizePatternChange()"
+            ng-change="ctrl.resizedSizePatternChange()"
+            ng-pattern=""
+          />
+        </div>
+        <div class="col-md-3">
+          <input
+            type="number"
+            required
+            class="form-control input-sm"
+            ng-model="newSize.desiredCapacity"
+            name="DesiredCapacity"
+            ng-focus=""
+            ng-change="ctrl.resizedSizePatternChange()"
             ng-pattern=""
           />
         </div>
       </div>
-      <div class="form-group row slide-in" ng-if="!ctrl.minSizePattern" >
+      <div class="form-group row slide-in" ng-if="!ctrl.minSizePattern">
         <div style="text-align:center;" class="col-sm-9 col-sm-offset-2 error-message">
           <span>MinSize do not large than MaxSize.</span>
         </div>
       </div>
       <div class="form-group row slide-in" ng-if="!ctrl.maxSizePattern">
-        <div class="col-sm-9 col-sm-offset-2 error-message">
-          <span>MxaSize do not small than MinSize.</span>
+        <div style="text-align:center;" class="col-sm-9 col-sm-offset-2 error-message">
+          <span>MaxSize do not small than MinSize.</span>
         </div>
       </div>
-
+      <div class="form-group row slide-in" ng-if="!ctrl.desiredCapacityPattern">
+        <div style="text-align:center;" class="col-sm-9 col-sm-offset-2 error-message">
+          <span>DesiredCapacity must between MinSize and MaxSize.</span>
+        </div>
+      </div>
       <div class="row" ng-if="command.platformHealthOnlyShowOverride">
         <div class="col-sm-10 col-sm-offset-1">
           <platform-health-override
@@ -92,8 +121,12 @@
       <div class="form-group row">
         <label class="col-md-3 sm-label-right">Changes</label>
         <div class="col-md-7 sm-control-field">
-          <div>Min:<b>{{serverGroup.result.scalingGroup.minSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.minSize}}</b></div>
-          <div>Max:<b>{{serverGroup.result.scalingGroup.maxSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.maxSize}}</b></div>
+          <div>Min:<b>{{serverGroup.result.scalingGroup.minSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.minSize}}</b>
+          </div>
+          <div>Max:<b>{{serverGroup.result.scalingGroup.maxSize}}</b><i class="fa fa-long-arrow-alt-right"></i><b>{{newSize.maxSize}}</b>
+          </div>
+          <div>Desired:<b>{{serverGroup.result.scalingGroup.desiredCapacity}}</b><i
+            class="fa fa-long-arrow-alt-right"></i><b>{{newSize.desiredCapacity}}</b></div>
         </div>
       </div>
     </div>
