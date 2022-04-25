@@ -118,6 +118,7 @@ export class HuaweiServerGroupTransformer {
           }
         : undefined,
       userData: base.userData ? btoa(base.userData) : undefined,
+      agency: base.agency,
       defaultCooldown: base.cooldown,
       enhancedService: base.enhancedService,
       source: base.viewState && base.viewState.mode === 'clone' ? base.source : undefined,
