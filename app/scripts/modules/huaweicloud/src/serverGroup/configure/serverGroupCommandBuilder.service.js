@@ -96,6 +96,7 @@ module.exports = angular
               dataDisks: [],
               weight: 10,
               userData: '',
+              agency: '',
             };
 
             if (
@@ -319,6 +320,9 @@ module.exports = angular
             });
             if (serverGroup.launchConfig.userData) {
               command.userData = serverGroup.launchConfig.userData;
+            }
+            if (serverGroup.launchConfig.agency) {
+              command.agency = serverGroup.launchConfig.agency;
             }
             command.viewState.imageId = serverGroup.launchConfig.imageId;
           }

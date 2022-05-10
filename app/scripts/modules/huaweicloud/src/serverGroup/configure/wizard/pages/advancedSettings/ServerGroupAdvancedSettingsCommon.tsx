@@ -127,6 +127,15 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
         </div>
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
+            <b>Agency (optional) </b>
+            <HelpField id="huaweicloud.serverGroup.agency" />
+          </div>
+          <div className="col-md-6">
+            <Field type="text" className="form-control input-sm no-spel" name="agency" />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="col-md-5 sm-label-right">
             <b>Network Billing</b>
           </div>
           <div className="col-md-3 radio">
