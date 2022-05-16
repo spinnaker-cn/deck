@@ -248,6 +248,7 @@ module.exports = angular
             detail: serverGroupName.detail || serverGroupName.freeFormDetails,
             credentials: serverGroup.account,
             cooldown: serverGroup.asg.defaultCooldown,
+            agency: serverGroup.asg.agency,
             enabledMetrics: _.get(serverGroup, 'asg.enabledMetrics', []).map(m => m.metric),
             terminationPolicies: serverGroup.asg.terminationPolicySet,
             loadBalancers: serverGroup.asg.loadBalancerNames,
