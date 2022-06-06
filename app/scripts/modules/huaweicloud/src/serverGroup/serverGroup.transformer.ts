@@ -87,6 +87,7 @@ export class HuaweiServerGroupTransformer {
       accountName: base.credentials,
       imageId: base.imageId,
       instanceType: base.instanceType,
+      instanceTypes: base.instanceTypes,
       subnetIds: base.subnetIds,
       subnetType: base.subnetIds.join(''),
       credentials: base.credentials,

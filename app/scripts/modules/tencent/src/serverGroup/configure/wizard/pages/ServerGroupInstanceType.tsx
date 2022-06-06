@@ -9,30 +9,28 @@ export interface IServerGroupInstanceTypeProps {
   formik: FormikProps<IAmazonServerGroupCommand>;
 }
 
-export class ServerGroupInstanceType extends React.Component<IServerGroupInstanceTypeProps>
+export class ServerGroupInstanceType extends React.Component<IServerGroupRInstanceTypeProps>
   implements IWizardPageComponent<IAmazonServerGroupCommand> {
   public validate(values: IAmazonServerGroupCommand) {
     const errors: FormikErrors<IAmazonServerGroupCommand> = {};
-
     if (!values.instanceType) {
       errors.instanceType = 'Instance Type required.';
     }
-
     return errors;
   }
 
-  private instanceTypeChanged = (option: Option) => {
+  private instanceTypeChanged = (options: Option[]) => {
     const { values } = this.props.formik;
-    this.props.formik.setFieldValue('instanceType', option && option.value || '');
+    this.props.formik.setFieldValue('instanceTypes', options.map(o => o.value as string));
+    this.props.formik.setFieldValue('instanceType', options.map(o => o.value as string).join());
     values.instanceTypeChanged(values);
   };
 
   public render() {
     const { values } = this.props.formik;
     const showTypeSelector = !!(values.viewState.disableImageSelection || values.amiName);
-
     if (showTypeSelector && values) {
-      const instanceTypeOptions = (values.backingData.filtered.instanceTypes || []).map(instanceType => {
+        const instanceTypeOptions = (values.backingData.filtered.instanceTypes || []).map(instanceType => {
         const regionInstanceTypes = values.backingData.instanceTypes[values.region] || []
         const instanceTypeInfo = regionInstanceTypes.find(({ name }) => name === instanceType)
         return {
@@ -48,11 +46,12 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupInstanc
             </div>
           <div className="col-md-8">
             <Select
-              value={values.instanceType}
+              value={values.instanceTypes}
               required={true}
               clearable={false}
               options={instanceTypeOptions}
               onChange={this.instanceTypeChanged}
+              multi={true}
             />
           </div>
           </div>
