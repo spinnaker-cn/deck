@@ -105,6 +105,12 @@ var huaweicloud = {
     region: '{%huaweicloud.default.region%}',
   },
 };
+var hecloud = {
+  defaults: {
+    account: '{%hecloud.default.account%}',
+    region: '{%hecloud.default.region%}',
+  },
+};
 var kubernetes = {
   defaults: {
     account: '{%kubernetes.default.account%}',
@@ -161,6 +167,7 @@ window.spinnakerSettings = {
     'ecs',
     'gce',
     'huaweicloud',
+    'hecloud',
     'kubernetes',
     'openstack',
     'oracle',
@@ -233,6 +240,7 @@ window.spinnakerSettings = {
     ecs: ecs,
     gce: gce,
     huaweicloud: huaweicloud,
+    hecloud: hecloud,
     kubernetes: kubernetes,
     openstack: openstack,
     oracle: oracle,

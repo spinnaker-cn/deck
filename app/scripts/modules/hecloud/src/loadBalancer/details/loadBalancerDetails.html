@@ -1,0 +1,93 @@
+<div class="details-panel">
+  <div ng-if="ctrl.state.loading" class="header">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="horizontal center middle spinner-container">
+      <loading-spinner size="'small'"></loading-spinner>
+    </div>
+  </div>
+
+  <div ng-if="!ctrl.state.loading" class="header">
+    <div class="close-button">
+      <a class="btn btn-link" ui-sref="^">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
+    </div>
+    <div class="header-text horizontal middle">
+      <i class="fa icon-sitemap"></i>
+      <h3 class="horizontal middle space-between flex-1" select-on-dbl-click>
+        {{ctrl.loadBalancer.name}}
+        <render-if-feature feature="entityTags">
+          <entity-notifications
+            entity="ctrl.loadBalancer"
+            application="ctrl.application"
+            placement="bottom"
+            h-offset-percent="90%"
+            entity-type="loadBalancer"
+            page-location="details"
+            on-update="ctrl.application.loadBalancers.refresh()"
+          ></entity-notifications>
+        </render-if-feature>
+      </h3>
+    </div>
+    <div>
+      <div class="actions">
+        <hecloud-load-balancer-actions
+          app="ctrl.application"
+          load-balancer="ctrl.loadBalancer"
+          load-balancer-from-params="ctrl.loadBalancerFromParams"
+        ></hecloud-load-balancer-actions>
+        <div
+          class="dropdown"
+          ng-if="ctrl.loadBalancer.elb.insightActions.length > 0"
+          uib-dropdown
+          dropdown-append-to-body
+        >
+          <button type="button" class="btn btn-sm btn-default dropdown-toggle" uib-dropdown-toggle>
+            Insight <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li ng-repeat="action in ctrl.loadBalancer.elb.insightActions">
+              <a target="_blank" href="{{action.url}}">{{action.label}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="!ctrl.state.loading" class="content">
+    <collapsible-section heading="Load Balancer Details" expanded="true">
+      <dl class="dl-horizontal dl-flex">
+        <dt>Created</dt>
+        <dd>{{ctrl.loadBalancer.createTime}}</dd>
+        <dt>In</dt>
+        <dd>
+          <account-tag account="ctrl.loadBalancer.account" pad="right"></account-tag> {{ctrl.loadBalancer.region}}
+        </dd>
+        <dt ng-if="ctrl.loadBalancer.subnetId">Subnet</dt>
+        <dd ng-if="ctrl.loadBalancer.subnetId">{{ctrl.loadBalancer.subnetId}}</dd>
+        <dt ng-if="ctrl.loadBalancer.vpcId">VPC</dt>
+        <dd ng-if="ctrl.loadBalancer.vpcId">{{ctrl.loadBalancer.vpcId}}</dd>
+        <dt ng-if="ctrl.loadBalancer.loadBalancerType">Type</dt>
+        <dd ng-if="ctrl.loadBalancer.loadBalancerType">Shared</dd>
+        <dt ng-if="ctrl.loadBalancer.loadBalancerVip">VIP</dt>
+        <dd ng-if="ctrl.loadBalancer.loadBalancerVip">{{ctrl.loadBalancer.loadBalancerVip}}</dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="Listeners({{ctrl.loadBalancer.listeners.length}})">
+      <dl class="dl-horizontal dl-flex" ng-repeat="listener in ctrl.loadBalancer.listeners">
+        <dt>Listener Id</dt>
+        <dd>{{listener.listenerId}}</dd>
+        <dt ng-if="listener.listenerName">Listener Name</dt>
+        <dd ng-if="listener.listenerName">{{listener.listenerName}}</dd>
+        <dt>Protocol</dt>
+        <dd>{{listener.protocol}}</dd>
+        <dt>Port</dt>
+        <dd>{{listener.port}}</dd>
+      </dl>
+    </collapsible-section>
+  </div>
+</div>
