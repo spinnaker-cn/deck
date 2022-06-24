@@ -64,6 +64,7 @@ window.spinnakerSettings = {
     'openstack',
     'oracle',
     'tencent',
+    'hecloud',
   ],
   defaultTimeZone: process.env.TIMEZONE || 'Asia/Shanghai', // see http://momentjs.com/timezone/docs/#/data-utilities/
   feature: {
@@ -201,6 +202,12 @@ window.spinnakerSettings = {
         zone: 'us-central1-f',
       },
     },
+    hecloud: {
+      defaults: {
+        account: 'ZXXY2020',
+        region: 'cidc-rp-11',
+      },
+    },	
     huaweicloud: {
       defaults: {
         account: 'my-huawei-account',

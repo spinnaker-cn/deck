@@ -1,0 +1,152 @@
+import { module, IPromise } from 'angular';
+
+import { IVpc } from '@spinnaker/core';
+
+import {
+  IScalingAdjustmentView,
+  IScalingPolicyView,
+  IScalingPolicyAlarmView,
+  IHeCloudServerGroup,
+  IScalingPolicy,
+  IHeCloudServerGroupView,
+} from '../domain';
+import { VpcReader } from '../vpc/VpcReader';
+
+export class HeServerGroupTransformer {
+  private addComparator(alarm: IScalingPolicyAlarmView): void {
+    if (!alarm.comparisonOperator) {
+      return;
+    }
+    switch (alarm.comparisonOperator) {
+      case 'LESS_THAN':
+        alarm.comparator = '&lt;';
+        break;
+      case 'GREATER_THAN':
+        alarm.comparator = '&gt;';
+        break;
+      case 'LESS_THAN_OR_EQUAL_TO':
+        alarm.comparator = '&le;';
+        break;
+      case 'GREATER_THAN_OR_EQUAL_TO':
+        alarm.comparator = '&ge;';
+        break;
+    }
+  }
+
+  private addAdjustmentAttributes(policyOrStepAdjustment: IScalingAdjustmentView): void {
+    policyOrStepAdjustment.operator = policyOrStepAdjustment.adjustmentValue < 0 ? 'decrease' : 'increase';
+    policyOrStepAdjustment.absAdjustment = Math.abs(policyOrStepAdjustment.adjustmentValue);
+  }
+
+  public transformScalingPolicy(policy: IScalingPolicy): IScalingPolicyView {
+    const view: IScalingPolicyView = { ...policy } as IScalingPolicyView;
+    view.metricAlarm = policy.metricAlarm;
+    this.addComparator(view.metricAlarm);
+    this.addAdjustmentAttributes(view); // simple policies
+    return view;
+  }
+
+  public normalizeServerGroupDetails(serverGroup: IHeCloudServerGroup): IHeCloudServerGroupView {
+    const view: IHeCloudServerGroupView = { ...serverGroup } as IHeCloudServerGroupView;
+    if (serverGroup.scalingPolicies) {
+      view.scalingPolicies = serverGroup.scalingPolicies.map(policy => this.transformScalingPolicy(policy));
+    }
+    return view;
+  }
+
+  public normalizeServerGroup(serverGroup: IHeCloudServerGroup): IPromise<IHeCloudServerGroup> {
+    serverGroup.instances.forEach(instance => {
+      instance.vpcId = serverGroup.vpcId;
+    });
+    return VpcReader.listVpcs().then(vpc => this.addVpcNameToServerGroup(serverGroup)(vpc));
+  }
+
+  private addVpcNameToServerGroup(serverGroup: IHeCloudServerGroup): (vpc: IVpc[]) => IHeCloudServerGroup {
+    return (vpcs: IVpc[]) => {
+      const match = vpcs.find(test => test.id === serverGroup.vpcId);
+      serverGroup.vpcName = match ? match.name : '';
+      return serverGroup;
+    };
+  }
+
+  public convertServerGroupCommandToDeployConfiguration(base: any): any {
+    const command = {
+      ...base,
+      backingData: {},
+      viewState: {},
+      availabilityZones: {},
+      zones: base.availabilityZones.map((zone: string) => zone.toUpperCase()),
+      type: base.type,
+      cloudProvider: 'hecloud',
+      application: base.application,
+      stack: base.stack,
+      detail: base.detail,
+      freeFormDetails: base.detail,
+      strategy: base.strategy,
+      account: base.credentials,
+      accountName: base.credentials,
+      imageId: base.imageId,
+      instanceType: base.instanceType,
+      subnetIds: base.subnetIds,
+      subnetType: base.subnetIds.join(''),
+      credentials: base.credentials,
+      capacity: base.capacity, // for pipline deploy
+      maxSize: base.capacity.max,
+      minSize: base.capacity.min,
+      desiredCapacity: base.capacity.desired,
+      terminationPolicies: base.terminationPolicies,
+      loginSettings: base.keyPair
+        ? {
+            keyIds: [base.keyPair],
+          }
+        : undefined,
+      targetHealthyDeployPercentage: base.targetHealthyDeployPercentage,
+      vpcId: base.vpcId,
+      region: base.region,
+      dataDisks: base.dataDisks,
+      systemDisk: base.systemDisk,
+      securityGroupIds: base.securityGroups,
+      instanceTags: Object.keys(base.tags).map(tagKey => ({
+        key: tagKey,
+        value: base.tags[tagKey],
+      })),
+      internetAccessible: base.internetAccessible
+        ? {
+            internetChargeType: base.internetAccessible.internetChargeType,
+            internetMaxBandwidthOut: base.internetAccessible.internetMaxBandwidthOut,
+            publicIpAssigned: base.internetAccessible.publicIpAssigned,
+          }
+        : undefined,
+      userData: base.userData ? btoa(base.userData) : undefined,
+      defaultCooldown: base.cooldown,
+      enhancedService: base.enhancedService,
+      source: base.viewState && base.viewState.mode === 'clone' ? base.source : undefined,
+      forwardLoadBalancers: base.forwardLoadBalancers,
+    };
+    return command;
+  }
+
+  public constructNewStepScalingPolicyTemplate(): IScalingPolicy {
+    return {
+      metricAlarm: {
+        metricName: 'CPU_UTILIZATION',
+        threshold: 50,
+        statistic: 'AVERAGE',
+        comparisonOperator: 'GREATER_THAN',
+        continuousTime: 1,
+        period: 60,
+      },
+      adjustmentType: 'CHANGE_IN_CAPACITY',
+      stepAdjustments: [
+        {
+          adjustmentValue: 1,
+          metricIntervalLowerBound: 0,
+        },
+      ],
+      estimatedInstanceWarmup: 600,
+    };
+  }
+}
+
+export const AWS_SERVER_GROUP_TRANSFORMER = 'spinnaker.hecloud.serverGroup.transformer';
+module(AWS_SERVER_GROUP_TRANSFORMER, []).service('hecloudServerGroupTransformer', HeServerGroupTransformer);

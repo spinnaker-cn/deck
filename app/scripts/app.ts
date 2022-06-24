@@ -17,6 +17,11 @@ import { ECS_MODULE } from '@spinnaker/ecs';
 import { CLOUD_FOUNDRY_MODULE } from '@spinnaker/cloudfoundry';
 import { TENCENT_MODULE } from '@spinnaker/tencent';
 import { HUAWEICLOUD_MODULE } from '@spinnaker/huaweicloud';
+import { HECLOUD_MODULE } from '@spinnaker/hecloud';
+
+// eslint-disable-next-line no-console
+console.log(CORE_MODULE);
+
 module('netflix.spinnaker', [
   CORE_MODULE,
   AMAZON_MODULE,
@@ -37,4 +42,5 @@ module('netflix.spinnaker', [
   TITUS_MODULE,
   TENCENT_MODULE,
   HUAWEICLOUD_MODULE,
+  HECLOUD_MODULE,
 ]);
