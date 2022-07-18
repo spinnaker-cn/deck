@@ -66,6 +66,7 @@ const helpContents: { [key: string]: string } = {
       <p><b>Legacy</b> will use the legacy (<b>deprecated</b>) template.</p>
       <p>This option is intended to allow testing migration from legacy to modern before configuring it for the entire application. If unsure, pick <b>Default</b>.</p>`,
   'aws.serverGroup.base64UserData': '(Optional) <b>UserData</b> is a base64 encoded string.',
+  'aws.serverGroup.camRoleName': '(Optional) <b>camRoleName</b> is a camRoleName.',
   'aws.serverGroup.enabledMetrics':
     '(Optional) <b>Enabled Metrics</b> are the Auto Scaling Group metrics to enable on this group. Existing metrics are not modified.',
   'aws.serverGroup.instanceMonitoring':

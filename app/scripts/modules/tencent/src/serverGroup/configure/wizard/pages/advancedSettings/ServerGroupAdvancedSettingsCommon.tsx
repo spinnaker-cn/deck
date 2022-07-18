@@ -127,6 +127,15 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
         </div>
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
+            <b>camRoleName (optional) </b>
+            <HelpField id="aws.serverGroup.camRoleName" />
+          </div>
+          <div className="col-md-6">
+            <Field type="text" className="form-control input-sm no-spel" name="camRoleName" />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="col-md-5 sm-label-right">
             <b>Security Service </b>
             <HelpField id="aws.serverGroup.securityService" />
           </div>
