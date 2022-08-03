@@ -94,6 +94,7 @@ window.spinnakerSettings = {
     wercker: false,
   },
   gateUrl: apiHost,
+  alicloudInstanceTypes: ['ecs.*6[^\\d][\\\\.].*','ecs.*7[^\\d][\\\\.].*'],
   gitSources: ['stash', 'github', 'bitbucket', 'gitlab'],
   maxPipelineAgeDays: 14,
   newApplicationDefaults: {
