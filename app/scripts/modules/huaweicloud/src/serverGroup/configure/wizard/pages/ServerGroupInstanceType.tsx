@@ -14,7 +14,7 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupInstanc
   public validate(values: IHuaweiCloudServerGroupCommand) {
     const errors: FormikErrors<IHuaweiCloudServerGroupCommand> = {};
 
-    if (!values.instanceType) {
+    if (!values.instanceType && !values.instanceTypes) {
       errors.instanceType = 'Instance Type required.';
     }
 
