@@ -85,17 +85,7 @@ angular
             .get()
             .then(function(types: any[]) {
               if ($scope.command.zoneIds) {
-                let typeval: any[] = [];
                 let filterInstances: any[] = [];
-                types.forEach((item: any) => {
-                  if (
-                    item.account === $scope.command.credentials &&
-                    item.regionId === $scope.command.region &&
-                    $scope.command.zoneIds.includes(item.zoneId)
-                  ) {
-                    typeval = item.instanceTypes;
-                  }
-                });
                 types.forEach((item: any) => {
                   // if (item.account === $scope.command.credentials && item.regionId === $scope.command.region && item.zoneId === $scope.command.masterZoneId) {
                   if (
@@ -103,10 +93,10 @@ angular
                     item.regionId === $scope.command.region &&
                     $scope.command.zoneIds.includes(item.zoneId)
                   ) {
-                    typeval = typeval.filter(function(v) {
+                    item.instanceTypes.filter(function(v:any) {
                       if(item.instanceTypes.indexOf(v) > -1){
                         SETTINGS.alicloudInstanceTypes.forEach(function (key: any) {
-                            if (v.search(key)>-1){
+                            if (v.search(key)>-1 && filterInstances.indexOf(v) === -1){
                               filterInstances.push(v)
                             }
                         })
