@@ -537,8 +537,8 @@ export class HeServerGroupConfigurationService {
         command.availabilityZones = cloneDeep(preferredZonesForAccount[command.region].sort());
       } else {
         command.availabilityZones = intersection(
-          command.availabilityZones,
-          command.backingData.filtered.availabilityZones,
+          command.availabilityZones.map(str => str.toLowerCase()),
+          command.backingData.filtered.availabilityZones.map(str => str.toLowerCase()),
         );
         const newZoneCount = command.availabilityZones ? command.availabilityZones.length : 0;
         if (currentZoneCount !== newZoneCount) {
