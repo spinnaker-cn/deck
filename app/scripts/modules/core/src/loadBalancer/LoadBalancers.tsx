@@ -23,6 +23,7 @@ export interface ILoadBalancersState {
   tags: IFilterTag[];
   showServerGroups: boolean;
   showInstances: boolean;
+  mark: number;
 }
 
 export class LoadBalancers extends React.Component<ILoadBalancersProps, ILoadBalancersState> {
@@ -38,6 +39,7 @@ export class LoadBalancers extends React.Component<ILoadBalancersProps, ILoadBal
       tags: [],
       showServerGroups: !$stateParams.hideServerGroups || true,
       showInstances: $stateParams.showInstances || false,
+      mark: 0,
     };
   }
 
@@ -64,6 +66,7 @@ export class LoadBalancers extends React.Component<ILoadBalancersProps, ILoadBal
     this.setState({
       groups: LoadBalancerState.filterModel.asFilterModel.groups,
       tags: LoadBalancerState.filterModel.asFilterModel.tags,
+      mark: this.state.mark + 1,
     });
   }
 
@@ -129,6 +132,7 @@ export class LoadBalancers extends React.Component<ILoadBalancersProps, ILoadBal
                   parentHeading={group.heading}
                   showServerGroups={this.state.showServerGroups}
                   showInstances={this.state.showInstances}
+                  mark={this.state.mark}
                 />
               ))}
           </div>

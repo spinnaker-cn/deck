@@ -13,13 +13,15 @@ export interface ILoadBalancerPodProps {
   parentHeading: string;
   showServerGroups: boolean;
   showInstances: boolean;
+  mark: number;
 }
 
 export class LoadBalancerPod extends React.Component<ILoadBalancerPodProps> {
   public render(): React.ReactElement<LoadBalancerPod> {
-    const { grouping, application, parentHeading, showServerGroups, showInstances } = this.props;
+    const { grouping, application, parentHeading, showServerGroups, showInstances, mark } = this.props;
     const subgroups = grouping.subgroups.map(subgroup => (
       <LoadBalancer
+        mark={mark}
         key={subgroup.heading}
         application={application}
         loadBalancer={subgroup.loadBalancer}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { orderBy } from 'lodash';
+import { isEqual, orderBy } from 'lodash';
 import { LoadBalancerInstances, LoadBalancerServerGroup, API, IServerGroup } from '@spinnaker/core';
 
 import { IHeCloudApplicationLoadBalancer, ITargetGroup } from 'hecloud/domain/IHeCloudLoadBalancer';
@@ -11,6 +11,7 @@ export interface ITargetGroupProps {
   targetGroup: ITargetGroup;
   showServerGroups: boolean;
   showInstances: boolean;
+  mark: number;
 }
 
 interface ITargetGroupState {
@@ -25,6 +26,16 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
     };
   }
   public componentDidMount(): void {
+    this.callApi();
+  }
+
+  public componentWillReceiveProps(nextProps: ITargetGroupProps): void {
+    if (!isEqual(nextProps.mark, this.props.mark)) {
+      this.callApi();
+    }
+  }
+
+  callApi = () => {
     const {
       loadBalancer: { application, id },
     } = this.props;
@@ -46,7 +57,8 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
             })),
         });
       });
-  }
+  };
+
   public render(): React.ReactElement<TargetGroup> {
     const { showInstances, showServerGroups } = this.props;
     const { serverGroups } = this.state;

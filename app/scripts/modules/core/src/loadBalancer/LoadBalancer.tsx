@@ -15,6 +15,7 @@ export interface ILoadBalancerProps {
   serverGroups: IServerGroup[];
   showServerGroups?: boolean;
   showInstances?: boolean;
+  mark: number;
 }
 
 export class LoadBalancer extends React.Component<ILoadBalancerProps> {
@@ -24,7 +25,7 @@ export class LoadBalancer extends React.Component<ILoadBalancerProps> {
   };
 
   public render(): React.ReactElement<LoadBalancer> {
-    const { application, loadBalancer, serverGroups, showInstances, showServerGroups } = this.props;
+    const { application, loadBalancer, serverGroups, showInstances, showServerGroups, mark } = this.props;
     const config = CloudProviderRegistry.getValue(loadBalancer.provider || loadBalancer.cloudProvider, 'loadBalancer');
     const ClusterContainer = config.ClusterContainer || LoadBalancerClusterContainer;
 
@@ -61,6 +62,7 @@ export class LoadBalancer extends React.Component<ILoadBalancerProps> {
           </UISrefActive>
         </div>
         <ClusterContainer
+          mark={mark}
           loadBalancer={loadBalancer}
           serverGroups={serverGroups}
           showServerGroups={showServerGroups}
