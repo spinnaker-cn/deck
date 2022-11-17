@@ -22,6 +22,8 @@ export class AdvancedSettingsDetailsSection extends React.Component<IHeCloudServ
             ]}
           <dt>Termination Policies</dt>
           <dd>{asg.terminationPolicySet.join(', ')}</dd>
+          <dt>Agency</dt>
+          <dd>{asg.agency}</dd>
         </dl>
       </CollapsibleSection>
     );
