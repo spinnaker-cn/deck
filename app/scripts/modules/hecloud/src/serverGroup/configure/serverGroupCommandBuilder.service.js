@@ -185,6 +185,7 @@ module.exports = angular
           type: 'modifyAsg',
           asgs: [{ asgName: serverGroup.name, region: serverGroup.region }],
           cooldown: serverGroup.asg.defaultCooldown,
+          agency: serverGroup.asg.agency,
           enabledMetrics: _.get(serverGroup, 'asg.enabledMetrics', []).map(m => m.metric),
           terminationPolicies: angular.copy(serverGroup.asg.terminationPolicies),
           credentials: serverGroup.account,
@@ -318,6 +319,9 @@ module.exports = angular
             });
             if (serverGroup.launchConfig.userData) {
               command.userData = serverGroup.launchConfig.userData;
+            }
+            if (serverGroup.launchConfig.agency) {
+              command.agency = serverGroup.launchConfig.agency;
             }
             command.viewState.imageId = serverGroup.launchConfig.imageId;
           }
