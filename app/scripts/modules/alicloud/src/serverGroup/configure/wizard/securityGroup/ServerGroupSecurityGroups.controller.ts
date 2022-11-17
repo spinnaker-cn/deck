@@ -2,7 +2,7 @@
 
 const angular = require('angular');
 
-import { ModalWizard, API } from '@spinnaker/core';
+import { ModalWizard, API,SETTINGS} from '@spinnaker/core';
 
 export const ALICLOUD_SERVERGROUP_SECURITY = 'spinnaker.alicloud.serverGroup.configure.securityGroups.controller';
 angular
@@ -85,16 +85,7 @@ angular
             .get()
             .then(function(types: any[]) {
               if ($scope.command.zoneIds) {
-                let typeval: any[] = [];
-                types.forEach((item: any) => {
-                  if (
-                    item.account === $scope.command.credentials &&
-                    item.regionId === $scope.command.region &&
-                    $scope.command.zoneIds.includes(item.zoneId)
-                  ) {
-                    typeval = item.instanceTypes;
-                  }
-                });
+                let filterInstances: any[] = [];
                 types.forEach((item: any) => {
                   // if (item.account === $scope.command.credentials && item.regionId === $scope.command.region && item.zoneId === $scope.command.masterZoneId) {
                   if (
@@ -102,13 +93,19 @@ angular
                     item.regionId === $scope.command.region &&
                     $scope.command.zoneIds.includes(item.zoneId)
                   ) {
-                    typeval = typeval.filter(function(v) {
-                      return item.instanceTypes.indexOf(v) > -1;
+                    item.instanceTypes.filter(function(v:any) {
+                      if(item.instanceTypes.indexOf(v) > -1){
+                        SETTINGS.alicloudInstanceTypes.forEach(function (key: any) {
+                            if (v.search(key)>-1 && filterInstances.indexOf(v) === -1){
+                              filterInstances.push(v)
+                            }
+                        })
+                      }
                     });
                   }
                 });
-                $scope.instanceType = typeval;
-
+                filterInstances=  filterInstances.sort();
+                $scope.instanceType = filterInstances;
                 $scope.selected = { value: [] };
                 $scope.selected.value = $scope.command.scalingConfigurations.instanceTypes;
               }
