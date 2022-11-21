@@ -6,8 +6,12 @@ import { ILoadBalancerClusterContainerProps, LoadBalancerClusterContainer } from
 import { IHeCloudApplicationLoadBalancer } from '../domain/IHeCloudLoadBalancer';
 import { TargetGroup } from './TargetGroup';
 
-export class HeCloudLoadBalancerClusterContainer extends React.Component<ILoadBalancerClusterContainerProps> {
-  public shouldComponentUpdate(nextProps: ILoadBalancerClusterContainerProps) {
+interface newILoadBalancerClusterContainerProps extends ILoadBalancerClusterContainerProps {
+  mark: number;
+}
+
+export class HeCloudLoadBalancerClusterContainer extends React.Component<newILoadBalancerClusterContainerProps> {
+  public shouldComponentUpdate(nextProps: newILoadBalancerClusterContainerProps) {
     const serverGroupsDiffer = () =>
       !isEqual((nextProps.serverGroups || []).map(g => g.name), (this.props.serverGroups || []).map(g => g.name));
     const targetGroupsDiffer = () =>
@@ -25,12 +29,13 @@ export class HeCloudLoadBalancerClusterContainer extends React.Component<ILoadBa
   }
 
   public render(): React.ReactElement<HeCloudLoadBalancerClusterContainer> {
-    const { loadBalancer, showInstances, showServerGroups } = this.props;
+    const { loadBalancer, showInstances, showServerGroups, mark } = this.props;
     const alb = loadBalancer as IHeCloudApplicationLoadBalancer;
     const ServerGroups = alb.serverGroups
       ? alb.serverGroups.map(serverGroup => {
           return (
             <TargetGroup
+              mark={mark}
               key={serverGroup.name}
               loadBalancer={loadBalancer as IHeCloudApplicationLoadBalancer}
               serverGroup={serverGroup}
