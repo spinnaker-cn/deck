@@ -46,7 +46,7 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
       .then((serverGroups: IServerGroup[]) => {
         this.setState({
           serverGroups: serverGroups
-            .filter(sg => sg.loadBalancers && sg.loadBalancers[0] === id)
+            .filter(sg => sg.loadBalancers && sg.loadBalancers.includes(id))
             .map(sg => ({
               ...sg,
               detachedInstances: [],

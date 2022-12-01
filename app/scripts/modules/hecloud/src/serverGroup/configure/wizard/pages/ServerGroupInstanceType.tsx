@@ -14,16 +14,17 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupInstanc
   public validate(values: IHeCloudServerGroupCommand) {
     const errors: FormikErrors<IHeCloudServerGroupCommand> = {};
 
-    if (!values.instanceType) {
+    if (!values.instanceType && !values.instanceTypes) {
       errors.instanceType = 'Instance Type required.';
     }
 
     return errors;
   }
 
-  private instanceTypeChanged = (option: Option) => {
+  private instanceTypeChanged = (options: Option[]) => {
     const { values } = this.props.formik;
-    this.props.formik.setFieldValue('instanceType', (option && option.value) || '');
+    this.props.formik.setFieldValue('instanceType', options.map(o => o.value as string).join());
+    this.props.formik.setFieldValue('instanceTypes', options.map(o => o.value as string));
     values.instanceTypeChanged(values);
   };
 
@@ -50,11 +51,12 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupInstanc
             </div>
             <div className="col-md-8">
               <Select
-                value={values.instanceType}
+                value={values.instanceTypes}
                 required={true}
                 clearable={false}
                 options={instanceTypeOptions}
                 onChange={this.instanceTypeChanged}
+                multi={true}
               />
             </div>
           </div>
