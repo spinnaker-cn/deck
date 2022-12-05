@@ -75,7 +75,7 @@ export class HeServerGroupTransformer {
       backingData: {},
       viewState: {},
       availabilityZones: {},
-      zones: base.availabilityZones.map((zone: string) => zone.toUpperCase()),
+      zones: base.availabilityZones,
       type: base.type,
       cloudProvider: 'hecloud',
       application: base.application,
