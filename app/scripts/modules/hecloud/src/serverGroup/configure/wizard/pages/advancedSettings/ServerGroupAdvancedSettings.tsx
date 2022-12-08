@@ -24,6 +24,9 @@ export class ServerGroupAdvancedSettings extends React.Component<IServerGroupAdv
 
   public render() {
     const { app, formik } = this.props;
+    if (formik.initialValues.instanceTypes) {
+      formik.initialValues.instanceType = formik.initialValues.instanceTypes.join();
+    }
     return <ServerGroupAdvancedSettingsInner formik={formik} app={app} ref={this.ref} />;
   }
 }
