@@ -111,6 +111,8 @@ function configure(env, webpackOpts) {
         '@spinnaker/titus': path.join(__dirname, 'app', 'scripts', 'modules', 'titus', 'src'),
         tencent: path.join(__dirname, 'app', 'scripts', 'modules', 'tencent', 'src'),
         '@spinnaker/tencent': path.join(__dirname, 'app', 'scripts', 'modules', 'tencent', 'src'),
+		ctyun: path.join(__dirname, 'app', 'scripts', 'modules', 'ctyun', 'src'),
+        '@spinnaker/ctyun': path.join(__dirname, 'app', 'scripts', 'modules', 'ctyun', 'src'),
       },
     },
     module: {
