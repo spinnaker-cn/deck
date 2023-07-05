@@ -1,0 +1,33 @@
+<div modal-page>
+  <modal-close dismiss="$ctrl.close()"></modal-close>
+  <div class="modal-header">
+    <h3>Scaling Activities for {{$ctrl.serverGroup.name}}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="loading" ng-if="$ctrl.viewState.loading">
+      <loading-spinner size="'small'"></loading-spinner>
+    </div>
+    <div ng-if="$ctrl.viewState.error" class="text-center">
+      <p>There was an error loading scaling activities for {{$ctrl.serverGroup.name}}. Please try again later.</p>
+    </div>
+    <div ng-if="!$ctrl.viewState.loading && !$ctrl.viewState.error && !$ctrl.activities.length" class="text-center">
+      <p>No scaling activities found for {{$ctrl.serverGroup.name}}.</p>
+    </div>
+    <div ng-repeat="activity in $ctrl.activities" ng-if="!$ctrl.viewState.loading">
+      <p class="clearfix">
+        <span class="label label-{{activity.isSuccessful ? 'success' : 'danger'}} pull-left"
+          >{{activity.statusCode == '1' ? 'success' : 'fail'}}</span
+        >
+        <span class="label label-default pull-right">{{activity.startTime}}</span>
+      </p>
+      <p>InstanceName: {{ activity.instanceNameStr }}</p>
+      <p>BeforeInstanceCount：{{ activity.beforeCount }}</p>
+      <p>AfterInstanceCount：{{ activity.afterCount }}</p>
+      <p>ExecuteType：{{activity.cause}}</p>
+      <hr ng-if="!$last" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$ctrl.close()">Close</button>
+  </div>
+</div>

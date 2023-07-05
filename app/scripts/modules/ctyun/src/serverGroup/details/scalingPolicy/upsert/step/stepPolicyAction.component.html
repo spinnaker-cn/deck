@@ -1,0 +1,82 @@
+<div class="row" ng-repeat="step in $ctrl.command.step.stepAdjustments">
+  <div class="col-md-10 col-md-offset-1 step-policy-row">
+    <select
+      ng-if="$first"
+      class="form-control input-sm"
+      style="width: 75px"
+      required
+      ng-model="$ctrl.viewState.operator"
+      ng-change="$ctrl.operatorChanged()"
+      ng-options="adjustment for adjustment in $ctrl.availableActions"
+    ></select>
+    <span
+      style="width: 75px; text-transform: capitalize"
+      class="form-control-static select-placeholder"
+      ng-bind="$ctrl.viewState.operator"
+      ng-if="!$first"
+    ></span>
+
+    <input
+      type="number"
+      min="1"
+      class="form-control input-sm"
+      required
+      style="width: 65px"
+      ng-model="step.adjustmentValue"
+    />
+
+    <select
+      ng-if="$first"
+      class="form-control input-sm"
+      style="width: 120px"
+      required
+      ng-model="$ctrl.viewState.adjustmentType"
+      ng-change="$ctrl.adjustmentTypeChanged()"
+      ng-options="option for option in $ctrl.adjustmentTypeOptions"
+    ></select>
+    <span
+      style="width: 120px"
+      class="form-control-static select-placeholder"
+      ng-if="!$first"
+      ng-bind="$ctrl.viewState.adjustmentType"
+    ></span>
+    <span class="input-label"> when <strong ng-bind="$ctrl.command.alarm.metricName"></strong> </span>
+
+    <span>
+      <span class="input-label" ng-if="$ctrl.command.alarm.comparisonOperator.includes('gt')">is greater than</span>
+      <span class="input-label" ng-if="$ctrl.command.alarm.comparisonOperator.includes('ge')"
+        >is greater than or equal to</span
+      >
+      <span class="input-label" ng-if="$ctrl.command.alarm.comparisonOperator.includes('lt')">is less than</span>
+      <span class="input-label" ng-if="$ctrl.command.alarm.comparisonOperator.includes('le')"
+        >is less than or equal to</span
+      >
+      <span class="input-label" ng-if="$ctrl.command.alarm.comparisonOperator.includes('eq')">is equal to</span>
+      <span class="input-label text-right" ng-bind="step.threshold"></span>
+    </span>
+
+    <span ng-if="!$first" class="pull-right" style="padding: 5px 0;">
+      <a href ng-click="$ctrl.removeStep($index)">
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+    </span>
+  </div>
+</div>
+
+<!-- <div class="row" style="margin-top: 10px">
+  <div class="col-md-10 col-md-offset-1">
+    <button class="btn btn-block btn-sm add-new" ng-click="$ctrl.addStep(step)">
+      <span class="glyphicon glyphicon-plus-sign"></span>
+      Add step
+    </button>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <a href="https://www.ctyun.cn/document/10027725/10031242" target="_blank">
+      <i class="far fa-file-alt"></i>
+      Documentation
+    </a>
+  </div>
+</div>
