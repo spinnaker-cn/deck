@@ -1,0 +1,76 @@
+<span class="label label-default">Step Scaling</span>
+
+<div
+  uib-popover-template="$ctrl.popoverTemplate"
+  popover-placement="left"
+  popover-title="{{ $ctrl.policy.name }}"
+  popover-trigger="'mouseenter'"
+>
+  <!-- 告警策略 -->
+  <div ng-if="$ctrl.policy.ruleType == 1">
+    <div ng-if="$ctrl.policy.triggerObj">
+      <strong>Whenever</strong>
+      {{ $ctrl.policy.triggerObj.statistics }} of
+      <span class="alarm-name">{{ $ctrl.policy.triggerObj.metricName }}</span> is
+      {{ $ctrl.comparisonOperatorObj[$ctrl.policy.triggerObj.comparisonOperator] }}
+      {{ $ctrl.policy.triggerObj.threshold }}%
+    </div>
+    <div ng-if="$ctrl.policy.triggerObj">
+      <strong>for at least</strong>
+      {{ $ctrl.policy.triggerObj.evaluationCount }} consecutive periods of {{ $ctrl.policy.triggerObj.period }}
+    </div>
+    <div ng-if="!$ctrl.policy.triggerObj">
+      <em>No alarms configured for this policy.</em>
+    </div>
+  </div>
+  <!-- 定时策略 -->
+  <div ng-if="$ctrl.policy.ruleType == 2">
+    <div>
+      <strong>Trigger time：</strong>
+      {{ $ctrl.policy.executionTime }}
+    </div>
+    <!-- <div>
+      <strong>Execute Action：</strong>
+      {{ $ctrl.actionObj[$ctrl.policy.action] }}
+      {{ $ctrl.policy.operateCount }}
+      {{ $ctrl.operateUnitObj[$ctrl.policy.operateUnit] }} instances
+    </div> -->
+  </div>
+  <!-- 周期策略 -->
+  <div ng-if="$ctrl.policy.ruleType == 3">
+    <div>
+      <strong>Effective time：</strong>
+      from {{ $ctrl.policy.effectiveFrom }} to {{ $ctrl.policy.effectiveTill }}
+    </div>
+    <div>
+      <strong>Trigger time：</strong>
+      <span ng-if="$ctrl.policy.cycle == 1">
+        {{ $ctrl.policy.executionTime.split(' ')[1] }}
+        on the {{ $ctrl.policy.day.join('th, ') }}{{ $ctrl.policy.day.length > 0 ? 'th' : '' }}
+        of each month
+      </span>
+      <span ng-if="$ctrl.policy.cycle == 2">
+        every {{ $ctrl.getWeek($ctrl.policy.day) }}
+        {{ $ctrl.policy.executionTime.split(' ')[1] }}
+      </span>
+      <span ng-if="$ctrl.policy.cycle == 3">Daily {{ $ctrl.policy.executionTime.split(' ')[1] }}</span>
+    </div>
+    <!-- <div>
+      <strong>Execute Action：</strong>
+      {{ $ctrl.actionObj[$ctrl.policy.action] }}
+      {{ $ctrl.policy.operateCount }}
+      {{ $ctrl.operateUnitObj[$ctrl.policy.operateUnit] }} instances
+    </div> -->
+  </div>
+</div>
+
+<div class="actions text-right">
+  <button class="btn btn-xs btn-link" ng-click="$ctrl.editPolicy()" ng-if="$ctrl.policy.triggerObj">
+    <span class="glyphicon glyphicon-cog" uib-tooltip="Edit policy"></span>
+    <span class="sr-only">Edit policy</span>
+  </button>
+  <button class="btn btn-xs btn-link" ng-click="$ctrl.deletePolicy()" ng-if="$ctrl.policy.triggerObj">
+    <span class="glyphicon glyphicon-trash" uib-tooltip="Delete policy"></span>
+    <span class="sr-only">Delete policy</span>
+  </button>
+</div>

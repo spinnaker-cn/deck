@@ -1,0 +1,204 @@
+<div modal-page>
+  <task-monitor monitor="taskMonitor"></task-monitor>
+  <form role="form" name="form" novalidate>
+    <modal-close dismiss="$dismiss()"></modal-close>
+    <div class="modal-header">
+      <h3>{{ ctrl.viewState.isNew ? 'Create' : 'Edit' }} Scaling Policy for {{serverGroup.name}}</h3>
+    </div>
+    <div class="modal-body container-fluid form-horizontal form-inline">
+      <h4 class="section-heading">Conditions</h4>
+      <div class="section-body">
+        <div class="row">
+          <div class="col-md-2 sm-label-right">Scaling Policy Type</div>
+          <div className="col-md-10 radio" style="padding-top: 5px;">
+            <label style="margin-left: 15px;">
+              <input
+                type="radio"
+                ng-model="ctrl.command.type"
+                ng-value="2"
+                ng-change="ctrl.typeChange()"
+                ng-disabled="!ctrl.viewState.isNew"
+              />
+              Scheduled
+            </label>
+            <label style="margin-left: 15px;">
+              <input
+                type="radio"
+                ng-model="ctrl.command.type"
+                ng-value="3"
+                ng-change="ctrl.typeChange()"
+                ng-disabled="!ctrl.viewState.isNew"
+              />
+              Periodic
+            </label>
+          </div>
+        </div>
+
+        <div class="row" ng-if="ctrl.command.type == 3">
+          <div class="col-md-2 sm-label-right">cycle</div>
+          <div className="col-md-10 radio" style="padding-top: 5px;">
+            <label style="margin-left: 15px;">
+              <input
+                style="vertical-align: middle;margin-top: -3px;"
+                type="radio"
+                ng-model="ctrl.command.cycle"
+                ng-value="3"
+              />
+              day
+            </label>
+            <label style="margin-left: 15px;">
+              <input
+                style="vertical-align: middle;margin-top: -3px;"
+                type="radio"
+                ng-model="ctrl.command.cycle"
+                ng-value="2"
+              />
+              week
+            </label>
+            <label style="margin-left: 15px;">
+              <input
+                type="radio"
+                style="vertical-align: middle;margin-top: -3px;"
+                ng-model="ctrl.command.cycle"
+                ng-value="1"
+              />
+              month
+            </label>
+          </div>
+        </div>
+        <div class="row" ng-if="ctrl.command.type == 3 && ctrl.command.cycle == 2" style="margin-bottom: 5px;">
+          <div class="col-md-2 sm-label-right">
+            Select week
+            <HelpField id="aws.serverGroup.Max" />
+          </div>
+          <div class="col-md-10 content-fields checkbox ctyun">
+            <label ng-repeat="week in ctrl.weekList" style="margin-right: 15px;">
+              <input
+                type="checkbox"
+                style="vertical-align: middle;margin-top: -3px;"
+                ng-model="ctrl.command.day[week.label]"
+                ng-required="week.required"
+                ng-change="ctrl.weekChange()"
+              />
+              {{ week.label }}
+            </label>
+          </div>
+        </div>
+
+        <div class="row" ng-if="ctrl.command.type == 3 && ctrl.command.cycle == 1" style="margin-bottom: 5px;">
+          <div class="col-md-2 sm-label-right">
+            Select date
+            <HelpField id="aws.serverGroup.Max" />
+          </div>
+          <div class="col-md-10 content-fields checkbox ctyun">
+            <label ng-repeat="date in ctrl.dateList" style="margin-right: 15px;">
+              <input
+                type="checkbox"
+                style="vertical-align: middle;margin-top: -3px;"
+                ng-model="ctrl.command.day[date.value]"
+                ng-required="date.required"
+                ng-change="ctrl.dateChange()"
+              />
+              {{ date.value }}
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 sm-label-right">
+            Trigger time
+            <HelpField id="aws.serverGroup.Max" />
+          </div>
+          <div class="col-md-10 content-fields">
+            <input
+              ng-if="ctrl.command.type == 2"
+              class="form-control input-sm no-spel"
+              type="datetime-local"
+              step="1"
+              ng-model="ctrl.command.executionTime"
+              required
+            />
+            <input
+              ng-if="ctrl.command.type == 3"
+              class="form-control input-sm no-spel"
+              type="time"
+              step="1"
+              ng-model="ctrl.command.executionTime"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="row" ng-if="ctrl.command.type == 3" style="margin-top: 5px;">
+          <div class="col-md-2 sm-label-right">
+            Effective time
+            <HelpField id="aws.serverGroup.Max" />
+          </div>
+          <div class="col-md-10 content-fields">
+            <input
+              class="form-control input-sm no-spel"
+              type="datetime-local"
+              step="1"
+              ng-model="ctrl.command.effectiveFrom"
+              required
+            />
+            to
+            <input
+              class="form-control input-sm no-spel"
+              type="datetime-local"
+              step="1"
+              ng-model="ctrl.command.effectiveTill"
+              required
+            />
+          </div>
+        </div>
+      </div>
+      <h4 class="section-heading">Actions</h4>
+      <div class="section-body">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1 step-policy-row">
+            <select
+              class="form-control input-sm"
+              style="width: 75px"
+              required
+              ng-model="ctrl.command.action"
+              ng-options="adjustment.value as adjustment.label for adjustment in ctrl.availableActions"
+            ></select>
+
+            <input
+              type="number"
+              min="1"
+              class="form-control input-sm"
+              required
+              style="width: 65px"
+              ng-model="ctrl.command.operateCount"
+            />
+
+            <select
+              class="form-control input-sm"
+              style="width: 120px"
+              required
+              ng-model="ctrl.command.operateUnit"
+              ng-options="option.value as option.label for option in ctrl.adjustmentTypeOptions"
+            ></select>
+          </div>
+        </div>
+
+        <div class="row" style="padding-top: 4px;">
+          <div class="col-md-10 col-md-offset-1">
+            <a href="https://www.ctyun.cn/document/10027725/10031242" target="_blank">
+              <i class="far fa-file-alt"></i>
+              Documentation
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+      <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid" ng-click="ctrl.submit()">
+        {{ ctrl.viewState.isNew ? 'Submit' : 'Update' }}
+      </button>
+    </div>
+  </form>
+</div>

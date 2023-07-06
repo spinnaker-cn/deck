@@ -25,7 +25,8 @@
       "openstack",
       "oracle",
       "titus ",
-      "tencent"
+      "tencent",
+	  "ctyun"
     ],
     "indent": [true, "spaces"],
     "jsx-no-lambda": false,

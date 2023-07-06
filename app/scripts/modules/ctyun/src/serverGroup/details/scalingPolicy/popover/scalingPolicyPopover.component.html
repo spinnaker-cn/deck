@@ -1,0 +1,138 @@
+<div>
+  <dl class="dl-horizontal dl-medium">
+    <ng-template ng-if="$ctrl.policy.ruleType == 1">
+      <dt>Whenever</dt>
+      <dd>
+        {{ $ctrl.alarm.statistics }} of {{ $ctrl.alarm.metricName }} is
+        {{ $ctrl.comparisonOperatorObj[$ctrl.alarm.comparisonOperator] }} {{ $ctrl.alarm.threshold }}%
+      </dd>
+      <dt>for at least</dt>
+      <dd>{{ $ctrl.alarm.evaluationCount }} consecutive periods of {{ $ctrl.alarm.period }}</dd>
+      <dt ng-if="$ctrl.alarm.cooldown">wait</dt>
+      <dd ng-if="$ctrl.alarm.cooldown">{{ $ctrl.policy.cooldown }} seconds before allowing another scaling activity</dd>
+      <dt>Execute Action</dt>
+      <dd>
+        {{ $ctrl.actionObj[$ctrl.policy.action] }}
+        {{ $ctrl.policy.operateCount }}
+        {{ $ctrl.operateUnitObj[$ctrl.policy.operateUnit] }} instances
+      </dd>
+    </ng-template>
+    <ng-template ng-if="$ctrl.policy.ruleType == 2">
+      <dt>Trigger time</dt>
+      <dd>{{ $ctrl.policy.executionTime }}</dd>
+      <dt>Execute Action</dt>
+      <dd>
+        {{ $ctrl.actionObj[$ctrl.policy.action] }}
+        {{ $ctrl.policy.operateCount }}
+        {{ $ctrl.operateUnitObj[$ctrl.policy.operateUnit] }} instances
+      </dd>
+    </ng-template>
+    <ng-template ng-if="$ctrl.policy.ruleType == 3">
+      <dt>Effective time</dt>
+      <dd>from {{ $ctrl.policy.effectiveFrom }} to {{ $ctrl.policy.effectiveTill }}</dd>
+      <dt>Trigger time</dt>
+      <dd ng-if="$ctrl.policy.cycle == 1">
+        {{ $ctrl.policy.executionTime.split(' ')[1] }}
+        on the {{ $ctrl.policy.day.join('th, ') }}{{ $ctrl.policy.day.length > 0 ? 'th' : '' }}
+        of each month
+      </dd>
+      <dd ng-if="$ctrl.policy.cycle == 2">
+        every {{ $ctrl.getWeek($ctrl.policy.day) }}
+        {{ $ctrl.policy.executionTime.split(' ')[1] }}
+      </dd>
+      <dd ng-if="$ctrl.policy.cycle == 3">Daily {{ $ctrl.policy.executionTime.split(' ')[1] }}</dd>
+      <dt>Execute Action</dt>
+      <dd>
+        {{ $ctrl.actionObj[$ctrl.policy.action] }}
+        {{ $ctrl.policy.operateCount }}
+        {{ $ctrl.operateUnitObj[$ctrl.policy.operateUnit] }} instances
+      </dd>
+    </ng-template>
+    <ng-template ng-if="false">
+      <dt>then</dt>
+      <dd ng-if="$ctrl.policy.stepAdjustments.length">
+        <div ng-repeat="stepAdjustment in $ctrl.policy.stepAdjustments">
+          <span ng-if="$ctrl.policy.stepAdjustments.length > 1">
+            if {{ $ctrl.alarm.metricName }}
+            <span ng-if="$ctrl.alarm.comparisonOperator.indexOf('Greater') === 0">
+              <span
+                ng-if="stepAdjustment.metricIntervalUpperBound !== undefined && stepAdjustment.metricIntervalLowerBound !== undefined"
+              >
+                is between
+                {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalLowerBound }}
+                and
+                {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalUpperBound }}
+              </span>
+              <span ng-if="stepAdjustment.metricIntervalUpperBound === undefined">
+                is greater than {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalLowerBound }}
+              </span>
+            </span>
+
+            <span ng-if="$ctrl.alarm.comparisonOperator.indexOf('Less') === 0">
+              <span
+                ng-if="stepAdjustment.metricIntervalUpperBound !== undefined && stepAdjustment.metricIntervalLowerBound !== undefined"
+              >
+                is between
+                {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalLowerBound }}
+                and
+                {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalUpperBound }}
+              </span>
+              <span ng-if="stepAdjustment.metricIntervalLowerBound === undefined">
+                is less than {{ $ctrl.alarm.threshold + stepAdjustment.metricIntervalUpperBound }}
+              </span> </span
+            >,
+          </span>
+          <span ng-if="$ctrl.policy.adjustmentType === 'EXACT_CAPACITY'">
+            set capacity to {{ stepAdjustment.adjustmentValue }} instance<span
+              ng-if="stepAdjustment.adjustmentValue > 1"
+              >s</span
+            >
+          </span>
+          <span
+            ng-if="$ctrl.policy.adjustmentType === 'CHANGE_IN_CAPACITY' || $ctrl.policy.adjustmentType === 'PERCENT_CHANGE_IN_CAPACITY'"
+          >
+            {{ stepAdjustment.operator }} capacity
+            <span ng-if="$ctrl.policy.adjustmentType === 'PERCENT_CHANGE_IN_CAPACITY'">
+              by {{ stepAdjustment.absAdjustment }}%
+            </span>
+            <span ng-if="$ctrl.policy.adjustmentType === 'CHANGE_IN_CAPACITY'">
+              by {{ stepAdjustment.absAdjustment }} instance<span ng-if="stepAdjustment.absAdjustment > 1">s</span>
+            </span>
+          </span>
+        </div>
+      </dd>
+      <dd ng-if="!$ctrl.policy.stepAdjustments.length">
+        <span ng-if="$ctrl.policy.adjustmentType === 'EXACT_CAPACITY'">
+          set capacity to {{ $ctrl.policy.adjustmentValue }} instance<span ng-if="$ctrl.policy.adjustmentValue > 1"
+            >s</span
+          >
+        </span>
+        <span
+          ng-if="$ctrl.policy.adjustmentType === 'CHANGE_IN_CAPACITY' || $ctrl.policy.adjustmentType === 'PERCENT_CHANGE_IN_CAPACITY'"
+        >
+          {{ $ctrl.policy.operator }} capacity
+          <span ng-if="$ctrl.policy.adjustmentType === 'PERCENT_CHANGE_IN_CAPACITY'">
+            by {{ $ctrl.policy.absAdjustment }}%
+          </span>
+          <span ng-if="$ctrl.policy.adjustmentType === 'CHANGE_IN_CAPACITY'">
+            by {{ $ctrl.policy.absAdjustment }} instance<span ng-if="$ctrl.policy.absAdjustment > 1">s</span>
+          </span>
+        </span>
+      </dd>
+      <dt ng-if="$ctrl.policy.minAdjustmentMagnitude">in</dt>
+      <dd ng-if="$ctrl.policy.minAdjustmentMagnitude">
+        increments of at least {{ $ctrl.policy.minAdjustmentMagnitude }} instance<span
+          ng-if="$ctrl.policy.minAdjustmentMagnitude > 1"
+          >s</span
+        >
+      </dd>
+      <dt ng-if="$ctrl.showWait">wait</dt>
+      <dd ng-if="$ctrl.policy.cooldown">
+        {{ $ctrl.policy.cooldown }} seconds before allowing another scaling activity.
+      </dd>
+      <dd ng-if="$ctrl.showWait && $ctrl.policy.estimatedInstanceWarmup">
+        {{ $ctrl.policy.estimatedInstanceWarmup }} seconds to warm up after each step.
+      </dd>
+    </ng-template>
+  </dl>
+</div>
