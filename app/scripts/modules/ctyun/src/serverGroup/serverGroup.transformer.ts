@@ -144,7 +144,7 @@ export class AwsServerGroupTransformer {
       forwardLoadBalancers: base.forwardLoadBalancers,
     };
 
-    if (base.optionZone.length > 1) {
+    if (base.optionZone.length > 0) {
       command.mazInfoList = base.mazInfoList;
       command.subnetIds = [];
     } else {
