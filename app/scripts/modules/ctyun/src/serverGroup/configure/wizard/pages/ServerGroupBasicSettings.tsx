@@ -384,7 +384,7 @@ export class ServerGroupBasicSettings
           </div>
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <div className="col-md-3 sm-label-right">
             Health mode <HelpField id="aws.serverGroup.healthMode" />
           </div>
@@ -405,7 +405,7 @@ export class ServerGroupBasicSettings
               onChange={this.healthModeChanged}
             />
           </div>
-        </div>
+        </div> */}
         <div className="form-group">
           <div className="col-md-3 sm-label-right">Health period</div>
           <div className="col-md-7">

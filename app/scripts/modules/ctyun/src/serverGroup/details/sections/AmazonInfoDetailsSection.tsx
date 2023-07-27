@@ -102,10 +102,10 @@ export class AmazonInfoDetailsSection extends React.Component<
 
           <dt>Recover Mode</dt>
           <dd>{serverGroup.asg.recoveryMode == 1 ? 'Release mode' : 'Shutdown recycling mode'}</dd>
-          <dt>Health mode</dt>
+          {/* <dt>Health mode</dt>
           <dd>
             {serverGroup.asg.healthMode == 1 ? 'Cloud Server Health Check' : 'Elastic Load Balancing Health Check'}
-          </dd>
+          </dd> */}
           <dt>Health period</dt>
           <dd>
             {serverGroup.asg.healthPeriod < 1000

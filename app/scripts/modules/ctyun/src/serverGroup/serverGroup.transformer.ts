@@ -90,7 +90,7 @@ export class AwsServerGroupTransformer {
       recoveryMode: base.recoveryMode,
       stack: base.stack,
       detail: base.detail,
-      healthMode: Number(base.healthMode),
+      healthMode: 1,
       healthPeriod: Number(base.healthPeriod),
       // moveOutStrategy: Number(base.moveOutStrategy),
       terminationPolicies: base.terminationPolicies, // [Number(base.moveOutStrategy)], //
