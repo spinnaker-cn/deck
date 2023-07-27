@@ -235,8 +235,8 @@ module.exports = angular
       ctrl.addRule = function(ruleset) {
         ruleset.push({
           action: 'ACCEPT',
-          protocol: 'TCP',
-          port: 7001,
+          protocol: 'ANY',
+          port: '',
         });
       };
 
