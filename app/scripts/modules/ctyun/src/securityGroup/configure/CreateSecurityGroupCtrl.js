@@ -27,7 +27,7 @@ module.exports = angular
 
       ctrl.translate = label => FirewallLabels.get(label);
       ctrl.protocolChange = rule => {
-        if (rule.protocol == 'ICMP') {
+        if (rule.protocol == 'ICMP' || rule.protocol == 'ANY') {
           rule.port = '';
         }
       };

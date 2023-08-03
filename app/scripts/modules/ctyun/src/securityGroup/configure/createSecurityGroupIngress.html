@@ -54,7 +54,7 @@
                   ng-if="!rule.existing"
                   class="form-control input-sm"
                   ng-model="rule.protocol"
-                  ng-options="protocol for protocol in ['TCP', 'UDP', 'ICMP']"
+                  ng-options="protocol for protocol in ['ANY', 'TCP', 'UDP', 'ICMP']"
                   ng-change="ctrl.protocolChange(rule)"
                   required
                 ></select>
@@ -65,8 +65,8 @@
                   ng-if="!rule.existing"
                   class="form-control input-sm"
                   ng-model="rule.port"
-                  ng-required="rule.protocol !='ICMP'"
-                  ng-disabled="rule.protocol == 'ICMP'"
+                  ng-required="rule.protocol !='ICMP' && rule.protocol != 'ANY'"
+                  ng-disabled="rule.protocol == 'ICMP' || rule.protocol == 'ANY'"
                 />
               </td>
               <td>
