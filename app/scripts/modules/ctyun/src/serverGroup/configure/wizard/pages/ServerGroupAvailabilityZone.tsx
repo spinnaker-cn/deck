@@ -35,12 +35,33 @@ export class ServerGroupAvailabilityZone extends React.Component<IServerGroupZon
 
   private updateAvailabilityZone(): void {
     const { setFieldValue, values } = this.props.formik;
+    let tableStr = '';
     values.mazInfoList = values.mazInfoList.map((item, index) => ({
       ...item,
       index,
     }));
     setFieldValue('mazInfoList', values.mazInfoList);
-    console.log('values.mazInfoList>', values.mazInfoList);
+    values.mazInfoList.map(item => {
+      if (values.backingData.filtered.subnetPurposes) {
+        if (item.masterId) {
+          let checkSubnet = values.backingData.filtered.subnetPurposes.find(subnet => subnet.id == item.masterId);
+          if (checkSubnet) {
+            tableStr != '' && (tableStr += ',');
+            tableStr += checkSubnet.name || '';
+          }
+        }
+        if (item.optionId && item.optionId.length > 0) {
+          item.optionId.map((optionItem: any) => {
+            let checkOption = values.backingData.filtered.subnetPurposes.find(subnet => subnet.id == optionItem);
+            if (checkOption) {
+              tableStr != '' && (tableStr += ',');
+              tableStr += checkOption.name || '';
+            }
+          });
+        }
+      }
+    });
+    setFieldValue('subnetTableStr', tableStr);
   }
 
   private addAvailabilityZone(): void {

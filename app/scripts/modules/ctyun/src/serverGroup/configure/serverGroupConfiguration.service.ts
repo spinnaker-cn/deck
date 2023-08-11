@@ -91,6 +91,7 @@ export interface ICtyunInternetAccessible {
   publicIpAssigned: boolean;
 }
 export interface IAmazonServerGroupCommand extends IServerGroupCommand {
+  subnetTableStr?: string;
   optionZone?: any[];
   configObj: any;
   configID: String;
@@ -401,6 +402,7 @@ export class AwsServerGroupConfigurationService {
     ) {
       command.subnetIds = [];
     }
+    let tableStr = '';
     if (command.mazInfoList && command.mazInfoList.length > 0) {
       command.mazInfoList.map(mazInfo => {
         if (!command.backingData.filtered.subnetPurposes.find(subnet => subnet.id === mazInfo.masterId)) {
@@ -408,7 +410,16 @@ export class AwsServerGroupConfigurationService {
             ? command.backingData.filtered.subnetPurposes[0].id
             : '';
         }
+
+        if (command.backingData.filtered.subnetPurposes) {
+          tableStr != '' && (tableStr += ',');
+          let checkSubnet = command.backingData.filtered.subnetPurposes.find(subnet => subnet.id == mazInfo.masterId);
+          if (checkSubnet) {
+            tableStr += checkSubnet.name || '';
+          }
+        }
       });
+      command.subnetTableStr = tableStr;
     }
     return result;
   }

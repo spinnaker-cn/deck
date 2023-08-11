@@ -95,6 +95,7 @@ export class AwsServerGroupTransformer {
       // moveOutStrategy: Number(base.moveOutStrategy),
       terminationPolicies: base.terminationPolicies, // [Number(base.moveOutStrategy)], //
       mazInfoList: null,
+      subnetTableStr: base.subnetTableStr,
       subnetIds: [],
 
       freeFormDetails: base.detail,
