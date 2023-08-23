@@ -393,13 +393,13 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
             </table>
           </div>
         </div>
-        {/* <div className="form-group">
+        <div className="form-group">
           <div className="sm-label-left">
             <b>Tags (optional)</b>
             <HelpField id="aws.serverGroup.tags" />
           </div>
           <MapEditor model={values.tags as any} allowEmpty={true} onChange={this.tagsChanged} />
-        </div> */}
+        </div>
       </div>
     );
   }

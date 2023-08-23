@@ -268,9 +268,9 @@ module.exports = angular
             'spinnaker:details',
             'spinnaker:server-group-name',
           ];
-          if (serverGroup.launchConfig.instanceTags) {
-            serverGroup.launchConfig.instanceTags
-              .filter(t => !reservedTags.includes(t.key))
+          if (serverGroup.launchConfig.tags) {
+            serverGroup.launchConfig.tags
+              // .filter(t => !reservedTags.includes(t.key))
               .forEach(tag => {
                 existingTags[tag.key] = tag.value;
               });
@@ -363,7 +363,7 @@ module.exports = angular
           if (serverGroup.launchConfig) {
             angular.extend(command, {
               instanceType: serverGroup.launchConfig.specName,
-              instanceTypes: serverGroup.launchConfig.specName ? [serverGroup.launchConfig.specName] : [],
+              instanceTypes: serverGroup.launchConfig.specName ? serverGroup.launchConfig.specName.split(',') : [],
               keyPair: '', //serverGroup.launchConfig.loginSettings.keyIds && serverGroup.launchConfig.loginSettings.keyIds[0],
               associatePublicIpAddress: serverGroup.launchConfig.useFloatings,
               ramdiskId: '', // serverGroup.launchConfig.ramdiskId,
