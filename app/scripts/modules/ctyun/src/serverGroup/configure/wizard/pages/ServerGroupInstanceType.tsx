@@ -19,10 +19,10 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
     return errors;
   }
 
-  private instanceTypeChanged = (options: any) => {
+  private instanceTypeChanged = (options: Option[]) => {
     const { values } = this.props.formik;
-    this.props.formik.setFieldValue('instanceTypes', [options.value]);
-    this.props.formik.setFieldValue('instanceType', options.value);
+    this.props.formik.setFieldValue('instanceTypes', options.map(o => o.value as string));
+    this.props.formik.setFieldValue('instanceType', options.map(o => o.value as string).join());
     values.instanceTypeChanged(values);
   };
 
@@ -48,12 +48,12 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
             </div>
             <div className="col-md-8">
               <Select
-                value={values.instanceType}
+                value={values.instanceTypes}
                 required={true}
                 clearable={false}
                 options={instanceTypeOptions}
                 onChange={this.instanceTypeChanged}
-                multi={false}
+                multi={true}
               />
             </div>
           </div>

@@ -35,7 +35,9 @@ export class TargetGroup extends React.Component<ITargetGroupProps, ITargetGroup
       .then((serverGroups: IServerGroup[]) => {
         this.setState({
           serverGroups: serverGroups
-            .filter(sg => sg.loadBalancers && sg.loadBalancers[0] === id)
+            .filter(
+              sg => sg.loadBalancers && sg.loadBalancers.length > 0 && sg.loadBalancers.findIndex(lb => lb === id) > -1,
+            )
             .map(sg => ({
               ...sg,
               detachedInstances: [],

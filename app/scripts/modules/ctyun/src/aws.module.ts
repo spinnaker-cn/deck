@@ -101,7 +101,7 @@ module(CTYUN_MODULE, [
         // ScalingProcessesDetailsSection,
         ScalingPoliciesDetailsSection,
         ScheduledActionsDetailsSection,
-        // TagsDetailsSection,
+        TagsDetailsSection,
         PackageDetailsSection,
         // AdvancedSettingsDetailsSection,
         LogsDetailsSection,
