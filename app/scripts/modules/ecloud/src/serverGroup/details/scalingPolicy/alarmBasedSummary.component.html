@@ -1,0 +1,63 @@
+<span class="label label-default">{{ $ctrl.policy.policyName }}</span>
+
+  <div
+    uib-popover-template="$ctrl.popoverTemplate"
+    popover-placement="left"
+    popover-title="{{ $ctrl.policy.scalingPolicyName }}"
+    popover-trigger="'mouseenter'"
+  >
+    <!-- <div>
+      <strong>Whenever</strong>
+      {{ $ctrl.policy.metricAlarm.statistic }} of <span class="alarm-name">{{ $ctrl.policy.metricAlarm.metricName }}</span> is
+      <span ng-bind-html="$ctrl.policy.metricAlarm.comparator"></span> {{ $ctrl.policy.metricAlarm.threshold }}
+    </div>
+    <div>
+      <strong>for at least</strong>
+      {{ $ctrl.policy.metricAlarm.continuousTime }} consecutive periods of {{ $ctrl.policy.metricAlarm.period }} seconds
+    </div> -->
+    <div ng-if="$ctrl.policy.policyName">
+      <strong>Scaling Rule Name</strong>
+      <span style="display: block;">{{ $ctrl.policy.scalingRuleName }}</span>
+    </div>
+    <div ng-if="$ctrl.policy.cooldown">
+      <strong>Cooldown</strong>
+      <span style="display: block;"></span>{{ $ctrl.policy.cooldown }}</span>
+    </div>
+    <div>
+      <strong>Condition</strong>
+      <span style="display: block;" ng-if="$ctrl.policy.scheduledTask.triggerTime">
+        Triggered at {{$ctrl.policy.scheduledTask.triggerTime}}
+        <span ng-if="$ctrl.policy.scheduledTask.periodName !== null && $ctrl.policy.scheduledTask.periodName !== 'UNSET'">
+          every {{$ctrl.policy.scheduledTask.periodValue}} {{$ctrl.policy.scheduledTask.periodName}}
+        </span>
+      </span>
+      <span style="display: block;" ng-if="!$ctrl.policy.scheduledTask.triggerTime">
+        When {{$ctrl.policy.metricAlarm.metricName}} {{$ctrl.policy.metricAlarm.statistic}} {{$ctrl.policy.metricAlarm.comparisonOperator}} {{$ctrl.policy.metricAlarm.threshold}} for {{$ctrl.policy.metricAlarm.continuousTime
+        }} times
+      </span>
+    </div>
+    
+    <!-- <div ng-if="$ctrl.policy.minAdjustmentValue">
+      <strong>最小调整台数：</strong>
+      {{ $ctrl.policy.minAdjustmentValue }}
+    </div> -->
+    <div ng-if="$ctrl.policy.adjustmentType">
+      <strong>Execution：</strong>
+      <span style="display: block;">{{ $ctrl.policy.des }}</span>
+    </div>
+  </div>
+
+<!-- <div ng-if="!$ctrl.policy">
+  <em>No alarms configured for this policy.</em>
+</div> -->
+
+<!-- <div class="actions text-right">
+  <button class="btn btn-xs btn-link" ng-click="$ctrl.editPolicy()" ng-if="$ctrl.policy">
+    <span class="glyphicon glyphicon-cog" uib-tooltip="Edit policy"></span>
+    <span class="sr-only">Edit policy</span>
+  </button>
+  <button class="btn btn-xs btn-link" ng-click="$ctrl.deletePolicy()" ng-if="$ctrl.policy">
+    <span class="glyphicon glyphicon-trash" uib-tooltip="Delete policy"></span>
+    <span class="sr-only">Delete policy</span>
+  </button>
+</div> -->
