@@ -16,6 +16,7 @@ import { TITUS_MODULE } from '@spinnaker/titus';
 import { ECS_MODULE } from '@spinnaker/ecs';
 import { CLOUD_FOUNDRY_MODULE } from '@spinnaker/cloudfoundry';
 import { TENCENT_MODULE } from '@spinnaker/tencent';
+import { ECLOUD_MODULE } from '@spinnaker/ecloud';
 import { HUAWEICLOUD_MODULE } from '@spinnaker/huaweicloud';
 import { HECLOUD_MODULE } from '@spinnaker/hecloud';
 import { CTYUN_MODULE } from '@spinnaker/ctyun';
@@ -45,4 +46,5 @@ module('netflix.spinnaker', [
   HUAWEICLOUD_MODULE,
   HECLOUD_MODULE,
   CTYUN_MODULE,
+  ECLOUD_MODULE,
 ]);
