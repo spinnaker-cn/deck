@@ -65,7 +65,8 @@ window.spinnakerSettings = {
     'oracle',
     'tencent',
     'hecloud',
-	'ctyun'
+    'ctyun',
+    'ecloud'
   ],
   defaultTimeZone: process.env.TIMEZONE || 'Asia/Shanghai', // see http://momentjs.com/timezone/docs/#/data-utilities/
   feature: {
@@ -209,7 +210,7 @@ window.spinnakerSettings = {
         account: 'ZXXY2020',
         region: 'cidc-rp-11',
       },
-    },	
+    },
     huaweicloud: {
       defaults: {
         account: 'my-huawei-account',
@@ -252,12 +253,18 @@ window.spinnakerSettings = {
         region: 'ap-guangzhou',
       },
     },
-	ctyun: {
-      defaults: {
-        account: 'myCtyunName',
-        region: 'd8d23b1e44ad11e9accd0242ac110002',
-      },
-    },
+    ctyun: {
+      defaults: {
+        account: 'myCtyunName',
+        region: 'd8d23b1e44ad11e9accd0242ac110002',
+      },
+    },
+    ecloud: {
+      defaults: {
+        account: 'test',
+        region: 'ap-yidong',
+      },
+    },
   },
   pagerDuty: {
     required: false,

@@ -26,7 +26,8 @@
       "oracle",
       "titus ",
       "tencent",
-	  "ctyun"
+      "ctyun",
+      "ecloud"
     ],
     "indent": [true, "spaces"],
     "jsx-no-lambda": false,
