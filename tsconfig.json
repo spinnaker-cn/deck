@@ -57,9 +57,12 @@
       "@spinnaker/tencent": ["tencent/src"],
       "tencent/*": ["tencent/src/*"],
       "tencent": ["tencent/src"],
-	  "@spinnaker/ctyun": ["ctyun/src"],
-      "ctyun/*": ["ctyun/src/*"],
-      "ctyun": ["ctyun/src"]
+      "@spinnaker/ecloud": ["ecloud/src"],
+      "ecloud/*": ["ecloud/src/*"],
+      "ecloud": ["ecloud/src"],
+      "@spinnaker/ctyun": ["ctyun/src"],
+      "ctyun/*": ["ctyun/src/*"],
+      "ctyun": ["ctyun/src"]
     },
     "pretty": true,
     "removeComments": true,
