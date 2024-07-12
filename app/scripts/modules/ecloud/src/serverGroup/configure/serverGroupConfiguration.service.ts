@@ -121,6 +121,13 @@ export interface IAmazonServerGroupCommand extends IServerGroupCommand {
   spelTargetGroups: string[];
   spelLoadBalancers: string[];
   viewState: IAmazonServerGroupCommandViewState;
+  roleName:string,
+  internet: {
+    usePublicIp:boolean,
+    chargeType:string,
+    bandwidthSize:number,
+    fipType:string
+  }
 
   getBlockDeviceMappingsSource: (command: IServerGroupCommand) => IBlockDeviceMappingSource;
   selectBlockDeviceMappingsSource: (command: IServerGroupCommand, selection: string) => void;
@@ -544,7 +551,7 @@ export class AwsServerGroupConfigurationService {
       }else{
         command.backingData.filtered.subnetsList = [];
       }
-      
+
       const result: IAmazonServerGroupCommandResult = { dirty: {} };
       // extend(result.dirty, this.configureLoadBalancerOptions(command).dirty);
       return result;

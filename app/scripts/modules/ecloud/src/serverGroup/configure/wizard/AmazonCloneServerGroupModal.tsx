@@ -178,6 +178,11 @@ export class AmazonCloneServerGroupModal extends React.Component<
 
   private submit = (command: IAmazonServerGroupCommand): void => {
     this.normalizeCommand(command);
+    if(command.internet.usePublicIp){
+      command.internet.fipType = "MOBILE"
+    }else{
+      command.internet.fipType = undefined
+    }
     const forPipelineConfig = command.viewState.mode === 'editPipeline' || command.viewState.mode === 'createPipeline';
     if (forPipelineConfig) {
       this.props.closeModal && this.props.closeModal(command);

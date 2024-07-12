@@ -74,7 +74,6 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
 
   public render() {
     const { setFieldValue, values } = this.props.formik;
-
     const keyPairs = values.backingData.filtered.keyPairs || [];
 
     return (
@@ -116,7 +115,15 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
             />
           </div>
         </div>
-        
+        <div className="form-group">
+          <div className="col-md-5 sm-label-right">
+            <b>Role Name </b>
+            <HelpField id="aws.serverGroup.RoleName" />
+          </div>
+          <div className="col-md-6">
+            <Field type="text" className="form-control input-sm no-spel" name="roleName" />
+          </div>
+        </div>
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
             <b>Security Reinforce </b>
@@ -164,77 +171,22 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
               Enable Instance Monitoring{' '}
             </label>
           </div>
-        </div>
+        </div> */}
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
-            <b>Network Billing</b>
-          </div>
-          <div className="col-md-3 radio">
-            <label>
-              <input
-                type="radio"
-                checked={values.internetAccessible.internetChargeType === 'BANDWIDTH_POSTPAID_BY_HOUR'}
-                onChange={() =>
-                  setFieldValue('internetAccessible', {
-                    ...values.internetAccessible,
-                    internetChargeType: 'BANDWIDTH_POSTPAID_BY_HOUR',
-                  })
-                }
-              />
-              Bill by Bandwidth
-            </label>
+            <b>Associate Public Ip</b>
           </div>
           <div className="col-md-2 radio">
             <label>
               <input
+                name='internet.usePublicIp'
                 type="radio"
-                checked={values.internetAccessible.internetChargeType === 'TRAFFIC_POSTPAID_BY_HOUR'}
+                checked={values.internet&&values.internet.usePublicIp === true}
                 onChange={() =>
-                  setFieldValue('internetAccessible', {
-                    ...values.internetAccessible,
-                    internetChargeType: 'TRAFFIC_POSTPAID_BY_HOUR',
-                  })
-                }
-              />
-              By Traffic
-            </label>
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="col-md-5 sm-label-right">
-            <b>Bandwidth</b>
-          </div>
-          <div className="col-md-2">
-            <input
-              type="number"
-              className="form-control input-sm"
-              value={values.internetAccessible.internetMaxBandwidthOut}
-              min={0}
-              max={100}
-              onChange={e =>
-                setFieldValue('internetAccessible', {
-                  ...values.internetAccessible,
-                  internetMaxBandwidthOut: e.target.value,
-                })
-              }
-              required={true}
-            />
-          </div>{' '}
-          Mbps
-        </div>
-        <div className="form-group">
-          <div className="col-md-5 sm-label-right">
-            <b>Associate Public IP Address</b>
-          </div>
-          <div className="col-md-2 radio">
-            <label>
-              <input
-                type="radio"
-                checked={values.internetAccessible.publicIpAssigned === true}
-                onChange={() =>
-                  setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: true })
+                  setFieldValue('internet', { ...values.internet, usePublicIp: true })
                 }
                 id="associatePublicIpAddressTrue"
+                required
               />
               Yes
             </label>
@@ -242,17 +194,82 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
           <div className="col-md-2 radio">
             <label>
               <input
+                name='internet.usePublicIp'
                 type="radio"
-                checked={values.internetAccessible.publicIpAssigned === false}
+                checked={values.internet&&values.internet.usePublicIp === false}
                 onChange={() =>
-                  setFieldValue('internetAccessible', { ...values.internetAccessible, publicIpAssigned: false })
+                  setFieldValue('internet', { ...values.internet, usePublicIp: false })
                 }
                 id="associatePublicIpAddressFalse"
+                required
               />
               No
             </label>
           </div>
-        </div> */}
+        </div>
+        <div className="form-group">
+          <div className="col-md-5 sm-label-right">
+            <b>Charge Type</b>
+          </div>
+          <div className="col-md-3 radio">
+            <label>
+              <input
+                type="radio"
+                name='internet.chargeType'
+                required={values.internet&&values.internet.usePublicIp}
+                checked={values.internet&&values.internet.chargeType === 'BANDWIDTH'}
+                onChange={() =>
+                  setFieldValue('internet', {
+                    ...values.internet,
+                    chargeType: 'BANDWIDTH',
+                  })
+                }
+              />
+              BANDWIDTH
+            </label>
+          </div>
+          <div className="col-md-2 radio">
+            <label>
+              <input
+                type="radio"
+                name='internet.chargeType'
+                required={values.internet&&values.internet.usePublicIp}
+                checked={values.internet&&values.internet.chargeType === 'TRAFFIC'}
+                onChange={() =>
+                  setFieldValue('internet', {
+                    ...values.internet,
+                    chargeType: 'TRAFFIC',
+                  })
+                }
+              />
+              TRAFFIC
+            </label>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="col-md-5 sm-label-right">
+            <b>Bandwidth Size</b>
+          </div>
+          <div className="col-md-2">
+            <input
+              type="number"
+              className="form-control input-sm"
+              value={values.internet&&values.internet.bandwidthSize}
+              min={2}
+              max={500}
+              onChange={e =>
+                setFieldValue('internet', {
+                  ...values.internet,
+                  bandwidthSize: e.target.value,
+                })
+              }
+              required={values.internet&&values.internet.usePublicIp}
+            />
+          </div>{' '}
+          Mbps
+        </div>
+
 
         <div className="form-group">
           <div className="col-md-5 sm-label-right">
