@@ -79,7 +79,7 @@ export class ServerGroupLoadBalancers
         poolId:''
       });
       this.updateLoadBalancers();
-    
+
   }
 
   private removeLoadBalancer(index: number): void {
@@ -134,7 +134,7 @@ export class ServerGroupLoadBalancers
   };
 
   // private listenerChanged(forwardLoadBalancer: IEcloudForwardLoadBalancer, listenerId: string, index: number) {
-    
+
   //   forwardLoadBalancer.listenerId = listenerId;
   //   forwardLoadBalancer.locationId = '';
   //   this.updateLoadBalancers();
@@ -233,11 +233,16 @@ export class ServerGroupLoadBalancers
 
   private getPoolList = (loadBalancerId: string) => {
     const { values:{backingData} } = this.props.formik;
-    if(backingData && backingData.appLoadBalancers && loadBalancerId){
-      return backingData.appLoadBalancers.find(item => item.loadBalancerId === loadBalancerId).serverGroups;
+    if(backingData && backingData.filtered&&backingData.filtered.lbList && loadBalancerId){
+      // return (backingData.appLoadBalancers.find(item => item.loadBalancerId === loadBalancerId)||{}).pools ||[];
+     return (backingData.filtered.lbList.find(item => item.id === loadBalancerId)||{}).pools ||[];
     }
     return [];
   };
+  // private getPoolList = (loadBalancerId: string) => {
+  //   const { values:{backingData} } = this.props.formik;
+  //   return backingData.filtered.lbListenerMap[loadBalancerId] || [];
+  // };
   // private getUrlList = (selectedListener: IALBListener, domain: string): string[] => {
   //   return selectedListener && selectedListener.rules && selectedListener.rules.length && domain
   //     ? selectedListener.rules.filter(r => r.domain === domain).map(r => r.url)
@@ -259,6 +264,7 @@ export class ServerGroupLoadBalancers
       forwardLoadBalancers.length &&
       forwardLoadBalancers.every(flb => !!flb.loadBalancerId)
     ) {
+      // console.log('forwardLoadBalancers',forwardLoadBalancers,listenerLocationMap)
       this.setState({
         listenerLocationMap: Object.assign(
           {},
@@ -295,7 +301,8 @@ export class ServerGroupLoadBalancers
     const { refreshing, listenerLocationMap } = this.state;
 
     const loadBalancerOptions: Option[] = [];
-
+    // console.log(values.backingData.filtered.lbList,'values.backingData.filtered.lbList');
+    // console.log('aaa', values.backingData.filtered.lbListenerMap);
     (values.backingData.filtered.lbList || []).map(lb => {
       if(lb.vpcId === values.vpcId){
         loadBalancerOptions.push({
@@ -447,8 +454,8 @@ export class ServerGroupLoadBalancers
                     </div>
                   </div>
                 ): null}
-                
-                
+
+
                 {/* {forwardLoadBalancer.listenerId &&
                 listenerLocationMap[index] &&
                 listenerLocationMap[index].isL7?(
