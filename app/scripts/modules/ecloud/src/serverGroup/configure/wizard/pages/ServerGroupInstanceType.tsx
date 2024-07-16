@@ -28,16 +28,36 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
 
   public render() {
     const { values } = this.props.formik;
-    const showTypeSelector = !!(values.viewState.disableImageSelection || values.amiName);
-    if (showTypeSelector && values) {
-        const instanceTypeOptions = (values.backingData.filtered.instanceTypes || []).map(instanceType => {
-        const regionInstanceTypes = values.backingData.instanceTypes[values.region] || []
-        const instanceTypeInfo = regionInstanceTypes.find(({ name }) => name === instanceType)
-        return {
-          label: instanceTypeInfo ? `${instanceType}(${instanceTypeInfo.cpu}Core ${instanceTypeInfo.mem}GB)` : instanceType,
-          value: instanceType
+    // const showTypeSelector = !!(values.viewState.disableImageSelection || values.amiName);
+    const {subnetPurposes} = values.backingData.filtered;
+    const showTypeSelector = values.subnetIds;
+    const selectedZoneList:string[] = [];
+    const instanceTypeOptions = [];
+    subnetPurposes.forEach(item=>{
+      if(showTypeSelector.includes(item.id) && !selectedZoneList.includes(item.zone)){
+        selectedZoneList.push(item.zone);
+      }
+    })
+
+    if (showTypeSelector&&showTypeSelector.length && values) {
+      //   const instanceTypeOptions = (values.backingData.filtered.instanceTypes || []).map(instanceType => {
+      //   const regionInstanceTypes = values.backingData.instanceTypes[values.region] || []
+      //   const instanceTypeInfo = regionInstanceTypes.find(({ name }) => name === instanceType)
+      //   return {
+      //     label: instanceTypeInfo ? `${instanceType}(${instanceTypeInfo.cpu}Core ${instanceTypeInfo.mem}GB)` : instanceType,
+      //     value: instanceType
+      //   }
+      // })
+      const regionInstanceTypes = values.backingData.instanceTypes[values.region] || []
+      regionInstanceTypes.forEach(item=>{
+        if(selectedZoneList.includes(item.zone)){
+          instanceTypeOptions.push({
+            label: `${item.name}(${item.cpu}Core ${item.mem}GB)` ,
+            value: item.name
+          })
         }
       })
+
       return (
         <div className="container-fluid form-horizontal">
           <div className="form-group">
@@ -59,6 +79,6 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
       );
     }
 
-    return <h5 className="text-center">Please select an image.</h5>;
+    return <h5 className="text-center">Please select an Subnet .</h5>;
   }
 }
