@@ -216,7 +216,10 @@ export class ServerGroupBasicSettings
     const { app, formik } = this.props;
     const { errors, values } = formik;
     const { createsNewCluster, latestServerGroup, namePreview, showPreviewAsWarning, selectedImage } = this.state;
-
+    if(values.moniker){
+      values.stack = values.moniker.stack;
+      values.detail = values.moniker.detail;
+    }
     const accounts = values.backingData.accounts;
     const readOnlyFields = values.viewState.readOnlyFields || {};
 
@@ -279,7 +282,7 @@ export class ServerGroupBasicSettings
           onChange={this.subnetUpdated}
           multi={true}
         />
-        
+
         <div className="form-group">
           <div className="col-md-3 sm-label-right">
             <b>多可用区扩容策略</b>
