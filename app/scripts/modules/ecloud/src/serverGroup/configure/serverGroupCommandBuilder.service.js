@@ -288,6 +288,7 @@ module.exports = angular
               isNew: false,
               dirty: {},
             },
+            moniker: serverGroup.moniker||{}
           };
 
           if (

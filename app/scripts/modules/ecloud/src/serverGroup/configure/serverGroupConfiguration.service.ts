@@ -126,7 +126,7 @@ export interface IAmazonServerGroupCommand extends IServerGroupCommand {
     usePublicIp:boolean,
     chargeType:string,
     bandwidthSize:number,
-    fipType:string
+    fipType?:string
   }
 
   getBlockDeviceMappingsSource: (command: IServerGroupCommand) => IBlockDeviceMappingSource;
