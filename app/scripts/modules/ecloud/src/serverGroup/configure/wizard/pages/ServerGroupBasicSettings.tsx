@@ -216,10 +216,7 @@ export class ServerGroupBasicSettings
     const { app, formik } = this.props;
     const { errors, values } = formik;
     const { createsNewCluster, latestServerGroup, namePreview, showPreviewAsWarning, selectedImage } = this.state;
-    if(values.moniker){
-      values.stack = values.moniker.stack;
-      values.detail = values.moniker.detail;
-    }
+
     const accounts = values.backingData.accounts;
     const readOnlyFields = values.viewState.readOnlyFields || {};
 

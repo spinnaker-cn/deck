@@ -246,8 +246,10 @@ module.exports = angular
           var command = {
             application: application.name,
             strategy: '',
-            stack: serverGroupName.stack,
-            detail: serverGroupName.detail || serverGroupName.freeFormDetails,
+            // stack: serverGroupName.stack,
+            // detail: serverGroupName.detail || serverGroupName.freeFormDetails,
+            stack:serverGroup.moniker&&serverGroup.moniker.stack,
+            detail:serverGroup.moniker&&serverGroup.moniker.detail,
             credentials: serverGroup.account,
             cooldown: serverGroup.asg.defaultCooldown,
             enabledMetrics: _.get(serverGroup, 'asg.enabledMetrics', []).map(m => m.metric),
@@ -288,7 +290,12 @@ module.exports = angular
               isNew: false,
               dirty: {},
             },
-            moniker: serverGroup.moniker||{}
+            internet:{
+              usePublicIp: serverGroup.launchConfig.internetAccessible.publicIpAssigned,
+              chargeType: serverGroup.launchConfig.internetAccessible.internetChargeType,
+              bandwidthSize: serverGroup.launchConfig.internetAccessible.internetMaxBandwidthOut,
+            },
+            // moniker: serverGroup.moniker||{}
           };
 
           if (
