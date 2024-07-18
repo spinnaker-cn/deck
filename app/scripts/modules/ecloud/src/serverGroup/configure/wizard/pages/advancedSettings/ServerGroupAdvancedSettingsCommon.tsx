@@ -74,13 +74,6 @@ export class ServerGroupAdvancedSettingsCommon extends React.Component<IServerGr
 
   public render() {
     const { setFieldValue, values } = this.props.formik;
-    if(values.internetAccessible){
-      values.internet = {
-        usePublicIp: values.internetAccessible.publicIpAssigned,
-        chargeType: values.internetAccessible.internetChargeType,
-        bandwidthSize: values.internetAccessible.internetMaxBandwidthOut,
-      }
-    }
     const keyPairs = values.backingData.filtered.keyPairs || [];
 
     return (
