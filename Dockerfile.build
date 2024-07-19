@@ -8,5 +8,8 @@ COPY build/webpack /usr/share/nginx/html
 
 EXPOSE 9000
 
+ENV DECK_HOST=0.0.0.0
+ENV API_HOST=http://10.200.40.28
+
 CMD ["nginx", "-g", "daemon off;"]
 
