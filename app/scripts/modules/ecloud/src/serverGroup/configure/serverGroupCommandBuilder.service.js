@@ -209,8 +209,6 @@ module.exports = angular
         var preferredZonesLoader = AccountService.getPreferredZonesByAccount('ecloud');
         var subnetsLoader = SubnetReader.listSubnets();
 
-        var serverGroupName = NameUtils.parseServerGroupName(serverGroup.asg.autoScalingGroupName);
-
         var instanceType = serverGroup.launchConfig ? serverGroup.launchConfig.instanceType : null;
         var instanceTypeCategoryLoader = instanceTypeService.getCategoryForInstanceType('ecloud', instanceType);
 
