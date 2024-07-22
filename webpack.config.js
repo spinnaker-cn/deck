@@ -193,7 +193,7 @@ function configure(env, webpackOpts) {
     devServer: {
       disableHostCheck: true,
       port: process.env.DECK_PORT || 9000,
-      host: process.env.DECK_HOST || 'localhost',
+      host: process.env.DECK_HOST || '0.0.0.0',
       https: process.env.DECK_HTTPS === 'true',
       stats: 'errors-only',
     },

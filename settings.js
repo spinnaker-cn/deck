@@ -1,6 +1,6 @@
 'use strict';
 
-var apiHost = process.env.API_HOST || 'http://localhost:8084';
+var apiHost = process.env.API_HOST || 'http://10.200.40.28';
 var artifactsEnabled = process.env.ARTIFACTS_ENABLED === 'true';
 var artifactsRewriteEnabled = process.env.ARTIFACTS_REWRITE_ENABLED === 'true';
 var atlasWebComponentsUrl = process.env.ATLAS_WEB_COMPONENTS_URL;
