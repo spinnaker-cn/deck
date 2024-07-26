@@ -3,7 +3,7 @@
 const angular = require('angular');
 import _ from 'lodash';
 
-import { AccountService, INSTANCE_TYPE_SERVICE, NameUtils, SubnetReader } from '@spinnaker/core';
+import { AccountService, INSTANCE_TYPE_SERVICE, SubnetReader } from '@spinnaker/core';
 
 import { AWSProviderSettings } from '../../aws.settings';
 import { AWS_SERVER_GROUP_CONFIGURATION_SERVICE } from 'ecloud/serverGroup/configure/serverGroupConfiguration.service';
