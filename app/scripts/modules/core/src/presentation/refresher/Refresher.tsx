@@ -21,8 +21,8 @@ export interface IRefresherState {
 
 export class Refresher extends React.Component<IRefresherProps, IRefresherState> {
   private activeRefresher: IScheduler;
-  private yellowAge = 2 * 60 * 1000; // 2 minutes
-  private redAge = 5 * 60 * 1000; // 5 minutes
+  private yellowAge = 20 * 60 * 1000; // 10 minutes
+  private redAge = 30 * 60 * 1000; // 15 minutes
 
   constructor(props: IRefresherProps) {
     super(props);
@@ -30,7 +30,7 @@ export class Refresher extends React.Component<IRefresherProps, IRefresherState>
     this.state = this.parseState(props);
 
     // Update the state on an interval to make sure the color and tooltip get updated
-    this.activeRefresher = SchedulerFactory.createScheduler(2000);
+    this.activeRefresher = SchedulerFactory.createScheduler(1200000);
     this.activeRefresher.subscribe(() => {
       this.setState(this.parseState(this.props));
     });

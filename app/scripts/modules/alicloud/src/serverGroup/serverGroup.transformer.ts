@@ -77,7 +77,7 @@ export class AlicloudServerGroupTransformer {
 
     const configuration: any = {
       interestingHealthProviderNames: ['Alibabacloud'],
-      // backingData: command.backingData,
+   // backingData: command.backingData,
       InstanceName: command.application,
       instancetype: command.instancetype,
       instancetypes: command.instancetypes,

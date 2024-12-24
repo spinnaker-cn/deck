@@ -1,6 +1,6 @@
 'use strict';
 
-var apiHost = process.env.API_HOST || 'http://10.200.40.28';
+var apiHost = 'http://spinnaker.imgo.tv:8084';
 var artifactsEnabled = process.env.ARTIFACTS_ENABLED === 'true';
 var artifactsRewriteEnabled = process.env.ARTIFACTS_REWRITE_ENABLED === 'true';
 var atlasWebComponentsUrl = process.env.ATLAS_WEB_COMPONENTS_URL;
@@ -24,7 +24,7 @@ var iapRefresherEnabled = process.env.IAP_REFRESHER_ENABLED === 'true' ? true : 
 var infrastructureEnabled = process.env.INFRA_ENABLED === 'true' ? true : false;
 var managedPipelineTemplatesV2UIEnabled = process.env.MANAGED_PIPELINE_TEMPLATES_V2_UI_ENABLED === 'true';
 var managedServiceAccountsEnabled = process.env.MANAGED_SERVICE_ACCOUNTS_ENABLED === 'true';
-var onDemandClusterThreshold = process.env.ON_DEMAND_CLUSTER_THRESHOLD || '350';
+var onDemandClusterThreshold = process.env.ON_DEMAND_CLUSTER_THRESHOLD || '600';
 var reduxLoggerEnabled = process.env.REDUX_LOGGER === 'true';
 var templatesEnabled = process.env.TEMPLATES_ENABLED === 'true';
 var useClassicFirewallLabels = process.env.USE_CLASSIC_FIREWALL_LABELS === 'true';

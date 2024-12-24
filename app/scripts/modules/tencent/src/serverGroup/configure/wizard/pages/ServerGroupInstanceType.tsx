@@ -13,10 +13,10 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
   implements IWizardPageComponent<IAmazonServerGroupCommand> {
   public validate(values: IAmazonServerGroupCommand) {
     const errors: FormikErrors<IAmazonServerGroupCommand> = {};
-    if (!values.instanceType && !values.instanceTypes) {
-      errors.instanceType = 'Instance Type required.';
-    }
-    return errors;
+   if (!values.instanceType && !values.instanceTypes) {
+     errors.instanceType = 'Instance Type required.';
+   } 
+   return errors;
   }
 
   private instanceTypeChanged = (options: Option[]) => {
