@@ -149,8 +149,11 @@ export class AwsServerGroupTransformer {
       });
     });
     command.securityReinforce = command.enhancedService.securityService.enabled;
-    const app = base.backingData.appLoadBalancers;
-    command.routerId = app[0]? app[0].routerId : '';
+    //const app = base.backingData.appLoadBalancers;
+    //command.routerId = app[0]? app[0].routerId : '';
+    const vpcIdList = base.backingData.vpcList.filter(item => item.vpcId === command.vpcId);
+    command.routerId = vpcIdList.length ? vpcIdList[0].routerId : '';
+
     if(command.keyPair){
       const keyPairsArr = (base.backingData.filtered.keyPairs || []).find(({ keyId }) => keyId === command.keyPair);
       command.keyPairName = keyPairsArr.keyName;
