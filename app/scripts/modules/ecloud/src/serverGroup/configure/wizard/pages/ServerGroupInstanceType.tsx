@@ -33,7 +33,7 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
     const showTypeSelector = values.subnetIds;
     const selectedZoneList:string[] = [];
     const instanceTypeOptions = [];
-    subnetPurposes.forEach(item=>{
+    (subnetPurposes || []).forEach(item=>{
       if(showTypeSelector.includes(item.id) && !selectedZoneList.includes(item.zone)){
         selectedZoneList.push(item.zone);
       }
