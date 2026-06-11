@@ -381,7 +381,7 @@ export class ServerGroupLoadBalancers
                     <div className="wizard-pod-row-contents">
                       <div className="wizard-pod-row-data">
                         <div className="col-md-10">
-                          {values.backingData.filtered.lbListenerMap[forwardLoadBalancer.loadBalancerId] ? (
+                          {values.backingData.filtered.lbListenerMap[forwardLoadBalancer.loadBalancerId] || values.backingData.filtered.lbList.find(lb => lb.id === forwardLoadBalancer.loadBalancerId) ? (
                             <Select
                               isLoading={refreshing}
                               value={forwardLoadBalancer.poolId}
