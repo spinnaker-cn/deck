@@ -48,15 +48,20 @@ export class ServerGroupInstanceType extends React.Component<IServerGroupRInstan
       //     value: instanceType
       //   }
       // })
-      const regionInstanceTypes = values.backingData.instanceTypes[values.region] || []
-      regionInstanceTypes.forEach(item=>{
-        if(selectedZoneList.includes(item.zone)){
+      const regionInstanceTypes = values.backingData.instanceTypes[values.region] || [];
+
+      regionInstanceTypes.forEach(item => {
+        if (
+          item.account === values.credentials &&
+          selectedZoneList.includes(item.zone) &&
+          !instanceTypeOptions.some(option => option.value === item.name)
+        ) {
           instanceTypeOptions.push({
-            label: `${item.name}(${item.cpu}Core ${item.mem}GB)` ,
-            value: item.name
-          })
+            label: `${item.name}(${item.cpu}Core ${item.mem}GB)`,
+            value: item.name,
+          });
         }
-      })
+      });
 
       return (
         <div className="container-fluid form-horizontal">

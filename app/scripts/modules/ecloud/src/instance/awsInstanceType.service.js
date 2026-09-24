@@ -175,7 +175,7 @@ module.exports = angular.module('spinnaker.ecloud.instanceType.service', []).fac
           return _.chain(types)
             .map(function(type) {
               return Object.assign(type,  {
-                key: [type.region, type.account, type.name].join(':'),
+                key: [type.region, type.account, type.zone, type.name].join(':'),
               });
             })
             .uniqBy('key')
